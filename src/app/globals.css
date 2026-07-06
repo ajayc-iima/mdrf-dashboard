@@ -1,0 +1,238 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Navy + Gold professional system */
+    --navy: 220 40% 20%;
+    --navy-light: 220 38% 30%;
+    --navy-dark: 220 42% 14%;
+
+    --gold: 38 60% 55%;
+    --gold-soft: 38 60% 92%;
+    --gold-light: 38 60% 70%;
+
+    --bg-page: 40 15% 97%;
+    --bg-surface: 0 0% 100%;
+    --bg-muted: 40 10% 94%;
+    --bg-hover: 40 10% 90%;
+
+    --text-1: 220 18% 12%;
+    --text-2: 220 10% 35%;
+    --text-3: 220 8% 52%;
+    --text-4: 220 6% 68%;
+
+    --blue: 221 83% 53%;
+    --blue-hover: 221 83% 46%;
+    --blue-soft: 221 83% 97%;
+
+    --green: 152 58% 40%;
+    --green-soft: 152 58% 96%;
+    --orange: 24 80% 50%;
+    --orange-soft: 24 80% 95%;
+    --red: 0 72% 51%;
+    --red-soft: 0 72% 96%;
+
+    --border: 40 8% 86%;
+    --border-strong: 40 6% 78%;
+
+    --radius: 8px;
+  }
+}
+
+@layer base {
+  * {
+    border-color: hsl(var(--border));
+  }
+  body {
+    background: hsl(var(--bg-page));
+    color: hsl(var(--text-1));
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  }
+  html,
+  body {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+.safe-bottom-nav {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Sidebar — navy, professional */
+.sidebar-shell {
+  background: linear-gradient(180deg, hsl(var(--navy)) 0%, hsl(var(--navy-dark)) 100%);
+  border-right: 1px solid hsl(220 38% 24%);
+}
+
+/* Card interaction */
+.card-lift {
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+.card-lift:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  transform: translateY(-1px);
+}
+
+/* Focus — visible ring */
+*:focus-visible {
+  outline: 2px solid hsl(var(--gold));
+  outline-offset: 2px;
+  border-radius: var(--radius);
+}
+
+/* ─── Entrance Animations ─── */
+
+.stagger-children > * {
+  animation: staggerIn 0.4s ease-out both;
+}
+.stagger-children > *:nth-child(1) { animation-delay: 0ms; }
+.stagger-children > *:nth-child(2) { animation-delay: 50ms; }
+.stagger-children > *:nth-child(3) { animation-delay: 100ms; }
+.stagger-children > *:nth-child(4) { animation-delay: 150ms; }
+.stagger-children > *:nth-child(5) { animation-delay: 200ms; }
+.stagger-children > *:nth-child(6) { animation-delay: 250ms; }
+
+@keyframes staggerIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Fade in with slight scale */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ─── Ambient Motion ─── */
+
+/* Slow drift for background decorative elements */
+@keyframes driftSlow {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  25% { transform: translate(10px, -15px) rotate(1deg); }
+  50% { transform: translate(-5px, -25px) rotate(-0.5deg); }
+  75% { transform: translate(-15px, -10px) rotate(0.5deg); }
+}
+
+@keyframes driftMedium {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  33% { transform: translate(-12px, 10px) rotate(-0.8deg); }
+  66% { transform: translate(8px, -8px) rotate(0.8deg); }
+}
+
+/* Gentle float for decorative elements */
+@keyframes float1 {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
+}
+
+@keyframes float2 {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(4px); }
+}
+
+/* Shimmer for gold accents */
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+/* Very subtle pulse for active states */
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 0 0 hsl(var(--gold) / 0.15); }
+  50% { box-shadow: 0 0 0 4px hsl(var(--gold) / 0.05); }
+}
+
+/* Gradient sweep for login background */
+@keyframes gradientSweep {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Rotate for loading */
+@keyframes spinSlow {
+  to { transform: rotate(360deg); }
+}
+
+/* ─── Utility Classes ─── */
+
+.animate-drift-slow {
+  animation: driftSlow 30s ease-in-out infinite;
+}
+
+.animate-drift-medium {
+  animation: driftMedium 25s ease-in-out infinite;
+}
+
+.animate-float1 {
+  animation: float1 4s ease-in-out infinite;
+}
+
+.animate-float2 {
+  animation: float2 3.5s ease-in-out infinite;
+}
+
+.animate-fade-up {
+  animation: fadeUp 0.5s ease-out both;
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradientSweep 15s ease infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 2s ease-in-out infinite;
+}
+
+.animate-shimmer {
+  background-size: 200% auto;
+  animation: shimmer 3s linear infinite;
+}
+
+/* Sidebar nav item glow for active state */
+.sidebar-nav-active {
+  animation: pulseGlow 3s ease-in-out infinite;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--border-strong));
+  border-radius: 3px;
+}
+
+/* Selection */
+::selection {
+  background: hsl(var(--gold) / 0.25);
+  color: hsl(var(--text-1));
+}

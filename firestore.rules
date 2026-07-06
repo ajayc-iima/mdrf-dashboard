@@ -1,0 +1,115 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper: check if user is authenticated
+    function isAuth() {
+      return request.auth != null;
+    }
+
+    // Helper: get user's role from their profile
+    function getUserRole() {
+      return exists(/databases/$(database)/documents/users/$(request.auth.uid))
+        ? get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role
+        : 'none';
+    }
+
+    // Helper: check if user is admin
+    function isAdmin() {
+      return getUserRole() == 'admin';
+    }
+
+    // ─── Users ────────────────────────────────────────
+    match /users/{userId} {
+      // Anyone authenticated can read profiles (needed for dashboards)
+      allow read: if isAuth();
+
+      // Users can create their own profile (first sign-up)
+      allow create: if isAuth() && request.auth.uid == userId;
+
+      // Users can update own profile; admins can update anyone
+      allow update: if isAuth() && (request.auth.uid == userId || isAdmin());
+
+      // Only admins can delete
+      allow delete: if isAuth() && isAdmin();
+    }
+
+    // ─── Config ───────────────────────────────────────
+    match /config/{docId} {
+      allow read: if isAuth();
+      allow write: if isAuth() && isAdmin();
+    }
+
+    // ─── Work Logs ────────────────────────────────────
+    match /workLogs/{logId} {
+      allow read: if isAuth();
+      allow create: if isAuth();
+      allow update: if isAuth() && isAdmin();
+      allow delete: if isAuth() && isAdmin();
+    }
+
+    // ─── Tasks ────────────────────────────────────────
+    match /tasks/{taskId} {
+      allow read: if isAuth();
+      allow create: if isAuth();
+      allow update: if isAuth();
+      allow delete: if isAuth() && isAdmin();
+    }
+
+    // ─── Support Requests ─────────────────────────────
+    match /supportRequests/{requestId} {
+      allow read: if isAuth();
+      allow create: if isAuth();
+      allow update: if isAuth();
+      allow delete: if isAuth() && isAdmin();
+    }
+
+    // ─── Notes (caseStudies collection for backward compat) ──
+    match /caseStudies/{caseId} {
+      allow read: if isAuth();
+      allow create: if isAuth();
+      allow update: if isAuth();
+      allow delete: if isAuth() && isAdmin();
+    }
+
+    // ─── Note Comments (caseComments collection for backward compat) ──
+    match /caseComments/{commentId} {
+      allow read: if isAuth();
+      allow create: if isAuth();
+      allow update: if isAuth();
+      allow delete: if isAuth() && isAdmin();
+    }
+
+    // ─── Workload Checkins (weekly self-declaration) ──
+    match /workloadCheckins/{checkinId} {
+      allow read: if isAuth();
+      allow create: if isAuth();
+      allow update: if isAuth();
+      allow delete: if isAuth() && isAdmin();
+    }
+
+    // ─── Course Progress ──
+    match /courseProgress/{progressId} {
+      allow read: if isAuth();
+      allow create: if isAuth();
+      allow update: if isAuth();
+      allow delete: if isAuth() && isAdmin();
+    }
+
+    // ─── Field Notes ──
+    match /notes/{noteId} {
+      allow read: if isAuth();
+      allow create: if isAuth();
+      allow update: if isAuth();
+      allow delete: if isAuth() && isAdmin();
+    }
+
+    // ─── Note Comments ──
+    match /noteComments/{commentId} {
+      allow read: if isAuth();
+      allow create: if isAuth();
+      allow update: if isAuth();
+      allow delete: if isAuth() && isAdmin();
+    }
+  }
+}
