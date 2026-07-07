@@ -9,7 +9,7 @@ import type {
   UserProfile, WorkLog, Task, SupportRequest, WorkloadCheckin,
   CaseStudy, CaseComment, CourseProgress, Note, NoteComment, NoteStatus,
   UserRole, Program, WorkCategory, SupportStatus, CaseStatus,
-  WorkloadPressure, CaseType,
+  WorkloadPressure, CaseType, LmsCourse,
 } from '@/types'
 
 // ─── Serialisation helpers ────────────────────────────────────────
@@ -304,6 +304,49 @@ export async function getWorkloadForWeek(weekKey: string, program?: Program): Pr
   return snap.docs.map(d => serializeDoc<WorkloadCheckin>(d))
 }
 
+// ─── LMS Courses (stored in config/lmsCourses for simpler security) ─
+
+const LMS_DOC = doc(db, 'config', 'lmsCourses')
+
+function lmsCourseId(): string {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2, 6)
+}
+
+export async function addLmsCourse(course: Omit<LmsCourse, 'id' | 'createdAt'>): Promise<string> {
+  const id = lmsCourseId()
+  const snap = await getDoc(LMS_DOC)
+  const existing = snap.exists() ? snap.data().courses || [] : []
+  await setDoc(LMS_DOC, {
+    courses: [...existing, { ...course, id, createdAt: serverTimestamp() }],
+  }, { merge: true })
+  return id
+}
+
+export async function deleteLmsCourse(id: string): Promise<void> {
+  const snap = await getDoc(LMS_DOC)
+  if (!snap.exists()) return
+  const courses = (snap.data().courses || []).filter((c: any) => c.id !== id)
+  await setDoc(LMS_DOC, { courses }, { merge: true })
+}
+
+export async function getLmsCourses(program?: Program): Promise<LmsCourse[]> {
+  const snap = await getDoc(LMS_DOC)
+  if (!snap.exists()) return []
+  const courses: LmsCourse[] = (snap.data().courses || []).map((c: any) => ({
+    ...c,
+    createdAt: c.createdAt?.toDate ? c.createdAt.toDate() : new Date(c.createdAt),
+  }))
+  let filtered = courses
+  if (program) {
+    filtered = courses.filter((c) => c.program === null || c.program === program)
+  }
+  return filtered.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+}
+
+export async function getAllLmsCourses(): Promise<LmsCourse[]> {
+  return getLmsCourses()
+}
+
 // ─── Case studies & discussion (§3.4) ─────────────────────────────
 
 export async function addCaseStudy(
@@ -486,6 +529,8 @@ export async function exportWorkLogs(filters: {
     Date: l.date.toISOString().split('T')[0],
     Category: l.category,
     Status: l.type,
+    'Activity Description': l.activityDescription,
+    'Output / Deliverable': l.outputDeliverable,
     Description: l.description,
   }))
 }

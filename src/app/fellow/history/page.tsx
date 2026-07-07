@@ -37,7 +37,6 @@ export default function FellowHistory() {
     return true
   })
 
-  // Group by week
   const grouped = filtered.reduce((acc, log) => {
     const k = log.weekKey
     if (!acc[k]) acc[k] = []
@@ -49,7 +48,7 @@ export default function FellowHistory() {
     return (
       <div className="space-y-6">
         {[...Array(3)].map((_, i) => (
-          <div key={i} className="h-32 animate-pulse rounded-xl bg-muted" />
+          <div key={i} className="h-32 animate-pulse rounded-2xl bg-[hsl(var(--bg-muted))]" />
         ))}
       </div>
     )
@@ -59,7 +58,6 @@ export default function FellowHistory() {
     <div className="space-y-6">
       <PageHeader title="My History" icon={<ClipboardList className="h-6 w-6" />} description="All your work logs, grouped by week." />
 
-      {/* Filters */}
       <div className="flex flex-wrap gap-3">
         <Select value={weekFilter} onValueChange={setWeekFilter}>
           <SelectTrigger className="w-48"><SelectValue placeholder="Week" /></SelectTrigger>
@@ -90,23 +88,35 @@ export default function FellowHistory() {
             <Card key={week}>
               <CardHeader className="border-b border-[hsl(var(--border))]">
                 <div className="flex items-center justify-between">
-                  <CardTitle className="text-base">{formatWeekRange(week)}</CardTitle>
+                  <CardTitle className="text-[15px]">{formatWeekRange(week)}</CardTitle>
                   <Badge variant="secondary">{weekLogs.length} logs</Badge>
                 </div>
               </CardHeader>
               <CardContent className="pt-4">
-                <div className="space-y-2.5">
+                <div className="space-y-2">
                   {weekLogs.map((log) => (
-                    <div key={log.id} className="flex gap-3 rounded-lg border border-[hsl(var(--border))] px-3 py-2.5 hover:bg-[hsl(var(--bg-muted))]/50 transition-colors">
+                    <div key={log.id} className="flex gap-3 rounded-xl border border-[hsl(var(--border))] px-3 py-2.5 hover:bg-[hsl(var(--bg-muted))]/50 transition-colors">
                       <span className="text-lg shrink-0">
                         {WORK_CATEGORIES.find((c) => c.value === log.category)?.emoji || "📌"}
                       </span>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm text-[hsl(var(--text-1))]">{log.description}</p>
+                        {log.activityDescription && (
+                          <p className="text-[13px] text-[hsl(var(--text-1))]">
+                            <span className="font-medium">Did:</span> {log.activityDescription}
+                          </p>
+                        )}
+                        {log.outputDeliverable && (
+                          <p className="text-[13px] text-[hsl(var(--text-2))] mt-0.5">
+                            <span className="font-medium">Produced:</span> {log.outputDeliverable}
+                          </p>
+                        )}
+                        {!log.activityDescription && !log.outputDeliverable && (
+                          <p className="text-[13px] text-[hsl(var(--text-1))]">{log.description}</p>
+                        )}
                         <div className="flex items-center gap-2 mt-0.5">
-                          <span className="text-xs text-[hsl(var(--text-3))]">{WORK_CATEGORIES.find((c) => c.value === log.category)?.label}</span>
+                          <span className="text-[11px] text-[hsl(var(--text-3))]">{WORK_CATEGORIES.find((c) => c.value === log.category)?.label}</span>
                           <Badge variant="outline" className="text-[10px] capitalize">{log.type}</Badge>
-                          <span className="text-xs text-[hsl(var(--text-3))]">{formatDate(log.date)}</span>
+                          <span className="text-[11px] text-[hsl(var(--text-3))]">{formatDate(log.date)}</span>
                         </div>
                       </div>
                     </div>

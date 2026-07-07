@@ -51,6 +51,8 @@ export interface UserProfile {
   badges: string[]
 }
 
+export type RequestType = 'data_analysis' | 'policy_drafting' | 'subject_matter_expert' | 'administrative'
+
 export interface WorkLog {
   id: string
   fellowId: string
@@ -61,8 +63,11 @@ export interface WorkLog {
   date: Date
   weekKey: string                 // ISO week "2026-W27"
   category: WorkCategory
-  description: string
+  activityDescription: string
+  outputDeliverable: string
+  description: string             // kept for backward compat; concatenation of activity+output
   type: LogType
+  dueDate?: Date
   createdAt: Date
 }
 
@@ -85,6 +90,7 @@ export interface SupportRequest {
   district: string
   program: Program
   category: SupportCategory
+  requestType?: RequestType
   description: string
   urgency: Urgency
   status: SupportStatus
@@ -142,6 +148,15 @@ export interface CourseProgress {
   courseKey: string
   status: CourseStatus
   updatedAt: Date
+}
+
+export interface LmsCourse {
+  id: string
+  title: string
+  url: string
+  description: string
+  program: Program | null          // null = visible to all programs
+  createdAt: Date
 }
 
 export interface Note {           // lightweight field notes (kept for continuity)
@@ -212,6 +227,13 @@ export const SUPPORT_CATEGORIES: { value: SupportCategory; label: string; emoji:
   { value: 'technical', label: 'Technical Issue', emoji: '🔧' },
   { value: 'logistics', label: 'Logistical Support', emoji: '🚚' },
   { value: 'capacity', label: 'Capacity-building', emoji: '🎓' },
+]
+
+export const REQUEST_TYPES: { value: RequestType; label: string }[] = [
+  { value: 'data_analysis', label: 'Data Analysis' },
+  { value: 'policy_drafting', label: 'Policy Drafting' },
+  { value: 'subject_matter_expert', label: 'Subject Matter Expert' },
+  { value: 'administrative', label: 'Administrative' },
 ]
 
 export const CASE_TYPES: { value: CaseType; label: string; emoji: string }[] = [

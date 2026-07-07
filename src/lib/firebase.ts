@@ -1,6 +1,6 @@
 import { initializeApp, getApps, getApp } from 'firebase/app'
 import { getAuth } from 'firebase/auth'
-import { getFirestore } from 'firebase/firestore'
+import { getFirestore, enableIndexedDbPersistence } from 'firebase/firestore'
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -14,4 +14,15 @@ const firebaseConfig = {
 const app = getApps().length ? getApp() : initializeApp(firebaseConfig)
 export const auth = getAuth(app)
 export const db = getFirestore(app)
+
+try {
+  enableIndexedDbPersistence(db)
+} catch (err: any) {
+  if (err.code === 'failed-precondition') {
+    console.warn('Firestore offline persistence unavailable: multiple tabs open.')
+  } else if (err.code === 'unimplemented') {
+    console.warn('Firestore offline persistence not supported by this browser.')
+  }
+}
+
 export default app

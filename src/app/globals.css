@@ -4,38 +4,38 @@
 
 @layer base {
   :root {
-    /* Warm cream + navy professional system — matches login page */
+    /* Cool modern professional system */
     --navy: 215 35% 14%;
     --navy-light: 215 30% 22%;
     --navy-dark: 215 40% 10%;
 
     --gold: 347 100% 39%;
-    --gold-soft: 347 100% 96%;
+    --gold-soft: 347 100% 97%;
     --gold-light: 347 80% 72%;
 
-    --bg-page: 40 20% 94%;
+    --bg-page: 220 14% 96%;
     --bg-surface: 0 0% 100%;
-    --bg-muted: 40 15% 95%;
-    --bg-hover: 40 12% 92%;
+    --bg-muted: 220 14% 94%;
+    --bg-hover: 220 14% 91%;
 
-    --text-1: 30 10% 10%;
-    --text-2: 30 8% 28%;
-    --text-3: 30 6% 45%;
-    --text-4: 25 8% 60%;
+    --text-1: 220 15% 12%;
+    --text-2: 220 10% 30%;
+    --text-3: 220 8% 46%;
+    --text-4: 220 8% 62%;
 
     --blue: 221 83% 53%;
     --blue-hover: 221 83% 46%;
     --blue-soft: 221 83% 97%;
 
-    --green: 140 45% 38%;
-    --green-soft: 140 45% 95%;
+    --green: 142 40% 36%;
+    --green-soft: 142 40% 95%;
     --orange: 28 80% 48%;
     --orange-soft: 28 80% 95%;
     --red: 0 72% 51%;
     --red-soft: 0 72% 96%;
 
-    --border: 30 12% 87%;
-    --border-strong: 30 10% 80%;
+    --border: 220 13% 90%;
+    --border-strong: 220 10% 82%;
 
     --radius: 8px;
   }
@@ -46,9 +46,9 @@
     border-color: hsl(var(--border));
   }
   body {
-    background: #f2efe9;
-    color: #151413;
-    font-family: "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    background: hsl(var(--bg-page));
+    color: hsl(var(--text-1));
+    font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
@@ -84,10 +84,10 @@ main {
   scrollbar-width: none;
 }
 
-/* Sidebar — navy, professional */
+/* Sidebar — modern dark with subtle grain */
 .sidebar-shell {
   background: linear-gradient(180deg, hsl(var(--navy)) 0%, hsl(var(--navy-dark)) 100%);
-  border-right: 1px solid hsl(220 38% 24%);
+  border-right: 1px solid hsl(215 30% 18%);
 }
 
 /* Card interaction */
@@ -143,7 +143,6 @@ main {
 
 /* ─── Ambient Motion ─── */
 
-/* Slow drift for background decorative elements */
 @keyframes driftSlow {
   0%, 100% { transform: translate(0, 0) rotate(0deg); }
   25% { transform: translate(10px, -15px) rotate(1deg); }
@@ -157,7 +156,6 @@ main {
   66% { transform: translate(8px, -8px) rotate(0.8deg); }
 }
 
-/* Gentle float for decorative elements */
 @keyframes float1 {
   0%, 100% { transform: translateY(0px); }
   50% { transform: translateY(-6px); }
@@ -168,26 +166,22 @@ main {
   50% { transform: translateY(4px); }
 }
 
-/* Shimmer for gold accents */
 @keyframes shimmer {
   0% { background-position: -200% center; }
   100% { background-position: 200% center; }
 }
 
-/* Very subtle pulse for active states */
 @keyframes pulseGlow {
   0%, 100% { box-shadow: 0 0 0 0 hsl(var(--gold) / 0.15); }
   50% { box-shadow: 0 0 0 4px hsl(var(--gold) / 0.05); }
 }
 
-/* Gradient sweep for login background */
 @keyframes gradientSweep {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
 
-/* Rotate for loading */
 @keyframes spinSlow {
   to { transform: rotate(360deg); }
 }
@@ -243,11 +237,15 @@ main {
   50% { transform: translateY(-6px); }
 }
 
+@keyframes pings {
+  0%, 100% { transform: scale(1); opacity: 0.75; }
+  50% { transform: scale(2); opacity: 0; }
+}
+
 .animate-float {
   animation: float 3s ease-in-out infinite;
 }
 
-/* Sidebar nav item glow for active state */
 .sidebar-nav-active {
   animation: pulseGlow 3s ease-in-out infinite;
 }
@@ -267,6 +265,6 @@ main {
 
 /* Selection */
 ::selection {
-  background: hsl(var(--gold) / 0.25);
+  background: hsl(var(--navy) / 0.15);
   color: hsl(var(--text-1));
 }

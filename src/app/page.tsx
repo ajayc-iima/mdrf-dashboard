@@ -15,7 +15,7 @@ export default function LoginPage() {
   const router = useRouter()
 
   useEffect(() => {
-    const t = setTimeout(() => setVisible(true), 60)
+    const t = setTimeout(() => setVisible(true), 80)
     return () => clearTimeout(t)
   }, [])
 
@@ -41,7 +41,10 @@ export default function LoginPage() {
       const user = await signInWithGoogle()
       let profile = await getUserProfile(user.uid)
       if (!profile) {
-        await createUserProfile(user.uid, { name: user.displayName || user.email?.split("@")[0] || "User", email: user.email || "" })
+        await createUserProfile(user.uid, {
+          name: user.displayName || user.email?.split("@")[0] || "User",
+          email: user.email || "",
+        })
         profile = await getUserProfile(user.uid)
       }
       if (!profile) { setError("Profile not found. Contact the administrator."); return }
@@ -53,216 +56,244 @@ export default function LoginPage() {
     } finally { setLoading(false) }
   }
 
-  const programs: { key: Program; icon: React.ReactNode }[] = [
-    {
-      key: "mdrf",
-      icon: (
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-          <rect x="3" y="3" width="7" height="7" rx="1" />
-          <rect x="14" y="3" width="7" height="7" rx="1" />
-          <rect x="3" y="14" width="7" height="7" rx="1" />
-          <rect x="14" y="14" width="7" height="7" rx="1" />
-        </svg>
-      ),
-    },
-    {
-      key: "mlrf",
-      icon: (
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M12 2L2 7l10 5 10-5-10-5z" />
-          <path d="M2 17l10 5 10-5" />
-          <path d="M2 12l10 5 10-5" />
-        </svg>
-      ),
-    },
-  ]
-
   return (
-    <div className="min-h-screen flex flex-col bg-[#f2efe9] text-[#151413] select-none">
+    <div className="min-h-screen bg-[hsl(var(--navy))] relative overflow-hidden select-none">
 
       <style dangerouslySetInnerHTML={{__html: `
-        @import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400;1,6..72,500;1,6..72,600;1,6..72,700&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400;1,9..40,500&display=swap');
-        .font-display { font-family: 'Newsreader', Georgia, serif; }
-        .font-body { font-family: 'DM Sans', system-ui, sans-serif; }
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600&display=swap');
+        .font-editorial { font-family: 'Playfair Display', Georgia, serif; }
+        .font-body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; }
+
+        @keyframes heroFadeIn {
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes heroFadeInLeft {
+          from { opacity: 0; transform: translateX(-20px); }
+          to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes heroFadeInRight {
+          from { opacity: 0; transform: translateX(20px); }
+          to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes subtlePulse {
+          0%, 100% { opacity: 0.4; }
+          50% { opacity: 0.7; }
+        }
+        @keyframes lineGrow {
+          from { width: 0; }
+          to { width: 100%; }
+        }
+        @keyframes dotBlink {
+          0%, 100% { opacity: 0.3; }
+          50% { opacity: 1; }
+        }
       `}} />
 
-      {/* ── Main content ── */}
-      <main className={`flex-1 max-w-[1080px] mx-auto w-full px-4 sm:px-6 py-8 sm:py-14 flex flex-col justify-center gap-5 transition-all duration-700 ease-out ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}`}>
+      {/* ═══ Background atmosphere ═══ */}
+      {/* Large gradient wash */}
+      <div className="absolute inset-0">
+        <div className="absolute top-[-20%] right-[-10%] w-[800px] h-[800px] rounded-full bg-[hsl(var(--gold))]/[0.04] blur-[160px]" />
+        <div className="absolute bottom-[-30%] left-[-15%] w-[600px] h-[600px] rounded-full bg-[hsl(var(--blue))]/[0.05] blur-[120px]" />
+        <div className="absolute top-[40%] left-[30%] w-[400px] h-[400px] rounded-full bg-[hsl(var(--navy-light))]/30 blur-[100px]" />
+      </div>
 
-        {/* ── Header ── */}
-        <header className="flex items-center justify-between py-1">
-          <div className="flex items-center gap-2.5">
-            <AppLogo size={26} />
-            <span className="font-body font-semibold text-[16px] tracking-tight text-[#151413]">Research Fellow Connect</span>
+      {/* Dot grid pattern */}
+      <div className="absolute inset-0 opacity-[0.035]" style={{
+        backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.8) 1px, transparent 1px)",
+        backgroundSize: "32px 32px",
+      }} />
+
+      {/* Thin horizontal accent lines */}
+      <div className="absolute top-[25%] left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/[0.04] to-transparent" />
+      <div className="absolute top-[75%] left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/[0.04] to-transparent" />
+
+      {/* Vertical accent line */}
+      <div className="hidden lg:block absolute top-0 bottom-0 left-[52%] w-px bg-gradient-to-b from-transparent via-white/[0.04] to-transparent" />
+
+
+      {/* ═══ Main content ═══ */}
+      <div className="relative z-10 min-h-screen flex flex-col lg:flex-row">
+
+        {/* ─── Left: Editorial hero ─── */}
+        <div className={`lg:w-[58%] flex flex-col justify-between p-6 sm:p-8 lg:p-12 xl:p-16 2xl:p-20 transition-all duration-1000 ease-out ${visible ? "opacity-100" : "opacity-0"}`}>
+
+          {/* Top bar */}
+          <div className={`flex items-center justify-between transition-all duration-700 delay-200 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
+            <div className="flex items-center gap-3">
+              <AppLogo size={28} />
+              <span className="font-body font-semibold text-[14px] text-white/80">RFC</span>
+            </div>
+            <div className="hidden sm:flex items-center gap-2">
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full rounded-full bg-[hsl(var(--gold))] opacity-40" style={{ animation: "subtlePulse 3s ease-in-out infinite" }} />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-[hsl(var(--gold))]" />
+              </span>
+              <span className="text-[11px] font-medium text-white/30 uppercase tracking-wider">Live Platform</span>
+            </div>
           </div>
-          <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#c5002f]">Sign In</span>
-        </header>
 
-        {/* ── Asymmetric Grid ── */}
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-5">
+          {/* Hero content — editorial style */}
+          <div className="flex-1 flex flex-col justify-center max-w-2xl mt-12 lg:mt-0">
 
-          {/* ── Left: Hero Card ── */}
-          <div className="md:col-span-3 rounded-[20px] bg-[#151413] text-white p-8 sm:p-10 relative overflow-hidden flex flex-col justify-between min-h-[360px] sm:min-h-[420px]"
-            style={{ boxShadow: "0 4px 10px rgba(21,20,19,.07), 0 20px 40px rgba(21,20,19,.12)" }}>
+            {/* Overline */}
+            <div className={`flex items-center gap-3 mb-6 transition-all duration-700 delay-300 ${visible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-4"}`}>
+              <div className="w-8 h-px bg-[hsl(var(--gold))]" />
+              <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-[hsl(var(--gold))]">
+                Bharti Institute of Public Policy · ISB
+              </span>
+            </div>
 
-            {/* Decorative concentric rings */}
-            <div className="pointer-events-none absolute -top-12 -right-12 h-64 w-64 rounded-full border border-white/[0.04] flex items-center justify-center">
-              <div className="h-48 w-48 rounded-full border border-white/[0.04] flex items-center justify-center">
-                <div className="h-32 w-32 rounded-full border border-white/[0.04] flex items-center justify-center">
-                  <div className="h-16 w-16 rounded-full border border-white/[0.03]" />
+            {/* Main headline — serif editorial */}
+            <h1 className={`transition-all duration-900 delay-[400ms] ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}>
+              <span className="block font-editorial text-[2.5rem] sm:text-[3.25rem] lg:text-[4rem] xl:text-[4.5rem] font-bold text-white leading-[1.05] tracking-tight">
+                Research
+              </span>
+              <span className="block font-editorial text-[2.5rem] sm:text-[3.25rem] lg:text-[4rem] xl:text-[4.5rem] font-bold leading-[1.05] tracking-tight">
+                <span className="text-[hsl(var(--gold))] italic">Fellow</span>
+                <span className="text-white/90"> Connect</span>
+              </span>
+            </h1>
+
+            {/* Thin line separator */}
+            <div className={`my-6 lg:my-8 overflow-hidden transition-all duration-700 delay-[600ms] ${visible ? "opacity-100" : "opacity-0"}`}>
+              <div className="h-px bg-gradient-to-r from-white/20 via-white/10 to-transparent" style={{ animation: visible ? "lineGrow 1s ease-out 0.8s both" : "none" }} />
+            </div>
+
+            {/* Subtitle */}
+            <p className={`font-body text-[14px] sm:text-[15px] lg:text-[16px] text-white/35 leading-relaxed max-w-lg transition-all duration-700 delay-[700ms] ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
+              Connecting Meghalaya&apos;s District & Legislative Research Fellows with Coordinators and Directors to drive meaningful governance impact.
+            </p>
+
+            {/* Feature grid — minimal */}
+            <div className={`grid grid-cols-3 gap-4 lg:gap-6 mt-8 lg:mt-12 transition-all duration-700 delay-[800ms] ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
+              {[
+                { num: "01", label: "Fellows", desc: "work tracking" },
+                { num: "02", label: "Coordinators", desc: "oversight" },
+                { num: "03", label: "Directors", desc: "leadership" },
+              ].map((item, i) => (
+                <div key={item.num} className="group">
+                  <span className="block text-[10px] font-bold text-[hsl(var(--gold))]/60 mb-1.5" style={{ animation: visible ? `dotBlink 2s ease-in-out ${1.5 + i * 0.3}s infinite` : "none" }}>
+                    {item.num}
+                  </span>
+                  <p className="text-[13px] font-semibold text-white/70">{item.label}</p>
+                  <p className="text-[11px] text-white/25 mt-0.5">{item.desc}</p>
                 </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Footer */}
+          <div className={`hidden lg:flex items-center justify-between transition-all duration-700 delay-[900ms] ${visible ? "opacity-100" : "opacity-0"}`}>
+            <p className="text-[11px] text-white/[0.12] font-medium">&copy; {new Date().getFullYear()} Indian School of Business</p>
+            <div className="flex items-center gap-3 text-[11px] text-white/[0.12]">
+              <span>Meghalaya</span>
+              <span className="w-1 h-1 rounded-full bg-white/10" />
+              <span>India</span>
+            </div>
+          </div>
+        </div>
+
+
+        {/* ─── Right: Sign-in panel ─── */}
+        <div className={`lg:w-[42%] flex flex-col justify-center p-6 sm:p-8 lg:p-12 xl:p-16 transition-all duration-1000 delay-200 ${visible ? "opacity-100" : "opacity-0"}`}>
+
+          <div className="w-full max-w-[380px] mx-auto lg:mx-0">
+
+            {/* Mobile logo */}
+            <div className={`lg:hidden flex items-center gap-3 mb-10 transition-all duration-700 delay-300 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
+              <AppLogo size={32} />
+              <span className="font-body font-bold text-[16px] text-white">Research Fellow Connect</span>
+            </div>
+
+            {/* Section label */}
+            <div className={`flex items-center gap-2 mb-6 transition-all duration-700 delay-[400ms] ${visible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-4"}`}>
+              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/25">Portal Access</span>
+            </div>
+
+            {/* Programs */}
+            <div className={`space-y-3 mb-8 transition-all duration-700 delay-[500ms] ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
+              {([
+                { key: "mdrf" as Program, icon: "M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z" },
+                { key: "mlrf" as Program, icon: "M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" },
+              ]).map(({ key, icon }) => {
+                const meta = PROGRAM_META[key]
+                return (
+                  <div key={key} className="group flex items-center gap-4 p-4 rounded-xl bg-white/[0.04] border border-white/[0.06] hover:bg-white/[0.07] hover:border-white/[0.1] transition-all duration-300 cursor-default">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/[0.06] text-white/40 group-hover:bg-[hsl(var(--gold))]/[0.12] group-hover:text-[hsl(var(--gold))] transition-all duration-300 shrink-0">
+                      <svg className="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                        <path d={icon} />
+                      </svg>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-semibold text-[13px] text-white/80">{meta.app}</p>
+                      <p className="text-[11px] text-white/30 mt-0.5">{meta.full}</p>
+                    </div>
+                    <svg className="w-4 h-4 text-white/15 group-hover:text-white/40 group-hover:translate-x-0.5 transition-all duration-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M9 18l6-6-6-6" />
+                    </svg>
+                  </div>
+                )
+              })}
+            </div>
+
+            {/* Divider with label */}
+            <div className={`relative mb-8 transition-all duration-700 delay-[600ms] ${visible ? "opacity-100" : "opacity-0"}`}>
+              <div className="flex items-center gap-3">
+                <div className="flex-1 h-px bg-white/[0.06]" />
+                <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-white/20">Sign In</span>
+                <div className="flex-1 h-px bg-white/[0.06]" />
               </div>
             </div>
 
-            {/* Subtle grid pattern */}
-            <div className="pointer-events-none absolute inset-0 opacity-[0.015]" style={{
-              backgroundImage: "linear-gradient(rgba(255,255,255,.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.1) 1px, transparent 1px)",
-              backgroundSize: "40px 40px",
-            }} />
+            {/* Google sign-in button */}
+            <div className={`transition-all duration-700 delay-[700ms] ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
+              <button
+                type="button"
+                onClick={handleGoogleSignIn}
+                disabled={loading}
+                className="group relative w-full h-[52px] rounded-xl transition-all duration-300 disabled:opacity-50 disabled:pointer-events-none active:scale-[0.98] select-none flex items-center justify-center gap-3 bg-white text-[hsl(var(--navy))] font-bold text-[13px] hover:bg-white/95 shadow-[0_2px_20px_rgba(0,0,0,0.15)] hover:shadow-[0_4px_30px_rgba(0,0,0,0.25)]"
+              >
+                {loading ? (
+                  <svg className="h-5 w-5 animate-spin" viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" className="opacity-20" />
+                    <path d="M4 12a8 8 0 018-8" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+                  </svg>
+                ) : (
+                  <svg className="h-5 w-5" viewBox="0 0 24 24">
+                    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4" />
+                    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
+                    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
+                    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
+                  </svg>
+                )}
+                <span>{loading ? "Signing in..." : "Continue with Google"}</span>
+                {!loading && (
+                  <svg className="w-4 h-4 opacity-40 group-hover:translate-x-0.5 group-hover:opacity-70 transition-all duration-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M5 12h14" />
+                    <path d="m12 5 7 7-7 7" />
+                  </svg>
+                )}
+              </button>
 
-            <div className="relative">
-              <span className="text-[9px] sm:text-[10px] uppercase tracking-[0.3em] text-[#c5002f] font-bold block mb-7">
-                Bharti Institute of Public Policy &middot; ISB
-              </span>
-
-              <div className="flex items-center gap-3.5 mb-5">
-                <div className="text-[#c5002f]">
-                  <AppLogo size={36} />
+              {/* Error message */}
+              {error && (
+                <div className="mt-4 rounded-xl bg-[hsl(var(--red))]/10 border border-[hsl(var(--red))]/20 px-4 py-3 text-[12px] text-[hsl(var(--red))] text-center font-medium" style={{ animation: "heroFadeIn 0.3s ease-out" }}>
+                  {error}
                 </div>
-                <h1 className="font-display text-[2.5rem] sm:text-[3.25rem] font-medium tracking-tight leading-none">
-                  Research Fellow<br />Connect
-                </h1>
-              </div>
+              )}
+            </div>
 
-              <p className="font-display italic text-[15px] sm:text-[17px] text-white/50 leading-relaxed max-w-md mt-5">
-                &ldquo;A unified platform connecting Meghalaya&rsquo;s District & Legislative Research Fellows with Coordinators and Directors to drive meaningful governance impact.&rdquo;
+            {/* Bottom info */}
+            <div className={`mt-10 transition-all duration-700 delay-[800ms] ${visible ? "opacity-100" : "opacity-0"}`}>
+              <p className="text-[11px] text-white/15 leading-relaxed text-center lg:text-left">
+                By signing in, you agree to the platform&apos;s terms. Your account will be reviewed by an administrator before access is granted.
               </p>
             </div>
-
-            {/* Bottom stat strip */}
-            <div className="relative mt-10 pt-5 border-t border-white/[0.08] grid grid-cols-3 gap-3">
-              <div>
-                <p className="text-[9px] sm:text-[10px] font-bold text-[#c5002f] uppercase tracking-wider">Fellows</p>
-                <p className="text-[9px] text-white/25 mt-0.5">work tracking</p>
-              </div>
-              <div>
-                <p className="text-[9px] sm:text-[10px] font-bold text-[#c5002f] uppercase tracking-wider">Coordinators</p>
-                <p className="text-[9px] text-white/25 mt-0.5">oversight & support</p>
-              </div>
-              <div>
-                <p className="text-[9px] sm:text-[10px] font-bold text-[#c5002f] uppercase tracking-wider">Directors</p>
-                <p className="text-[9px] text-white/25 mt-0.5">strategic leadership</p>
-              </div>
-            </div>
-          </div>
-
-          {/* ── Right Column ── */}
-          <div className="md:col-span-2 flex flex-col gap-5">
-
-            {/* Programs Card */}
-            <div className="rounded-[20px] bg-white border border-[#e5e0d5] p-6 flex flex-col"
-              style={{ boxShadow: "0 1px 2px rgba(21,20,19,.04), 0 2px 8px rgba(21,20,19,.04)" }}>
-              <span className="text-[9px] uppercase tracking-[0.2em] text-[#8b7e67] font-bold block mb-4">
-                Our Programs
-              </span>
-              <div className="space-y-3">
-                {programs.map(({ key, icon }) => {
-                  const meta = PROGRAM_META[key]
-                  return (
-                    <div key={key} className="flex items-start gap-3 p-3 rounded-xl bg-[#faf8f5] border border-[#ebe7df] transition-colors hover:bg-[#f5f2ec]">
-                      <div className="mt-0.5 text-[#c5002f] shrink-0">{icon}</div>
-                      <div className="min-w-0">
-                        <p className="font-body font-semibold text-[13px] text-[#151413] leading-tight">{meta.app}</p>
-                        <p className="text-[11px] text-[#675a44] mt-0.5 leading-snug">{meta.full}</p>
-                      </div>
-                    </div>
-                  )
-                })}
-              </div>
-            </div>
-
-            {/* Portal Access Card */}
-            <div className="rounded-[20px] bg-white border border-[#e5e0d5] p-6 flex flex-col flex-1"
-              style={{ boxShadow: "0 1px 2px rgba(21,20,19,.04), 0 2px 8px rgba(21,20,19,.04)" }}>
-              <div className="flex-1">
-                <span className="text-[9px] uppercase tracking-[0.2em] text-[#8b7e67] font-bold block mb-3">
-                  Portal Access
-                </span>
-                <h3 className="font-display text-[17px] font-bold text-[#151413] leading-snug">
-                  Sign in to your dashboard
-                </h3>
-                <p className="text-[12px] text-[#675a44] mt-2 leading-relaxed">
-                  Access your personalized workspace to track progress, collaborate with your team, and submit reports.
-                </p>
-              </div>
-
-              <div className="mt-6">
-                <button
-                  type="button"
-                  onClick={handleGoogleSignIn}
-                  disabled={loading}
-                  className="group relative w-full h-12 rounded-2xl transition-all duration-200 disabled:opacity-50 disabled:pointer-events-none active:scale-[0.97] select-none flex items-center justify-center gap-2.5 text-white font-bold text-[11px] uppercase tracking-[0.12em]"
-                  style={{
-                    background: loading ? "#6b3a4a" : "linear-gradient(135deg, #c5002f 0%, #aa0029 100%)",
-                    boxShadow: "0 1px 2px rgba(21,20,19,.05), 0 4px 12px rgba(197,0,47,.2)",
-                  }}
-                >
-                  {/* Hover glow */}
-                  <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                    style={{ boxShadow: "0 8px 24px rgba(197,0,47,.3)" }} />
-
-                  <span className="relative flex items-center justify-center gap-2.5">
-                    {loading ? (
-                      <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
-                        <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" className="opacity-25" />
-                        <path d="M4 12a8 8 0 018-8" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
-                      </svg>
-                    ) : (
-                      <svg className="h-[15px] w-[15px]" viewBox="0 0 24 24">
-                        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4" />
-                        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
-                        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
-                        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
-                      </svg>
-                    )}
-                    {loading ? "Signing in..." : "Continue with Google"}
-                    {!loading && (
-                      <svg className="w-3.5 h-3.5 opacity-70 group-hover:translate-x-0.5 transition-transform duration-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M5 12h14" />
-                        <path d="m12 5 7 7-7 7" />
-                      </svg>
-                    )}
-                  </span>
-                </button>
-
-                {error && (
-                  <div className="mt-3 rounded-xl bg-[#fef2f2] border border-[#fecaca] px-4 py-3 text-[11px] text-[#dc2626] text-center leading-relaxed font-medium">
-                    {error}
-                  </div>
-                )}
-              </div>
-            </div>
           </div>
         </div>
-      </main>
-
-      {/* ── Footer ── */}
-      <footer className="bg-[#151413] text-white mt-auto border-t border-white/5">
-        <div className="mx-auto max-w-3xl px-5 py-7 text-center">
-          <div className="mb-2.5 flex justify-center text-[#c5002f]">
-            <AppLogo size={24} />
-          </div>
-          <p className="font-display italic text-white/25 text-[13px]">
-            Research &middot; Governance &middot; Meghalaya
-          </p>
-          <p className="text-white/15 text-[10px] mt-1 font-semibold tracking-[0.12em] uppercase">
-            Bharti Institute of Public Policy &middot; ISB &middot; Government of Meghalaya
-          </p>
-          <div className="border-t border-white/[0.06] mt-4 pt-3 text-[10px] text-white/10">
-            &copy; {new Date().getFullYear()} Indian School of Business. All rights reserved.
-          </div>
-        </div>
-      </footer>
+      </div>
     </div>
   )
 }

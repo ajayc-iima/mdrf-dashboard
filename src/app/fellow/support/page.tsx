@@ -12,14 +12,13 @@ import { PageHeader } from "@/components/shared/page-header"
 import { addSupportRequest, getSupportRequests } from "@/lib/firestore"
 import { formatRelativeTime } from "@/lib/utils"
 import { SUPPORT_CATEGORIES, type SupportCategory, type Urgency } from "@/types"
-import { LifeBuoy, Send } from "lucide-react"
+import { LifeBuoy, Send, Plus } from "lucide-react"
 
 export default function FellowSupport() {
   const { profile } = useAuth()
   const [requests, setRequests] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
 
-  // Form
   const [category, setCategory] = useState<SupportCategory>("knowledge")
   const [urgency, setUrgency] = useState<Urgency>("medium")
   const [description, setDescription] = useState("")
@@ -58,7 +57,7 @@ export default function FellowSupport() {
     return (
       <div className="space-y-6">
         {[...Array(3)].map((_, i) => (
-          <div key={i} className="h-28 animate-pulse rounded-xl bg-muted" />
+          <div key={i} className="h-28 animate-pulse rounded-2xl bg-[hsl(var(--bg-muted))]" />
         ))}
       </div>
     )
@@ -66,10 +65,11 @@ export default function FellowSupport() {
 
   return (
     <div className="space-y-6">
-      <PageHeader title="Get Help" icon={<LifeBuoy className="h-6 w-6" />} description="Raise support requests to senior management — knowledge, data, logistics, technical, or capacity-building." />
+      <PageHeader title="Get Help" icon={<LifeBuoy className="h-6 w-6" />} description="Raise support requests to senior management — knowledge, data, logistics, technical, or capacity-building."
+        actions={<a href="/fellow/submit-support" className="inline-flex items-center gap-1.5 h-9 px-4 rounded-xl bg-[hsl(var(--navy))] text-white font-semibold text-[12px] hover:bg-[hsl(var(--navy-light))] active:scale-[0.98] transition-all duration-200"><Plus className="h-3.5 w-3.5" /> New Request</a>}
+      />
 
       <div className="grid gap-6 lg:grid-cols-2">
-        {/* New request form */}
         <Card>
           <CardHeader className="border-b border-[hsl(var(--border))]">
             <CardTitle>New Support Request</CardTitle>
@@ -89,9 +89,9 @@ export default function FellowSupport() {
                 <Select value={urgency} onValueChange={(v) => setUrgency(v as Urgency)}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="low">🟢 Low</SelectItem>
-                    <SelectItem value="medium">🟡 Medium</SelectItem>
-                    <SelectItem value="high">🔴 High</SelectItem>
+                    <SelectItem value="low">Low</SelectItem>
+                    <SelectItem value="medium">Medium</SelectItem>
+                    <SelectItem value="high">High</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -104,7 +104,7 @@ export default function FellowSupport() {
                 required
               />
               <div className="flex justify-between items-center">
-                <span className="text-xs text-[hsl(var(--text-3))]">{description.length}/1000</span>
+                <span className="text-[11px] text-[hsl(var(--text-3))]">{description.length}/1000</span>
                 <Button type="submit" size="sm" loading={submitting}>
                   <Send className="mr-1.5 h-3.5 w-3.5" /> Submit
                 </Button>
@@ -113,7 +113,6 @@ export default function FellowSupport() {
           </CardContent>
         </Card>
 
-        {/* Existing requests */}
         <Card>
           <CardHeader className="border-b border-[hsl(var(--border))]">
             <CardTitle>My Requests</CardTitle>
@@ -126,14 +125,14 @@ export default function FellowSupport() {
                 requests.map((r) => (
                   <div
                     key={r.id}
-                    className={`rounded-lg border p-3 ${
+                    className={`rounded-xl border p-3.5 ${
                       r.urgency === "high"
                         ? "border-[hsl(var(--red))]/20 bg-[hsl(var(--red))]/[0.02]"
                         : "border-[hsl(var(--border))]"
                     }`}
                   >
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="text-sm font-medium text-[hsl(var(--text-1))]">
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="text-[13px] font-semibold text-[hsl(var(--text-1))]">
                         {SUPPORT_CATEGORIES.find((c) => c.value === r.category)?.label}
                       </span>
                       <div className="flex items-center gap-1.5">
@@ -145,8 +144,8 @@ export default function FellowSupport() {
                         </Badge>
                       </div>
                     </div>
-                    <p className="text-sm text-[hsl(var(--text-2))]">{r.description}</p>
-                    <p className="mt-1 text-xs text-[hsl(var(--text-3))]">{formatRelativeTime(r.createdAt)}</p>
+                    <p className="text-[13px] text-[hsl(var(--text-2))]">{r.description}</p>
+                    <p className="mt-1 text-[11px] text-[hsl(var(--text-3))]">{formatRelativeTime(r.createdAt)}</p>
                   </div>
                 ))
               )}

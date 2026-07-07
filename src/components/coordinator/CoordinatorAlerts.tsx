@@ -12,7 +12,9 @@ import { formatRelativeTime } from "@/lib/utils"
 import { PROGRAM_META } from "@/lib/constants"
 import { SUPPORT_CATEGORIES } from "@/types"
 import type { Program } from "@/types"
-import { AlertTriangle, Volume2, HelpCircle, ClipboardList, CheckCircle2, ArrowRight } from "lucide-react"
+import { AlertTriangle, Volume2, HelpCircle, ClipboardList, CheckCircle2, Clock } from "lucide-react"
+
+const INACTIVE_DAYS_THRESHOLD = 7
 
 interface Props { program: Program }
 
@@ -41,9 +43,21 @@ export function CoordinatorAlerts({ program }: Props) {
 
   const silentFellows = fellows.filter((f) => {
     if (!f.lastLogDate) return true
-    return (Date.now() - f.lastLogDate.getTime()) / 86400000 > 3
+    return (Date.now() - f.lastLogDate.getTime()) / 86400000 > INACTIVE_DAYS_THRESHOLD
   })
   const stuckTasks = tasks.filter((t) => t.status === "stuck")
+
+  function checkOverdueDeliverables() {
+    const now = new Date()
+    return tasks.filter((t) => {
+      if (t.status === "completed") return false
+      if (!t.dueDate) return false
+      const due = t.dueDate.toDate ? t.dueDate.toDate() : new Date(t.dueDate)
+      return due < now
+    })
+  }
+
+  const overdueDeliverables = checkOverdueDeliverables()
   const urgentRequests = requests.filter((r) => r.status === "open" && r.urgency === "high")
   const openRequests = requests.filter((r) => r.status === "open")
 
@@ -55,7 +69,7 @@ export function CoordinatorAlerts({ program }: Props) {
   if (loading) {
     return (
       <div className="space-y-6 stagger-children">
-        {[...Array(4)].map((_, i) => <div key={i} className="h-28 animate-pulse rounded-xl bg-muted" />)}
+        {[...Array(4)].map((_, i) => <div key={i} className="h-28 animate-pulse rounded-2xl bg-[hsl(var(--bg-muted))]" />)}
       </div>
     )
   }
@@ -67,10 +81,12 @@ export function CoordinatorAlerts({ program }: Props) {
       <div className="grid grid-cols-2 gap-3 sm:gap-4 sm:grid-cols-4 stagger-children">
         <StatCard title="Silent Fellows" value={silentFellows.length} icon={<Volume2 className="h-4 w-4" />}
           variant={silentFellows.length > 0 ? "destructive" : "success"} />
-        <StatCard title="Stuck Tasks" value={stuckTasks.length} icon={<AlertTriangle className="h-4 w-4 text-[hsl(var(--red))]" />}
+        <StatCard title="Stuck Tasks" value={stuckTasks.length} icon={<AlertTriangle className="h-4 w-4" />}
           variant={stuckTasks.length > 0 ? "destructive" : "success"} />
-        <StatCard title="Urgent Requests" value={urgentRequests.length} icon={<HelpCircle className="h-4 w-4 text-[hsl(var(--red))]" />}
+        <StatCard title="Urgent Requests" value={urgentRequests.length} icon={<HelpCircle className="h-4 w-4" />}
           variant={urgentRequests.length > 0 ? "destructive" : "success"} />
+        <StatCard title="Overdue" value={overdueDeliverables.length} icon={<Clock className="h-4 w-4" />}
+          variant={overdueDeliverables.length > 0 ? "destructive" : "success"} />
         <StatCard title="Open Requests" value={openRequests.length} icon={<ClipboardList className="h-4 w-4" />} variant="default" />
       </div>
 
@@ -78,15 +94,15 @@ export function CoordinatorAlerts({ program }: Props) {
         <Card>
           <CardHeader className="border-b border-[hsl(var(--border))]">
             <CardTitle className="flex items-center gap-2"><Volume2 className="h-4 w-4" /> Silent Fellows</CardTitle>
-            <CardDescription>No activity for 3+ days</CardDescription>
+            <CardDescription>No activity for {INACTIVE_DAYS_THRESHOLD}+ days</CardDescription>
           </CardHeader>
           <CardContent className="pt-4">
             <div className="space-y-2 max-h-72 overflow-auto">
-              {silentFellows.length === 0 ? <p className="py-4 text-center text-sm text-[hsl(var(--text-3))]">All fellows are active! 🎉</p> :
+              {silentFellows.length === 0 ? <p className="py-4 text-center text-[13px] text-[hsl(var(--text-3))]">All fellows are active!</p> :
                 silentFellows.map((f) => (
-                    <div key={f.id} className="flex items-center justify-between rounded-lg border border-[hsl(var(--red))]/[0.12] bg-[hsl(var(--red))]/[0.02] px-3 py-2.5">
-                    <div><p className="text-sm font-medium text-[hsl(var(--text-1))]">{f.name}</p><p className="text-xs text-[hsl(var(--text-3))]">{f.program === "mlrf" ? (f.constituencies?.join(", ") || "—") : f.district}</p></div>
-                    <p className="text-sm text-[hsl(var(--red))] font-medium">{f.lastLogDate ? formatRelativeTime(f.lastLogDate) : "Never"}</p>
+                    <div key={f.id} className="flex items-center justify-between rounded-xl border border-[hsl(var(--red))]/[0.12] bg-[hsl(var(--red))]/[0.02] px-3 py-2.5">
+                    <div><p className="text-[13px] font-semibold text-[hsl(var(--text-1))]">{f.name}</p><p className="text-[11px] text-[hsl(var(--text-3))]">{f.program === "mlrf" ? (f.constituencies?.join(", ") || "—") : f.district}</p></div>
+                    <p className="text-[13px] text-[hsl(var(--red))] font-medium">{f.lastLogDate ? formatRelativeTime(f.lastLogDate) : "Never"}</p>
                   </div>
                 ))}
             </div>
@@ -99,11 +115,36 @@ export function CoordinatorAlerts({ program }: Props) {
           </CardHeader>
           <CardContent className="pt-4">
             <div className="space-y-2 max-h-72 overflow-auto">
-              {stuckTasks.length === 0 ? <p className="py-4 text-center text-sm text-[hsl(var(--text-3))]">No stuck tasks</p> :
+              {stuckTasks.length === 0 ? <p className="py-4 text-center text-[13px] text-[hsl(var(--text-3))]">No stuck tasks</p> :
                 stuckTasks.map((t) => (
-                  <div key={t.id} className="rounded-lg border border-[hsl(var(--red))]/[0.12] bg-[hsl(var(--red))]/[0.02] px-3 py-2.5">
-                    <p className="text-sm font-medium text-[hsl(var(--text-1))]">{t.title}</p>
-                    <p className="text-xs text-[hsl(var(--text-3))]">{t.fellowName} · {program === "mlrf" ? "—" : t.district}</p>
+                  <div key={t.id} className="rounded-xl border border-[hsl(var(--red))]/[0.12] bg-[hsl(var(--red))]/[0.02] px-3 py-2.5">
+                    <p className="text-[13px] font-semibold text-[hsl(var(--text-1))]">{t.title}</p>
+                    <p className="text-[11px] text-[hsl(var(--text-3))]">{t.fellowName} · {program === "mlrf" ? "—" : t.district}</p>
+                  </div>
+                ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="border-b border-[hsl(var(--border))]">
+            <CardTitle className="flex items-center gap-2"><Clock className="h-4 w-4 text-[hsl(var(--orange))]" /> Overdue Deliverables</CardTitle>
+            <CardDescription>Tasks past due date and not yet completed</CardDescription>
+          </CardHeader>
+          <CardContent className="pt-4">
+            <div className="space-y-2 max-h-72 overflow-auto">
+              {overdueDeliverables.length === 0 ? <p className="py-4 text-center text-[13px] text-[hsl(var(--text-3))]">No overdue deliverables</p> :
+                overdueDeliverables.map((t) => (
+                  <div key={t.id} className="rounded-xl border border-[hsl(var(--orange))]/[0.15] bg-[hsl(var(--orange))]/[0.03] px-3 py-2.5">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-[13px] font-semibold text-[hsl(var(--text-1))]">{t.title}</p>
+                        <p className="text-[11px] text-[hsl(var(--text-3))]">{t.fellowName}</p>
+                      </div>
+                      <span className="text-[11px] font-medium text-[hsl(var(--orange))]">
+                        {t.dueDate ? formatRelativeTime(t.dueDate.toDate ? t.dueDate.toDate() : new Date(t.dueDate)) : ''}
+                      </span>
+                    </div>
                   </div>
                 ))}
             </div>
@@ -118,18 +159,18 @@ export function CoordinatorAlerts({ program }: Props) {
         </CardHeader>
         <CardContent className="pt-4">
           <div className="space-y-2 max-h-96 overflow-auto">
-            {openRequests.length === 0 ? <p className="py-4 text-center text-sm text-[hsl(var(--text-3))]">No open requests</p> :
+            {openRequests.length === 0 ? <p className="py-4 text-center text-[13px] text-[hsl(var(--text-3))]">No open requests</p> :
               openRequests.map((r) => (
-                <div key={r.id} className={`rounded-lg border p-3 ${r.urgency === "high" ? "border-[hsl(var(--red))]/20 bg-[hsl(var(--red))]/[0.02]" : "border-[hsl(var(--border))]"}`}>
+                <div key={r.id} className={`rounded-xl border p-3.5 ${r.urgency === "high" ? "border-[hsl(var(--red))]/20 bg-[hsl(var(--red))]/[0.02]" : "border-[hsl(var(--border))]"}`}>
                   <div className="flex items-center justify-between">
                     <div className="min-w-0">
                       <div className="flex items-center gap-2 mb-1">
-                        <span className="text-sm font-medium text-[hsl(var(--text-1))]">{r.fellowName}</span>
+                        <span className="text-[13px] font-semibold text-[hsl(var(--text-1))]">{r.fellowName}</span>
                         <Badge variant="secondary" className="text-[10px]">{SUPPORT_CATEGORIES.find((c) => c.value === r.category)?.label}</Badge>
                         <Badge variant={r.urgency === "high" ? "destructive" : r.urgency === "medium" ? "warning" : "secondary"}>{r.urgency}</Badge>
                       </div>
-                      <p className="text-sm text-[hsl(var(--text-2))]">{r.description}</p>
-                      <p className="text-xs text-[hsl(var(--text-3))]">{r.program === "mlrf" ? "—" : r.district} · {formatRelativeTime(r.createdAt)}</p>
+                      <p className="text-[13px] text-[hsl(var(--text-2))]">{r.description}</p>
+                      <p className="text-[11px] text-[hsl(var(--text-3))]">{r.program === "mlrf" ? "—" : r.district} · {formatRelativeTime(r.createdAt)}</p>
                     </div>
                     <Button size="sm" variant="outline" onClick={() => resolveRequest(r.id)}>
                       <CheckCircle2 className="mr-1 h-3.5 w-3.5" /> Take
