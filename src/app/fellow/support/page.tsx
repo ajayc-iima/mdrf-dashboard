@@ -71,7 +71,7 @@ export default function FellowSupport() {
       <div className="grid gap-6 lg:grid-cols-2">
         {/* New request form */}
         <Card>
-          <CardHeader className="border-b border-[#E5E0DA]">
+          <CardHeader className="border-b border-[hsl(var(--border))]">
             <CardTitle>New Support Request</CardTitle>
             <CardDescription>Describe what you need help with.</CardDescription>
           </CardHeader>
@@ -104,7 +104,7 @@ export default function FellowSupport() {
                 required
               />
               <div className="flex justify-between items-center">
-                <span className="text-xs text-[#98989D]">{description.length}/1000</span>
+                <span className="text-xs text-[hsl(var(--text-3))]">{description.length}/1000</span>
                 <Button type="submit" size="sm" loading={submitting}>
                   <Send className="mr-1.5 h-3.5 w-3.5" /> Submit
                 </Button>
@@ -115,7 +115,7 @@ export default function FellowSupport() {
 
         {/* Existing requests */}
         <Card>
-          <CardHeader className="border-b border-[#E5E0DA]">
+          <CardHeader className="border-b border-[hsl(var(--border))]">
             <CardTitle>My Requests</CardTitle>
           </CardHeader>
           <CardContent className="pt-5">
@@ -128,12 +128,12 @@ export default function FellowSupport() {
                     key={r.id}
                     className={`rounded-lg border p-3 ${
                       r.urgency === "high"
-                        ? "border-[#FF453A]/20 bg-[#FF453A]/[0.02]"
-                        : "border-[#E5E0DA]"
+                        ? "border-[hsl(var(--red))]/20 bg-[hsl(var(--red))]/[0.02]"
+                        : "border-[hsl(var(--border))]"
                     }`}
                   >
                     <div className="flex items-center justify-between mb-1">
-                      <span className="text-sm font-medium text-[#161618]">
+                      <span className="text-sm font-medium text-[hsl(var(--text-1))]">
                         {SUPPORT_CATEGORIES.find((c) => c.value === r.category)?.label}
                       </span>
                       <div className="flex items-center gap-1.5">
@@ -145,8 +145,8 @@ export default function FellowSupport() {
                         </Badge>
                       </div>
                     </div>
-                    <p className="text-sm text-[#636366]">{r.description}</p>
-                    <p className="mt-1 text-xs text-[#98989D]">{formatRelativeTime(r.createdAt)}</p>
+                    <p className="text-sm text-[hsl(var(--text-2))]">{r.description}</p>
+                    <p className="mt-1 text-xs text-[hsl(var(--text-3))]">{formatRelativeTime(r.createdAt)}</p>
                   </div>
                 ))
               )}

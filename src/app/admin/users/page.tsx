@@ -232,14 +232,14 @@ export default function AdminUsersPage() {
                                       const cur = draft?.constituencies || []
                                       const next = sel ? cur.filter((x) => x !== c) : [...cur, c]
                                       setDrafts((d) => ({ ...d, [u.id]: { ...d[u.id]!, constituencies: next } }))
-                                    }} className={`rounded border px-1.5 py-0.5 text-[10px] transition-colors ${sel ? "border-[#30D158]/40 bg-[#30D158]/10 text-[#1A8A3A]" : "border-[#E5E0DA] text-[#98989D] hover:border-[#30D158]/30"}`}>
+                                    }} className={`rounded border px-1.5 py-0.5 text-[10px] transition-colors ${sel ? "border-[hsl(var(--green))]/40 bg-[hsl(var(--green))]/10 text-[hsl(var(--green))]" : "border-[hsl(var(--border))] text-[hsl(var(--text-3))] hover:border-[hsl(var(--green))]/30"}`}>
                                       {sel ? "✓ " : ""}{c}
                                     </button>
                                   )
                                 })}
                               </div>
                               {draft?.constituencies && draft.constituencies.length > 0 && (
-                                <p className="text-[10px] text-[#98989D]">{draft.constituencies.length} selected</p>
+                                <p className="text-[10px] text-[hsl(var(--text-3))]">{draft.constituencies.length} selected</p>
                               )}
                             </div>
                           ) : (
@@ -259,11 +259,11 @@ export default function AdminUsersPage() {
                           )
                         ) : (
                           u.program === "mlrf" ? (
-                            <div className="text-xs text-[#636366]">
+                            <div className="text-xs text-[hsl(var(--text-2))]">
                               {u.constituencies && u.constituencies.length > 0 ? (
                                 <p className="font-medium">{u.constituencies.join(", ")}</p>
                               ) : (
-                                <p className="text-[#98989D]">—</p>
+                                <p className="text-[hsl(var(--text-3))]">—</p>
                               )}
                             </div>
                           ) : (

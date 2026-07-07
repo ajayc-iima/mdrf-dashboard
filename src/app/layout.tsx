@@ -3,7 +3,7 @@ import "./globals.css"
 import { AuthProvider } from "@/hooks/useAuth"
 
 export const viewport: Viewport = {
-  themeColor: "#1e3a5f",
+  themeColor: "#f2efe9",
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
@@ -11,8 +11,8 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
-  title: "MDRF/MLRF Connect — Meghalaya Research Fellows",
-  description: "Work tracking and oversight platform for Meghalaya District & Legislative Research Fellows",
+  title: "Research Fellow Connect — Bharti Institute of Public Policy, ISB",
+  description: "Work tracking and oversight platform for Meghalaya District & Legislative Research Fellows. A Bharti Institute of Public Policy, ISB initiative in partnership with the Government of Meghalaya.",
   manifest: "/manifest.json",
   icons: {
     icon: "/favicon.ico",
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "MDRF / MLRF",
+    title: "Research Fellow Connect",
   },
 }
 

@@ -113,7 +113,7 @@ export function CoordinatorOverview({ program }: Props) {
 
       <Select value={locationFilter} onValueChange={setLocationFilter}>
         <SelectTrigger className="w-64">
-          <Map className="mr-1.5 h-4 w-4 text-[#98989D]" />
+          <Map className="mr-1.5 h-4 w-4 text-[hsl(var(--text-3))]" />
           <SelectValue placeholder="All locations" />
         </SelectTrigger>
         <SelectContent>
@@ -123,7 +123,7 @@ export function CoordinatorOverview({ program }: Props) {
       </Select>
 
       <Card>
-        <CardHeader className="border-b border-[#E5E0DA]">
+        <CardHeader className="border-b border-[hsl(var(--border))]">
           <CardTitle>Fellows — Weekly Compliance</CardTitle>
           <CardDescription>{filtered.length} fellows · Target: {WEEKLY_LOG_TARGET} logs/week</CardDescription>
         </CardHeader>
@@ -131,7 +131,7 @@ export function CoordinatorOverview({ program }: Props) {
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-[#E5E0DA] text-left text-xs font-medium uppercase tracking-wider text-[#98989D]">
+                <tr className="border-b border-[hsl(var(--border))] text-left text-xs font-medium uppercase tracking-wider text-[hsl(var(--text-3))]">
                   <th className="px-4 py-3">Fellow</th>
                   <th className="px-4 py-3">{isMDRF ? "District" : "Constituency"}</th>
                   <th className="px-4 py-3">Week Logs</th>
@@ -141,31 +141,31 @@ export function CoordinatorOverview({ program }: Props) {
                   <th className="px-4 py-3">Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#E5E0DA]">
+              <tbody className="divide-y divide-[hsl(var(--border))]">
                 {filtered.map((c) => {
                   const f = c.fellow
                   const status = getWorkloadStatus(f.lastLogDate)
                   const loc = isMDRF ? f.district : f.constituencies?.join(", ") || "—"
                   return (
-                    <tr key={f.id} className="hover:bg-[#F8F6F3]/50 transition-colors cursor-pointer" onClick={() => setSelectedFellow(f)}>
+                    <tr key={f.id} className="hover:bg-[hsl(var(--bg-muted))]/50 transition-colors cursor-pointer" onClick={() => setSelectedFellow(f)}>
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-2.5">
-                          <Avatar className="h-8 w-8"><AvatarFallback className="bg-[#F3F0EB] text-[#636366] text-xs">
+                          <Avatar className="h-8 w-8"><AvatarFallback className="bg-[hsl(var(--bg-muted))] text-[hsl(var(--text-2))] text-xs">
                             {f.name.split(" ").map((w: string) => w[0]).join("").slice(0, 2).toUpperCase()}
                           </AvatarFallback></Avatar>
-                          <span className="text-sm font-medium text-[#161618]">{f.name}</span>
+                          <span className="text-sm font-medium text-[hsl(var(--text-1))]">{f.name}</span>
                         </div>
                       </td>
-                      <td className="px-4 py-3 text-sm text-[#98989D]">{loc}</td>
+                      <td className="px-4 py-3 text-sm text-[hsl(var(--text-3))]">{loc}</td>
                       <td className="px-4 py-3">
-                        <span className={`text-sm font-bold ${c.metTarget ? "text-[#1A8A3A]" : "text-[#FF453A]"}`}>{c.logCount}</span>
-                        <span className="text-xs text-[#98989D]">/{WEEKLY_LOG_TARGET}</span>
+                        <span className={`text-sm font-bold ${c.metTarget ? "text-[hsl(var(--green))]" : "text-[hsl(var(--red))]"}`}>{c.logCount}</span>
+                        <span className="text-xs text-[hsl(var(--text-3))]">/{WEEKLY_LOG_TARGET}</span>
                       </td>
                       <td className="px-4 py-3">
                         {c.pressure && <Badge variant={c.pressure === "over" ? "destructive" : c.pressure === "under" ? "warning" : "success"} className="text-[10px]">{WORKLOAD_LABELS[c.pressure]}</Badge>}
                       </td>
                       <td className="px-4 py-3">{f.streak > 0 && <span className="flex items-center gap-1 text-sm"><Flame className="h-3.5 w-3.5 text-[hsl(var(--gold))]" />{f.streak}d</span>}</td>
-                      <td className="px-4 py-3 text-sm text-[#98989D]">{f.lastLogDate ? formatRelativeTime(f.lastLogDate) : "Never"}</td>
+                      <td className="px-4 py-3 text-sm text-[hsl(var(--text-3))]">{f.lastLogDate ? formatRelativeTime(f.lastLogDate) : "Never"}</td>
                       <td className="px-4 py-3"><Badge variant={status === "green" ? "success" : status === "yellow" ? "warning" : "destructive"}>
                         {status === "green" ? "Active" : status === "yellow" ? "Slowing" : "Silent"}</Badge></td>
                     </tr>
@@ -180,34 +180,34 @@ export function CoordinatorOverview({ program }: Props) {
 
       <div className="grid gap-6 lg:grid-cols-2">
         <Card>
-          <CardHeader className="border-b border-[#E5E0DA]">
-            <CardTitle className="flex items-center gap-2 text-base"><AlertTriangle className="h-4 w-4 text-[#FF453A]" />Stuck Tasks</CardTitle>
+          <CardHeader className="border-b border-[hsl(var(--border))]">
+            <CardTitle className="flex items-center gap-2 text-base"><AlertTriangle className="h-4 w-4 text-[hsl(var(--red))]" />Stuck Tasks</CardTitle>
           </CardHeader>
           <CardContent className="pt-4">
             <div className="space-y-2 max-h-64 overflow-auto">
-              {stuckTasks.length === 0 ? <p className="py-4 text-center text-sm text-[#98989D]">No stuck tasks</p> :
+              {stuckTasks.length === 0 ? <p className="py-4 text-center text-sm text-[hsl(var(--text-3))]">No stuck tasks</p> :
                 stuckTasks.slice(0, 10).map((t) => (
-                  <div key={t.id} className="flex items-center gap-3 rounded-lg border border-[#FF453A]/[0.12] bg-[#FF453A]/[0.02] px-3 py-2">
-                    <AlertTriangle className="h-4 w-4 text-[#FF453A] shrink-0" />
-                    <div className="flex-1 min-w-0"><p className="text-sm font-medium text-[#161618]">{t.title}</p><p className="text-xs text-[#98989D]">{t.fellowName} · {isMDRF ? t.district : "—"}</p></div>
+                  <div key={t.id} className="flex items-center gap-3 rounded-lg border border-[hsl(var(--red))]/[0.12] bg-[hsl(var(--red))]/[0.02] px-3 py-2">
+                    <AlertTriangle className="h-4 w-4 text-[hsl(var(--red))] shrink-0" />
+                    <div className="flex-1 min-w-0"><p className="text-sm font-medium text-[hsl(var(--text-1))]">{t.title}</p><p className="text-xs text-[hsl(var(--text-3))]">{t.fellowName} · {isMDRF ? t.district : "—"}</p></div>
                   </div>
                 ))}
             </div>
           </CardContent>
         </Card>
         <Card>
-          <CardHeader className="border-b border-[#E5E0DA]">
+          <CardHeader className="border-b border-[hsl(var(--border))]">
             <CardTitle className="flex items-center gap-2 text-base"><HelpCircle className="h-4 w-4" />Open Support Requests</CardTitle>
           </CardHeader>
           <CardContent className="pt-4">
             <div className="space-y-2 max-h-64 overflow-auto">
-              {openRequests.length === 0 ? <p className="py-4 text-center text-sm text-[#98989D]">No open requests</p> :
+              {openRequests.length === 0 ? <p className="py-4 text-center text-sm text-[hsl(var(--text-3))]">No open requests</p> :
                 openRequests.slice(0, 10).map((r) => (
-                  <div key={r.id} className={`rounded-lg border p-3 ${r.urgency === "high" ? "border-[#FF453A]/20 bg-[#FF453A]/[0.02]" : "border-[#E5E0DA]"}`}>
-                    <div className="flex items-center justify-between"><span className="text-sm font-medium text-[#161618]">{r.fellowName}</span>
+                  <div key={r.id} className={`rounded-lg border p-3 ${r.urgency === "high" ? "border-[hsl(var(--red))]/20 bg-[hsl(var(--red))]/[0.02]" : "border-[hsl(var(--border))]"}`}>
+                    <div className="flex items-center justify-between"><span className="text-sm font-medium text-[hsl(var(--text-1))]">{r.fellowName}</span>
                       <Badge variant={r.urgency === "high" ? "destructive" : r.urgency === "medium" ? "warning" : "secondary"}>{r.urgency}</Badge></div>
-                    <p className="mt-1 text-sm text-[#636366]">{r.description}</p>
-                    <p className="mt-1 text-xs text-[#98989D]">{isMDRF ? r.district : "—"} · {formatRelativeTime(r.createdAt)}</p>
+                    <p className="mt-1 text-sm text-[hsl(var(--text-2))]">{r.description}</p>
+                    <p className="mt-1 text-xs text-[hsl(var(--text-3))]">{isMDRF ? r.district : "—"} · {formatRelativeTime(r.createdAt)}</p>
                   </div>
                 ))}
             </div>

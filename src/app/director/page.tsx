@@ -127,7 +127,7 @@ export default function DirectorOverviewPage() {
       {/* Program comparison */}
       <div className="grid gap-6 lg:grid-cols-3">
         <Card className="lg:col-span-1">
-          <CardHeader className="border-b border-[#E5E0DA]">
+          <CardHeader className="border-b border-[hsl(var(--border))]">
             <CardTitle className="text-base">Programme Split</CardTitle>
           </CardHeader>
           <CardContent className="pt-4">
@@ -149,15 +149,15 @@ export default function DirectorOverviewPage() {
                 const rate = p === "mdrf" ? mdrfRate : mlrfRate
                 const silent = p === "mdrf" ? mdrfSilent : mlrfSilent
                 return (
-                  <Link key={p} href={`/${p === "mdrf" ? "mdrf" : "mlrf"}-coordinator`} className="flex items-center justify-between rounded-lg border border-[#E5E0DA] px-3 py-2 hover:bg-[#F8F6F3] transition-colors">
+                  <Link key={p} href={`/${p === "mdrf" ? "mdrf" : "mlrf"}-coordinator`} className="flex items-center justify-between rounded-lg border border-[hsl(var(--border))] px-3 py-2 hover:bg-[hsl(var(--bg-muted))] transition-colors">
                     <div className="flex items-center gap-2">
-                      {p === "mdrf" ? <Building2 className="h-4 w-4 text-[#98989D]" /> : <MapPin className="h-4 w-4 text-[#30D158]" />}
-                      <span className="text-sm font-medium text-[#161618]">{meta.label}</span>
+                      {p === "mdrf" ? <Building2 className="h-4 w-4 text-[hsl(var(--text-3))]" /> : <MapPin className="h-4 w-4 text-[hsl(var(--green))]" />}
+                      <span className="text-sm font-medium text-[hsl(var(--text-1))]">{meta.label}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className={`text-sm font-bold ${rate >= 70 ? "text-[#1A8A3A]" : "text-[#636366]"}`}>{rate}%</span>
+                      <span className={`text-sm font-bold ${rate >= 70 ? "text-[hsl(var(--green))]" : "text-[hsl(var(--text-2))]"}`}>{rate}%</span>
                       {silent > 0 && <Badge variant="destructive" className="text-[10px]">{silent} silent</Badge>}
-                      <ArrowRight className="h-3.5 w-3.5 text-[#98989D]" />
+                      <ArrowRight className="h-3.5 w-3.5 text-[hsl(var(--text-3))]" />
                     </div>
                   </Link>
                 )
@@ -168,14 +168,14 @@ export default function DirectorOverviewPage() {
 
         {/* Weekly trend */}
         <Card className="lg:col-span-2">
-          <CardHeader className="border-b border-[#E5E0DA]">
+          <CardHeader className="border-b border-[hsl(var(--border))]">
             <CardTitle className="text-base">8-Week Compliance Trend</CardTitle>
             <CardDescription>% of fellows meeting weekly target</CardDescription>
           </CardHeader>
           <CardContent className="pt-4">
             <ResponsiveContainer width="100%" height={250}>
               <BarChart data={trendChart}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                 <XAxis dataKey="week" tick={{ fontSize: 11 }} />
                 <YAxis tick={{ fontSize: 11 }} domain={[0, 100]} />
                 <Tooltip />
@@ -191,16 +191,16 @@ export default function DirectorOverviewPage() {
       {/* District heat map (MDRF) */}
       {districtChart.length > 0 && (
         <Card>
-          <CardHeader className="border-b border-[#E5E0DA]">
+          <CardHeader className="border-b border-[hsl(var(--border))]">
             <CardTitle className="flex items-center gap-2 text-base">
-              <Building2 className="h-4 w-4 text-[#636366]" /> MDRF District Compliance
+              <Building2 className="h-4 w-4 text-[hsl(var(--text-2))]" /> MDRF District Compliance
             </CardTitle>
             <CardDescription>This week&apos;s compliance rate by district</CardDescription>
           </CardHeader>
           <CardContent className="pt-4">
             <ResponsiveContainer width="100%" height={Math.max(200, districtChart.length * 32)}>
               <BarChart data={districtChart} layout="vertical" margin={{ left: 100 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                 <XAxis type="number" tick={{ fontSize: 11 }} domain={[0, 100]} />
                 <YAxis type="category" dataKey="name" tick={{ fontSize: 11 }} width={100} />
                 <Tooltip formatter={(v: any, name: string, props: any) => [`${v}% (${props.payload.fellows} fellows)`, props.payload.fullName]} />
@@ -218,9 +218,9 @@ export default function DirectorOverviewPage() {
       {/* Silent fellows across both programs */}
       {(mdrfSilent + mlrfSilent > 0) && (
         <Card>
-          <CardHeader className="border-b border-[#E5E0DA]">
+          <CardHeader className="border-b border-[hsl(var(--border))]">
             <CardTitle className="flex items-center gap-2 text-base">
-              <AlertTriangle className="h-4 w-4 text-[#FF453A]" /> Silent Fellows (3+ days)
+              <AlertTriangle className="h-4 w-4 text-[hsl(var(--red))]" /> Silent Fellows (3+ days)
             </CardTitle>
           </CardHeader>
           <CardContent className="pt-4">
@@ -228,12 +228,12 @@ export default function DirectorOverviewPage() {
               {[...mdrfCompliance, ...mlrfCompliance]
                 .filter((c) => !c.fellow.lastLogDate || (Date.now() - c.fellow.lastLogDate.getTime()) / 86400000 > 3)
                 .map((c) => (
-                  <div key={c.fellow.id} onClick={() => setSelectedFellow(c.fellow)} className="flex items-center justify-between rounded-lg border border-[#FF453A]/[0.12] bg-[#FF453A]/[0.02] px-3 py-2 cursor-pointer hover:bg-[#FF453A]/[0.06] transition-colors">
+                  <div key={c.fellow.id} onClick={() => setSelectedFellow(c.fellow)} className="flex items-center justify-between rounded-lg border border-[hsl(var(--red))]/[0.12] bg-[hsl(var(--red))]/[0.02] px-3 py-2 cursor-pointer hover:bg-[hsl(var(--red))]/[0.06] transition-colors">
                     <div>
-                      <p className="text-sm font-medium text-[#161618]">{c.fellow.name}</p>
-                      <p className="text-xs text-[#98989D]">{c.fellow.district} · {PROGRAM_META[c.fellow.program].label}</p>
+                      <p className="text-sm font-medium text-[hsl(var(--text-1))]">{c.fellow.name}</p>
+                      <p className="text-xs text-[hsl(var(--text-3))]">{c.fellow.district} · {PROGRAM_META[c.fellow.program].label}</p>
                     </div>
-                    <p className="text-xs text-[#FF453A] font-medium">{c.fellow.lastLogDate ? formatRelativeTime(c.fellow.lastLogDate) : "Never"}</p>
+                    <p className="text-xs text-[hsl(var(--red))] font-medium">{c.fellow.lastLogDate ? formatRelativeTime(c.fellow.lastLogDate) : "Never"}</p>
                   </div>
                 ))}
             </div>

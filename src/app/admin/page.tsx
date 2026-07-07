@@ -121,18 +121,18 @@ export default function AdminDashboard() {
           onClick={() => setDashboardType("mdrf")}
           className={`flex-1 flex items-center gap-3 rounded-2xl px-4 sm:px-6 py-3 sm:py-4 text-left transition-all duration-200 ${
             dashboardType === "mdrf"
-              ? "bg-[#0A84FF] text-white shadow-blue ring-2 ring-[#0A84FF]/30"
-              : "bg-white text-[#636366] border-2 border-[#E5E0DA] hover:border-[#0A84FF]/30 hover:bg-[#F8F6F3]"
+              ? "bg-[hsl(var(--blue))] text-white shadow-blue ring-2 ring-[hsl(var(--blue))]/30"
+              : "bg-white text-[hsl(var(--text-2))] border-2 border-[hsl(var(--border))] hover:border-[hsl(var(--blue))]/30 hover:bg-[hsl(var(--bg-muted))]"
           }`}
         >
           <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${
-            dashboardType === "mdrf" ? "bg-white/15" : "bg-[#F3F0EB]"
+            dashboardType === "mdrf" ? "bg-white/15" : "bg-[hsl(var(--bg-muted))]"
           }`}>
             <Building2 className="h-5 w-5" />
           </div>
           <div>
             <p className="font-bold text-sm">MDRF</p>
-            <p className={`text-xs ${dashboardType === "mdrf" ? "text-white/60" : "text-[#98989D]"}`}>
+            <p className={`text-xs ${dashboardType === "mdrf" ? "text-white/60" : "text-[hsl(var(--text-3))]"}`}>
               District Research Fellows
             </p>
           </div>
@@ -142,18 +142,18 @@ export default function AdminDashboard() {
           onClick={() => setDashboardType("mlrf")}
           className={`flex-1 flex items-center gap-3 rounded-2xl px-4 sm:px-6 py-3 sm:py-4 text-left transition-all duration-200 ${
             dashboardType === "mlrf"
-              ? "bg-[#30D158] text-white shadow-green ring-2 ring-[#30D158]"
-              : "bg-white text-[#636366] border-2 border-[#E5E0DA] hover:border-[#30D158]/80 hover:bg-[#30D158]/[0.06]"
+              ? "bg-[hsl(var(--green))] text-white shadow-green ring-2 ring-[hsl(var(--green))]"
+              : "bg-white text-[hsl(var(--text-2))] border-2 border-[hsl(var(--border))] hover:border-[hsl(var(--green))]/80 hover:bg-[hsl(var(--green))]/[0.06]"
           }`}
         >
           <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${
-            dashboardType === "mlrf" ? "bg-white/15" : "bg-[#30D158]/[0.12]"
+            dashboardType === "mlrf" ? "bg-white/15" : "bg-[hsl(var(--green))]/[0.12]"
           }`}>
             <MapPin className="h-5 w-5" />
           </div>
           <div>
             <p className="font-bold text-sm">MLRF</p>
-            <p className={`text-xs ${dashboardType === "mlrf" ? "text-white/60" : "text-[#98989D]"}`}>
+            <p className={`text-xs ${dashboardType === "mlrf" ? "text-white/60" : "text-[hsl(var(--text-3))]"}`}>
               Legislative Research Fellows
             </p>
           </div>
@@ -162,10 +162,10 @@ export default function AdminDashboard() {
 
       {/* Pending approvals */}
       <div id="approvals">
-        <Card className="border-[#FF9F0A]/20">
+        <Card className="border-[hsl(var(--orange))]/20">
           <CardHeader className="border-b border-border/50">
             <CardTitle className="flex items-center gap-2">
-              <Shield className="h-5 w-5 text-[#FF9F0A]" />
+              <Shield className="h-5 w-5 text-[hsl(var(--orange))]" />
               Pending Approvals
             </CardTitle>
             <CardDescription>
@@ -183,12 +183,12 @@ export default function AdminDashboard() {
                   const draft = drafts[p.id]
                   const isMLRF = draft?.program === "mlrf"
                   return (
-                    <div key={p.id} className="rounded-xl border-2 border-[#E5E0DA] p-4 hover:bg-[#F8F6F3] transition-colors">
+                    <div key={p.id} className="rounded-xl border-2 border-[hsl(var(--border))] p-4 hover:bg-[hsl(var(--bg-muted))] transition-colors">
                       <div className="flex flex-col gap-3">
                         {/* User info */}
                         <div className="min-w-0">
-                          <p className="text-sm font-semibold text-[#161618]">{p.name}</p>
-                          <p className="truncate text-xs text-[#98989D]">
+                          <p className="text-sm font-semibold text-[hsl(var(--text-1))]">{p.name}</p>
+                          <p className="truncate text-xs text-[hsl(var(--text-3))]">
                             {p.email} &bull; requested {formatRelativeTime(p.createdAt)}
                           </p>
                         </div>
@@ -264,8 +264,8 @@ export default function AdminDashboard() {
 
                         {/* MLRF: multi-constituency selector */}
                         {draft?.role === "fellow" && isMLRF && (
-                          <div className="rounded-lg bg-[#30D158]/[0.04] border border-[#30D158]/15 p-3">
-                            <p className="text-xs font-semibold text-[#1A8A3A] mb-2">
+                          <div className="rounded-lg bg-[hsl(var(--green))]/[0.04] border border-[hsl(var(--green))]/15 p-3">
+                            <p className="text-xs font-semibold text-[hsl(var(--green))] mb-2">
                               Assign Constituencies (select multiple)
                             </p>
                             <div className="flex flex-wrap gap-1.5 max-h-32 overflow-auto">
@@ -278,8 +278,8 @@ export default function AdminDashboard() {
                                     onClick={() => toggleConstituency(p.id, c)}
                                     className={`rounded-lg border px-2 py-1 text-[11px] font-medium transition-all duration-150 ${
                                       selected
-                                        ? "border-[#30D158]/40 bg-[#30D158]/10 text-[#1A8A3A]"
-                                        : "border-[#E5E0DA] bg-white text-[#98989D] hover:border-[#30D158]/30 hover:text-[#636366]"
+                                        ? "border-[hsl(var(--green))]/40 bg-[hsl(var(--green))]/10 text-[hsl(var(--green))]"
+                                        : "border-[hsl(var(--border))] bg-white text-[hsl(var(--text-3))] hover:border-[hsl(var(--green))]/30 hover:text-[hsl(var(--text-2))]"
                                     }`}
                                   >
                                     {selected ? "✓ " : ""}{c}
@@ -288,7 +288,7 @@ export default function AdminDashboard() {
                               })}
                             </div>
                             {draft?.constituencies?.length > 0 && (
-                              <p className="mt-2 text-[11px] text-[#98989D]">
+                              <p className="mt-2 text-[11px] text-[hsl(var(--text-3))]">
                                 {draft.constituencies.length} constituenc{draft.constituencies.length === 1 ? "y" : "ies"} selected
                               </p>
                             )}
@@ -335,8 +335,8 @@ export default function AdminDashboard() {
 
       {/* Inactive fellows */}
       {silentFellows.length > 0 && (
-        <div className="rounded-xl border-2 border-[#FF9F0A]/20 bg-[#FF9F0A]/[0.03] p-4">
-          <h3 className="flex items-center gap-2 text-sm font-bold text-[#C67C00]">
+        <div className="rounded-xl border-2 border-[hsl(var(--orange))]/20 bg-[hsl(var(--orange))]/[0.03] p-4">
+          <h3 className="flex items-center gap-2 text-sm font-bold text-[hsl(var(--orange))]">
             <AlertTriangle className="h-4 w-4" />
             {silentFellows.length} Fellows Inactive (3+ days)
           </h3>
@@ -353,7 +353,7 @@ export default function AdminDashboard() {
         <Card>
           <CardHeader className="border-b border-border/50">
             <CardTitle className="flex items-center gap-2">
-              <Building2 className="h-5 w-5 text-[#636366]" /> District Performance
+              <Building2 className="h-5 w-5 text-[hsl(var(--text-2))]" /> District Performance
             </CardTitle>
             <CardDescription>Fellow activity across Meghalaya districts</CardDescription>
           </CardHeader>
@@ -361,7 +361,7 @@ export default function AdminDashboard() {
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr className="border-b text-left text-xs font-medium uppercase tracking-wider text-[#98989D]">
+                  <tr className="border-b text-left text-xs font-medium uppercase tracking-wider text-[hsl(var(--text-3))]">
                     <th className="px-4 py-3">District</th>
                     <th className="px-4 py-3">Fellows</th>
                     <th className="px-4 py-3">Active</th>
@@ -369,17 +369,17 @@ export default function AdminDashboard() {
                     <th className="px-4 py-3">Engagement</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#E5E0DA]">
+                <tbody className="divide-y divide-[hsl(var(--border))]">
                   {districtSummary.map((d) => (
-                    <tr key={d.name} className="hover:bg-[#F8F6F3] transition-colors">
-                      <td className="px-4 py-3 text-sm font-semibold text-[#161618]">{d.name}</td>
-                      <td className="px-4 py-3 text-sm text-[#98989D]">{d.total}</td>
-                      <td className="px-4 py-3 text-sm text-[#98989D]">{d.active}</td>
-                      <td className="px-4 py-3 text-sm text-[#98989D]">{d.logs}</td>
+                    <tr key={d.name} className="hover:bg-[hsl(var(--bg-muted))] transition-colors">
+                      <td className="px-4 py-3 text-sm font-semibold text-[hsl(var(--text-1))]">{d.name}</td>
+                      <td className="px-4 py-3 text-sm text-[hsl(var(--text-3))]">{d.total}</td>
+                      <td className="px-4 py-3 text-sm text-[hsl(var(--text-3))]">{d.active}</td>
+                      <td className="px-4 py-3 text-sm text-[hsl(var(--text-3))]">{d.logs}</td>
                       <td className="px-4 py-3">
-                        <div className="h-2.5 w-full rounded-full bg-[#F3F0EB]">
+                        <div className="h-2.5 w-full rounded-full bg-[hsl(var(--bg-muted))]">
                           <div
-                            className="h-2.5 rounded-full bg-[#30D158] transition-all"
+                            className="h-2.5 rounded-full bg-[hsl(var(--green))] transition-all"
                             style={{ width: `${d.total > 0 ? Math.round((d.active / d.total) * 100) : 0}%` }}
                           />
                         </div>
@@ -395,7 +395,7 @@ export default function AdminDashboard() {
         <Card>
           <CardHeader className="border-b border-border/50">
             <CardTitle className="flex items-center gap-2">
-              <Activity className="h-5 w-5 text-[#1A8A3A]" /> Fellow Activity
+              <Activity className="h-5 w-5 text-[hsl(var(--green))]" /> Fellow Activity
             </CardTitle>
             <CardDescription>Individual fellow engagement across constituencies</CardDescription>
           </CardHeader>
@@ -403,7 +403,7 @@ export default function AdminDashboard() {
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr className="border-b text-left text-xs font-medium uppercase tracking-wider text-[#98989D]">
+                  <tr className="border-b text-left text-xs font-medium uppercase tracking-wider text-[hsl(var(--text-3))]">
                     <th className="px-4 py-3">Fellow</th>
                     <th className="px-4 py-3">Constituencies</th>
                     <th className="px-4 py-3">Total Logs</th>
@@ -412,19 +412,19 @@ export default function AdminDashboard() {
                     <th className="px-4 py-3">Status</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#E5E0DA]">
+                <tbody className="divide-y divide-[hsl(var(--border))]">
                   {fellows.sort((a, b) => (b.totalLogs || 0) - (a.totalLogs || 0)).map((f) => {
                     const status = f.lastLogDate
                       ? (Date.now() - f.lastLogDate.getTime()) / 86400000 < 2 ? "active" : (Date.now() - f.lastLogDate.getTime()) / 86400000 < 4 ? "slowing" : "silent"
                       : "silent"
                     const statusBadge = status === "active" ? "success" : status === "slowing" ? "warning" : "destructive"
                     return (
-                      <tr key={f.id} className="hover:bg-[#F8F6F3] transition-colors">
-                        <td className="px-4 py-3 text-sm font-semibold text-[#161618]">{f.name}</td>
-                        <td className="px-4 py-3 text-sm text-[#98989D]">{f.constituencies?.join(", ") || "—"}</td>
-                        <td className="px-4 py-3 text-sm text-[#98989D]">{f.totalLogs || 0}</td>
-                        <td className="px-4 py-3">{f.streak > 0 ? <span className="text-sm font-medium text-[#C67C00]">{f.streak}d</span> : <span className="text-sm text-[#98989D]">—</span>}</td>
-                        <td className="px-4 py-3 text-sm text-[#98989D]">{f.lastLogDate ? formatRelativeTime(f.lastLogDate) : "Never"}</td>
+                      <tr key={f.id} className="hover:bg-[hsl(var(--bg-muted))] transition-colors">
+                        <td className="px-4 py-3 text-sm font-semibold text-[hsl(var(--text-1))]">{f.name}</td>
+                        <td className="px-4 py-3 text-sm text-[hsl(var(--text-3))]">{f.constituencies?.join(", ") || "—"}</td>
+                        <td className="px-4 py-3 text-sm text-[hsl(var(--text-3))]">{f.totalLogs || 0}</td>
+                        <td className="px-4 py-3">{f.streak > 0 ? <span className="text-sm font-medium text-[hsl(var(--orange))]">{f.streak}d</span> : <span className="text-sm text-[hsl(var(--text-3))]">—</span>}</td>
+                        <td className="px-4 py-3 text-sm text-[hsl(var(--text-3))]">{f.lastLogDate ? formatRelativeTime(f.lastLogDate) : "Never"}</td>
                         <td className="px-4 py-3"><Badge variant={statusBadge as any}>{status.charAt(0).toUpperCase() + status.slice(1)}</Badge></td>
                       </tr>
                     )
@@ -445,18 +445,18 @@ export default function AdminDashboard() {
           <CardContent className="pt-6">
             <div className="space-y-3">
               {requests.filter((r) => r.status !== "resolved").slice(0, 5).map((req) => (
-                <div key={req.id} className="rounded-xl border-2 border-[#E5E0DA] p-3 hover:bg-[#F8F6F3] transition-colors">
+                <div key={req.id} className="rounded-xl border-2 border-[hsl(var(--border))] p-3 hover:bg-[hsl(var(--bg-muted))] transition-colors">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-semibold text-[#161618]">{req.fellowName}</span>
+                    <span className="text-sm font-semibold text-[hsl(var(--text-1))]">{req.fellowName}</span>
                     <Badge variant={req.urgency === "high" ? "destructive" : req.urgency === "medium" ? "warning" : "secondary"}>
                       {req.urgency}
                     </Badge>
                   </div>
-                  <p className="mt-1 text-sm text-[#98989D]">{req.description}</p>
+                  <p className="mt-1 text-sm text-[hsl(var(--text-3))]">{req.description}</p>
                 </div>
               ))}
               {requests.filter((r) => r.status !== "resolved").length === 0 && (
-                <p className="py-4 text-center text-sm text-[#98989D]">No open requests</p>
+                <p className="py-4 text-center text-sm text-[hsl(var(--text-3))]">No open requests</p>
               )}
             </div>
           </CardContent>
@@ -466,24 +466,24 @@ export default function AdminDashboard() {
           <Card>
             <CardHeader className="border-b border-border/50">
               <CardTitle className="flex items-center gap-2">
-                <Trophy className="h-5 w-5 text-[#FF9F0A]" />
+                <Trophy className="h-5 w-5 text-[hsl(var(--orange))]" />
                 Top Performing Districts
               </CardTitle>
             </CardHeader>
             <CardContent className="pt-6">
               <div className="space-y-3">
                 {districtSummary.slice(0, 5).map((d, i) => (
-                  <div key={d.name} className="flex items-center gap-3 rounded-xl border-2 border-[#E5E0DA] p-3 hover:bg-[#F8F6F3] transition-colors">
+                  <div key={d.name} className="flex items-center gap-3 rounded-xl border-2 border-[hsl(var(--border))] p-3 hover:bg-[hsl(var(--bg-muted))] transition-colors">
                     <div className={`flex h-9 w-9 items-center justify-center rounded-xl text-sm font-bold ${
-                      i === 0 ? "bg-[#FF9F0A]/10 text-[#C67C00]" : i === 1 ? "bg-[#F3F0EB] text-[#98989D]" : i === 2 ? "bg-[#FF9F0A]/[0.06] text-[#C67C00]" : "bg-[#F8F6F3] text-[#98989D]"
+                      i === 0 ? "bg-[hsl(var(--orange))]/10 text-[hsl(var(--orange))]" : i === 1 ? "bg-[hsl(var(--bg-muted))] text-[hsl(var(--text-3))]" : i === 2 ? "bg-[hsl(var(--orange))]/[0.06] text-[hsl(var(--orange))]" : "bg-[hsl(var(--bg-muted))] text-[hsl(var(--text-3))]"
                     }`}>
                       {i + 1}
                     </div>
                     <div className="flex-1">
-                      <p className="text-sm font-semibold text-[#161618]">{d.name}</p>
-                      <p className="text-xs text-[#98989D]">{d.active}/{d.total} active fellows</p>
+                      <p className="text-sm font-semibold text-[hsl(var(--text-1))]">{d.name}</p>
+                      <p className="text-xs text-[hsl(var(--text-3))]">{d.active}/{d.total} active fellows</p>
                     </div>
-                    <span className="text-sm font-bold text-[#1A8A3A]">{d.logs} logs</span>
+                    <span className="text-sm font-bold text-[hsl(var(--green))]">{d.logs} logs</span>
                   </div>
                 ))}
               </div>
@@ -493,24 +493,24 @@ export default function AdminDashboard() {
           <Card>
             <CardHeader className="border-b border-border/50">
               <CardTitle className="flex items-center gap-2">
-                <Trophy className="h-5 w-5 text-[#FF9F0A]" />
+                <Trophy className="h-5 w-5 text-[hsl(var(--orange))]" />
                 Top Performing Fellows
               </CardTitle>
             </CardHeader>
             <CardContent className="pt-6">
               <div className="space-y-3">
                 {fellows.sort((a, b) => (b.totalLogs || 0) - (a.totalLogs || 0)).slice(0, 5).map((f, i) => (
-                  <div key={f.id} className="flex items-center gap-3 rounded-xl border-2 border-[#E5E0DA] p-3 hover:bg-[#F8F6F3] transition-colors">
+                  <div key={f.id} className="flex items-center gap-3 rounded-xl border-2 border-[hsl(var(--border))] p-3 hover:bg-[hsl(var(--bg-muted))] transition-colors">
                     <div className={`flex h-9 w-9 items-center justify-center rounded-xl text-sm font-bold ${
-                      i === 0 ? "bg-[#FF9F0A]/10 text-[#C67C00]" : i === 1 ? "bg-[#F3F0EB] text-[#98989D]" : i === 2 ? "bg-[#FF9F0A]/[0.06] text-[#C67C00]" : "bg-[#F8F6F3] text-[#98989D]"
+                      i === 0 ? "bg-[hsl(var(--orange))]/10 text-[hsl(var(--orange))]" : i === 1 ? "bg-[hsl(var(--bg-muted))] text-[hsl(var(--text-3))]" : i === 2 ? "bg-[hsl(var(--orange))]/[0.06] text-[hsl(var(--orange))]" : "bg-[hsl(var(--bg-muted))] text-[hsl(var(--text-3))]"
                     }`}>
                       {i + 1}
                     </div>
                     <div className="flex-1">
-                      <p className="text-sm font-semibold text-[#161618]">{f.name}</p>
-                      <p className="text-xs text-[#98989D]">{f.constituencies?.join(", ") || "—"} · {f.totalLogs || 0} logs</p>
+                      <p className="text-sm font-semibold text-[hsl(var(--text-1))]">{f.name}</p>
+                      <p className="text-xs text-[hsl(var(--text-3))]">{f.constituencies?.join(", ") || "—"} · {f.totalLogs || 0} logs</p>
                     </div>
-                    <span className="text-sm font-bold text-[#1A8A3A]">{f.totalLogs || 0} logs</span>
+                    <span className="text-sm font-bold text-[hsl(var(--green))]">{f.totalLogs || 0} logs</span>
                   </div>
                 ))}
               </div>

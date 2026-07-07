@@ -63,8 +63,8 @@ export function CoordinatorSupport({ program }: Props) {
                 <div
                   key={req.id}
                   className={`rounded-lg border p-4 ${
-                    req.urgency === "high" ? "border-[#FF453A]/30 bg-[#FF453A]/5" :
-                    req.urgency === "medium" ? "border-[#FF9F0A]/30 bg-[#FF9F0A]/5" : ""
+                    req.urgency === "high" ? "border-[hsl(var(--red))]/30 bg-[hsl(var(--red))]/5" :
+                    req.urgency === "medium" ? "border-[hsl(var(--orange))]/30 bg-[hsl(var(--orange))]/5" : ""
                   }`}
                 >
                   <div className="flex items-start justify-between">

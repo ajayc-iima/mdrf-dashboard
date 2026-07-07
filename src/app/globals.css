@@ -4,38 +4,38 @@
 
 @layer base {
   :root {
-    /* Navy + Gold professional system */
-    --navy: 220 40% 20%;
-    --navy-light: 220 38% 30%;
-    --navy-dark: 220 42% 14%;
+    /* Warm cream + navy professional system — matches login page */
+    --navy: 215 35% 14%;
+    --navy-light: 215 30% 22%;
+    --navy-dark: 215 40% 10%;
 
-    --gold: 38 60% 55%;
-    --gold-soft: 38 60% 92%;
-    --gold-light: 38 60% 70%;
+    --gold: 347 100% 39%;
+    --gold-soft: 347 100% 96%;
+    --gold-light: 347 80% 72%;
 
-    --bg-page: 40 15% 97%;
+    --bg-page: 40 20% 94%;
     --bg-surface: 0 0% 100%;
-    --bg-muted: 40 10% 94%;
-    --bg-hover: 40 10% 90%;
+    --bg-muted: 40 15% 95%;
+    --bg-hover: 40 12% 92%;
 
-    --text-1: 220 18% 12%;
-    --text-2: 220 10% 35%;
-    --text-3: 220 8% 52%;
-    --text-4: 220 6% 68%;
+    --text-1: 30 10% 10%;
+    --text-2: 30 8% 28%;
+    --text-3: 30 6% 45%;
+    --text-4: 25 8% 60%;
 
     --blue: 221 83% 53%;
     --blue-hover: 221 83% 46%;
     --blue-soft: 221 83% 97%;
 
-    --green: 152 58% 40%;
-    --green-soft: 152 58% 96%;
-    --orange: 24 80% 50%;
-    --orange-soft: 24 80% 95%;
+    --green: 140 45% 38%;
+    --green-soft: 140 45% 95%;
+    --orange: 28 80% 48%;
+    --orange-soft: 28 80% 95%;
     --red: 0 72% 51%;
     --red-soft: 0 72% 96%;
 
-    --border: 40 8% 86%;
-    --border-strong: 40 6% 78%;
+    --border: 30 12% 87%;
+    --border-strong: 30 10% 80%;
 
     --radius: 8px;
   }
@@ -46,9 +46,9 @@
     border-color: hsl(var(--border));
   }
   body {
-    background: hsl(var(--bg-page));
-    color: hsl(var(--text-1));
-    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    background: #f2efe9;
+    color: #151413;
+    font-family: "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
@@ -61,6 +61,15 @@
 
 html {
   scroll-behavior: smooth;
+}
+
+main {
+  animation: fade-in .3s cubic-bezier(.16,1,.3,1);
+}
+
+@keyframes fade-in {
+  0% { opacity: 0; transform: translateY(6px); }
+  100% { opacity: 1; transform: translateY(0); }
 }
 
 .safe-bottom-nav {
@@ -95,6 +104,12 @@ html {
   outline: 2px solid hsl(var(--gold));
   outline-offset: 2px;
   border-radius: var(--radius);
+}
+
+.focus-ring:focus-visible {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px hsl(var(--gold));
 }
 
 /* ─── Entrance Animations ─── */
@@ -211,6 +226,25 @@ html {
 .animate-shimmer {
   background-size: 200% auto;
   animation: shimmer 3s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.05); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
 }
 
 /* Sidebar nav item glow for active state */

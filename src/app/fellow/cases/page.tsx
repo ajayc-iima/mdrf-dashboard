@@ -111,8 +111,8 @@ export default function FellowCases() {
 
       {/* New case form */}
       {showForm && (
-        <Card className="border-[#E5E0DA]">
-          <CardHeader className="border-b border-[#E5E0DA]">
+        <Card className="border-[hsl(var(--border))]">
+          <CardHeader className="border-b border-[hsl(var(--border))]">
             <CardTitle className="text-base">New Submission</CardTitle>
             <CardDescription>Start as draft — you can submit for review once ready.</CardDescription>
           </CardHeader>
@@ -176,7 +176,7 @@ export default function FellowCases() {
             return (
               <Card
                 key={cs.id}
-                className="cursor-pointer hover:border-[#E5E0DA] transition-colors"
+                className="cursor-pointer hover:border-[hsl(var(--border))] transition-colors"
                 onClick={() => setSelected(cs.id)}
               >
                 <CardHeader className="pb-2">
@@ -189,8 +189,8 @@ export default function FellowCases() {
                   <CardTitle className="text-base line-clamp-2">{cs.title}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  {cs.summary && <p className="text-sm text-[#98989D] line-clamp-2 mb-2">{cs.summary}</p>}
-                  <p className="text-xs text-[#98989D]">{formatRelativeTime(cs.createdAt)}</p>
+                  {cs.summary && <p className="text-sm text-[hsl(var(--text-3))] line-clamp-2 mb-2">{cs.summary}</p>}
+                  <p className="text-xs text-[hsl(var(--text-3))]">{formatRelativeTime(cs.createdAt)}</p>
                   {cs.tags.length > 0 && (
                     <div className="mt-2 flex flex-wrap gap-1">
                       {cs.tags.map((tag) => (

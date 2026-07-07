@@ -148,7 +148,7 @@ export default function NotesPage() {
             </h1>
           </div>
         </div>
-        <Card className="border-[#FF453A]/30">
+        <Card className="border-[hsl(var(--red))]/30">
           <CardContent className="py-12 text-center">
             <p className="text-destructive font-medium">Could not load notes</p>
             <p className="text-sm text-muted-foreground mt-2 max-w-md mx-auto">
@@ -184,10 +184,10 @@ export default function NotesPage() {
 
       {/* Create Form */}
       {showCreate && (
-        <Card className="border-[#FF9F0A]/20 animate-fade-in-up">
+        <Card className="border-[hsl(var(--orange))]/20 animate-fade-in-up">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <FileText className="h-5 w-5 text-[#FF9F0A]" />
+              <FileText className="h-5 w-5 text-[hsl(var(--orange))]" />
               Create Field Note
             </CardTitle>
             <CardDescription>Document your research findings and field experiences</CardDescription>

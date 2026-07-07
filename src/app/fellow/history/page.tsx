@@ -88,7 +88,7 @@ export default function FellowHistory() {
           .sort(([a], [b]) => b.localeCompare(a))
           .map(([week, weekLogs]) => (
             <Card key={week}>
-              <CardHeader className="border-b border-[#E5E0DA]">
+              <CardHeader className="border-b border-[hsl(var(--border))]">
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-base">{formatWeekRange(week)}</CardTitle>
                   <Badge variant="secondary">{weekLogs.length} logs</Badge>
@@ -97,16 +97,16 @@ export default function FellowHistory() {
               <CardContent className="pt-4">
                 <div className="space-y-2.5">
                   {weekLogs.map((log) => (
-                    <div key={log.id} className="flex gap-3 rounded-lg border border-[#E5E0DA] px-3 py-2.5 hover:bg-[#F8F6F3]/50 transition-colors">
+                    <div key={log.id} className="flex gap-3 rounded-lg border border-[hsl(var(--border))] px-3 py-2.5 hover:bg-[hsl(var(--bg-muted))]/50 transition-colors">
                       <span className="text-lg shrink-0">
                         {WORK_CATEGORIES.find((c) => c.value === log.category)?.emoji || "📌"}
                       </span>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm text-[#161618]">{log.description}</p>
+                        <p className="text-sm text-[hsl(var(--text-1))]">{log.description}</p>
                         <div className="flex items-center gap-2 mt-0.5">
-                          <span className="text-xs text-[#98989D]">{WORK_CATEGORIES.find((c) => c.value === log.category)?.label}</span>
+                          <span className="text-xs text-[hsl(var(--text-3))]">{WORK_CATEGORIES.find((c) => c.value === log.category)?.label}</span>
                           <Badge variant="outline" className="text-[10px] capitalize">{log.type}</Badge>
-                          <span className="text-xs text-[#98989D]">{formatDate(log.date)}</span>
+                          <span className="text-xs text-[hsl(var(--text-3))]">{formatDate(log.date)}</span>
                         </div>
                       </div>
                     </div>

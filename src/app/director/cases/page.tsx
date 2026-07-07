@@ -59,7 +59,7 @@ export default function DirectorCasesPage() {
           {cases.map((c) => {
             const csType = CASE_TYPES.find((t) => t.value === c.type)
             return (
-              <div key={c.id} onClick={() => setSelectedCase(c)} className="cursor-pointer rounded-xl border border-[#E5E0DA] bg-white p-4 hover:bg-[#F8F6F3]/50 transition-colors">
+              <div key={c.id} onClick={() => setSelectedCase(c)} className="cursor-pointer rounded-xl border border-[hsl(var(--border))] bg-white p-4 hover:bg-[hsl(var(--bg-muted))]/50 transition-colors">
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
                     <div className="flex items-center gap-2 mb-1">
@@ -68,9 +68,9 @@ export default function DirectorCasesPage() {
                       <Badge variant="outline" className="text-[10px]">{c.program.toUpperCase()}</Badge>
                       <Badge variant={c.status === "published" ? "success" : c.status === "submitted" ? "default" : "outline"}>{c.status}</Badge>
                     </div>
-                    <h3 className="text-sm font-semibold text-[#161618]">{c.title}</h3>
-                    {c.summary && <p className="mt-1 text-xs text-[#98989D] line-clamp-2">{c.summary}</p>}
-                    <p className="mt-1 text-xs text-[#98989D]">{c.authorName} · {c.program === "mlrf" ? "—" : c.district} · {formatRelativeTime(c.createdAt)}</p>
+                    <h3 className="text-sm font-semibold text-[hsl(var(--text-1))]">{c.title}</h3>
+                    {c.summary && <p className="mt-1 text-xs text-[hsl(var(--text-3))] line-clamp-2">{c.summary}</p>}
+                    <p className="mt-1 text-xs text-[hsl(var(--text-3))]">{c.authorName} · {c.program === "mlrf" ? "—" : c.district} · {formatRelativeTime(c.createdAt)}</p>
                   </div>
                 </div>
               </div>

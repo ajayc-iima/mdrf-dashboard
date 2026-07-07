@@ -68,18 +68,18 @@ export default function DirectorSupportPage() {
               <EmptyState title="No requests" description="No support requests match your filters." />
             ) : (
               filtered.map((req) => (
-                <div key={req.id} className={`rounded-lg border p-4 ${req.urgency === "high" ? "border-[#FF453A]/20 bg-[#FF453A]/[0.02]" : "border-[#E5E0DA]"}`}>
+                <div key={req.id} className={`rounded-lg border p-4 ${req.urgency === "high" ? "border-[hsl(var(--red))]/20 bg-[hsl(var(--red))]/[0.02]" : "border-[hsl(var(--border))]"}`}>
                   <div className="flex items-start justify-between">
                     <div className="min-w-0">
                       <div className="flex items-center gap-2 mb-1">
-                        <span className="text-sm font-medium text-[#161618]">{req.fellowName}</span>
+                        <span className="text-sm font-medium text-[hsl(var(--text-1))]">{req.fellowName}</span>
                         <Badge variant="outline" className="text-[10px]">{req.program?.toUpperCase()}</Badge>
                         <Badge variant="secondary" className="text-[10px]">{SUPPORT_CATEGORIES.find((c) => c.value === req.category)?.label}</Badge>
                         <Badge variant={req.urgency === "high" ? "destructive" : req.urgency === "medium" ? "warning" : "secondary"}>{req.urgency}</Badge>
                         <Badge variant={req.status === "resolved" ? "success" : req.status === "in_progress" ? "default" : "warning"}>{req.status.replace("_", " ")}</Badge>
                       </div>
-                      <p className="text-sm text-[#636366]">{req.description}</p>
-                      <p className="mt-1 text-xs text-[#98989D]">{req.program === "mlrf" ? "—" : req.district} · {formatRelativeTime(req.createdAt)}</p>
+                      <p className="text-sm text-[hsl(var(--text-2))]">{req.description}</p>
+                      <p className="mt-1 text-xs text-[hsl(var(--text-3))]">{req.program === "mlrf" ? "—" : req.district} · {formatRelativeTime(req.createdAt)}</p>
                     </div>
                     <div className="flex gap-2 shrink-0">
                       {req.status === "open" && <Button size="sm" variant="outline" onClick={() => handleStatusChange(req.id, "in_progress")}>Start</Button>}

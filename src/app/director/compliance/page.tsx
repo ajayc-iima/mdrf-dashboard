@@ -94,7 +94,7 @@ export default function DirectorCompliancePage() {
       </div>
 
       <Card>
-        <CardHeader className="border-b border-[#E5E0DA]">
+        <CardHeader className="border-b border-[hsl(var(--border))]">
           <CardTitle>Fellows — Weekly Compliance</CardTitle>
           <CardDescription>{all.length} fellows</CardDescription>
         </CardHeader>
@@ -102,7 +102,7 @@ export default function DirectorCompliancePage() {
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-[#E5E0DA] text-left text-xs font-medium uppercase tracking-wider text-[#98989D]">
+                <tr className="border-b border-[hsl(var(--border))] text-left text-xs font-medium uppercase tracking-wider text-[hsl(var(--text-3))]">
                   <th className="px-4 py-3">Fellow</th>
                   <th className="px-4 py-3">Program</th>
                   <th className="px-4 py-3">Location</th>
@@ -113,24 +113,24 @@ export default function DirectorCompliancePage() {
                   <th className="px-4 py-3">Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#E5E0DA]">
+              <tbody className="divide-y divide-[hsl(var(--border))]">
                 {all.map((c) => {
                   const f = c.fellow
                   const status = getWorkloadStatus(f.lastLogDate)
                   return (
-                    <tr key={f.id} className="hover:bg-[#F8F6F3]/50 transition-colors cursor-pointer" onClick={() => setSelectedFellow(f)}>
-                      <td className="px-4 py-3 text-sm font-medium text-[#161618]">{f.name}</td>
+                    <tr key={f.id} className="hover:bg-[hsl(var(--bg-muted))]/50 transition-colors cursor-pointer" onClick={() => setSelectedFellow(f)}>
+                      <td className="px-4 py-3 text-sm font-medium text-[hsl(var(--text-1))]">{f.name}</td>
                       <td className="px-4 py-3"><Badge variant="outline" className="text-[10px]">{PROGRAM_META[f.program].label}</Badge></td>
-                      <td className="px-4 py-3 text-sm text-[#98989D]">{f.program === "mlrf" ? (f.constituencies?.join(", ") || "—") : f.district}</td>
+                      <td className="px-4 py-3 text-sm text-[hsl(var(--text-3))]">{f.program === "mlrf" ? (f.constituencies?.join(", ") || "—") : f.district}</td>
                       <td className="px-4 py-3">
-                        <span className={`text-sm font-bold ${c.metTarget ? "text-[#1A8A3A]" : "text-[#FF453A]"}`}>{c.logCount}</span>
-                        <span className="text-xs text-[#98989D]">/{WEEKLY_LOG_TARGET}</span>
+                        <span className={`text-sm font-bold ${c.metTarget ? "text-[hsl(var(--green))]" : "text-[hsl(var(--red))]"}`}>{c.logCount}</span>
+                        <span className="text-xs text-[hsl(var(--text-3))]">/{WEEKLY_LOG_TARGET}</span>
                       </td>
                       <td className="px-4 py-3">
                         {c.pressure && <Badge variant={c.pressure === "over" ? "destructive" : c.pressure === "under" ? "warning" : "success"} className="text-[10px]">{WORKLOAD_LABELS[c.pressure]}</Badge>}
                       </td>
                       <td className="px-4 py-3">{f.streak > 0 && <span className="flex items-center gap-1 text-sm"><Flame className="h-3.5 w-3.5 text-[hsl(var(--gold))]" />{f.streak}d</span>}</td>
-                      <td className="px-4 py-3 text-sm text-[#98989D]">{f.lastLogDate ? formatRelativeTime(f.lastLogDate) : "Never"}</td>
+                      <td className="px-4 py-3 text-sm text-[hsl(var(--text-3))]">{f.lastLogDate ? formatRelativeTime(f.lastLogDate) : "Never"}</td>
                       <td className="px-4 py-3"><Badge variant={status === "green" ? "success" : status === "yellow" ? "warning" : "destructive"}>
                         {status === "green" ? "Active" : status === "yellow" ? "Slowing" : "Silent"}</Badge></td>
                     </tr>
