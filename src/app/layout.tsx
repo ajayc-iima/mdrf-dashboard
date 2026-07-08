@@ -1,9 +1,21 @@
 import type { Metadata, Viewport } from "next"
+import { Plus_Jakarta_Sans, Playfair_Display } from "next/font/google"
 import "./globals.css"
 import { AuthProvider } from "@/hooks/useAuth"
+import { OfflineBanner } from "@/components/shared/offline-banner"
+
+const plusJakartaSans = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  variable: "--font-plus-jakarta",
+})
+
+const playfairDisplay = Playfair_Display({
+  subsets: ["latin"],
+  variable: "--font-playfair",
+})
 
 export const viewport: Viewport = {
-  themeColor: "#f2efe9",
+  themeColor: "#f0f2f5",
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
@@ -26,12 +38,13 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning className={`${plusJakartaSans.variable} ${playfairDisplay.variable}`}>
       <head>
         <meta name="mobile-web-app-capable" content="yes" />
       </head>
       <body suppressHydrationWarning>
         <AuthProvider>
+          <OfflineBanner />
           {children}
         </AuthProvider>
       </body>

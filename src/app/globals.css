@@ -4,14 +4,14 @@
 
 @layer base {
   :root {
-    /* Cool modern professional system */
-    --navy: 215 35% 14%;
-    --navy-light: 215 30% 22%;
-    --navy-dark: 215 40% 10%;
+    /* ISB branding system */
+    --navy: 232 70% 33%;
+    --navy-light: 232 50% 50%;
+    --navy-dark: 232 75% 26%;
 
-    --gold: 347 100% 39%;
-    --gold-soft: 347 100% 97%;
-    --gold-light: 347 80% 72%;
+    --gold: 169 75% 72%;
+    --gold-soft: 169 75% 97%;
+    --gold-light: 169 50% 85%;
 
     --bg-page: 220 14% 96%;
     --bg-surface: 0 0% 100%;
@@ -23,9 +23,9 @@
     --text-3: 220 8% 46%;
     --text-4: 220 8% 62%;
 
-    --blue: 221 83% 53%;
-    --blue-hover: 221 83% 46%;
-    --blue-soft: 221 83% 97%;
+    --blue: 232 70% 33%;
+    --blue-hover: 232 70% 28%;
+    --blue-soft: 232 70% 95%;
 
     --green: 142 40% 36%;
     --green-soft: 142 40% 95%;
@@ -48,7 +48,7 @@
   body {
     background: hsl(var(--bg-page));
     color: hsl(var(--text-1));
-    font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    font-family: var(--font-plus-jakarta), "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
@@ -61,6 +61,17 @@
 
 html {
   scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 main {
@@ -267,4 +278,34 @@ main {
 ::selection {
   background: hsl(var(--navy) / 0.15);
   color: hsl(var(--text-1));
+}
+
+/* ─── Login page fonts ─── */
+.font-editorial { font-family: 'Playfair Display', Georgia, serif; }
+.font-body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; }
+
+/* ─── Login page animations ─── */
+@keyframes heroFadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes heroFadeInLeft {
+  from { opacity: 0; transform: translateX(-20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes heroFadeInRight {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes subtlePulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.7; }
+}
+@keyframes lineGrow {
+  from { width: 0; }
+  to { width: 100%; }
+}
+@keyframes dotBlink {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
 }

@@ -9,6 +9,9 @@ import type { UserRole } from '@/types'
 const googleProvider = new GoogleAuthProvider()
 
 export async function signInWithGoogle() {
+  if (typeof navigator !== 'undefined' && !navigator.onLine) {
+    throw { code: 'offline', message: 'You appear to be offline. Please connect to the internet to sign in.' }
+  }
   const cred = await signInWithPopup(auth, googleProvider)
   return cred.user
 }

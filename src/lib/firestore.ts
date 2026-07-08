@@ -12,6 +12,16 @@ import type {
   WorkloadPressure, CaseType, LmsCourse,
 } from '@/types'
 
+// ─── Offline helpers ────────────────────────────────────────────────
+
+export function isOffline(): boolean {
+  return typeof navigator !== 'undefined' && !navigator.onLine
+}
+
+export function dataFromCache(snapshot: { metadata: { fromCache: boolean } }): boolean {
+  return snapshot.metadata.fromCache
+}
+
 // ─── Serialisation helpers ────────────────────────────────────────
 
 function toDate(ts: any): Date {
@@ -33,6 +43,26 @@ function serializeDoc<T>(d: any): T {
 // ─── Users ────────────────────────────────────────────────────────
 
 export async function createUserProfile(uid: string, data: { name: string; email: string }): Promise<void> {
+  if (isOffline()) {
+    const profileRef = doc(db, 'users', uid)
+    await setDoc(profileRef, {
+      name: data.name,
+      email: data.email,
+      district: 'All',
+      constituencies: [],
+      program: 'mdrf',
+      role: null,
+      status: 'pending',
+      isActive: true,
+      streak: 0,
+      totalLogs: 0,
+      badges: [],
+      lastLogDate: null,
+      createdAt: serverTimestamp(),
+    })
+    return
+  }
+
   await runTransaction(db, async (tx) => {
     const bootstrapRef = doc(db, 'config', 'bootstrap')
     const bootstrapSnap = await tx.get(bootstrapRef)
