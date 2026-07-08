@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-import { signInWithGoogle, getRoleHome } from "@/lib/auth"
+import { signInWithGoogle, signInWithMicrosoft, getRoleHome } from "@/lib/auth"
 import { getUserProfile, createUserProfile } from "@/lib/firestore"
 import { PROGRAM_META } from "@/lib/constants"
 import { AppLogo } from "@/components/shared/app-logo"
@@ -10,7 +10,7 @@ import type { Program } from "@/types"
 
 export default function LoginPage() {
   const [error, setError] = useState("")
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState<string | null>(null)
   const [visible, setVisible] = useState(false)
   const router = useRouter()
 
@@ -34,11 +34,12 @@ export default function LoginPage() {
     return () => { active = false }
   }, [router])
 
-  async function handleGoogleSignIn() {
+  async function handleSignIn(provider: "google" | "microsoft") {
     setError("")
-    setLoading(true)
+    setLoading(provider)
     try {
-      const user = await signInWithGoogle()
+      const fn = provider === "google" ? signInWithGoogle : signInWithMicrosoft
+      const user = await fn()
       let profile = await getUserProfile(user.uid)
       if (!profile) {
         await createUserProfile(user.uid, {
@@ -54,7 +55,7 @@ export default function LoginPage() {
     } catch (err: any) {
       if (err?.code === 'offline') setError(err.message)
       else if (err?.code !== 'auth/popup-closed-by-user') setError("Sign in failed. Please try again.")
-    } finally { setLoading(false) }
+    } finally { setLoading(null) }
   }
 
   return (
@@ -219,11 +220,11 @@ export default function LoginPage() {
             <div className={`transition-all duration-500 delay-[500ms] ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
               <button
                 type="button"
-                onClick={handleGoogleSignIn}
-                disabled={loading}
+                onClick={() => handleSignIn("google")}
+                disabled={loading !== null}
                 className="group relative w-full h-[48px] rounded-xl transition-all duration-200 disabled:opacity-50 disabled:pointer-events-none active:scale-[0.98] select-none flex items-center justify-center gap-3 bg-[#0d1f4b] text-white font-semibold text-[13px] hover:bg-[#131f70] shadow-[0_1px_2px_rgba(0,0,0,0.08)] hover:shadow-[0_4px_16px_rgba(13,31,75,0.25)]"
               >
-                {loading ? (
+                {loading === "google" ? (
                   <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
                     <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" className="opacity-20" />
                     <path d="M4 12a8 8 0 018-8" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
@@ -236,7 +237,30 @@ export default function LoginPage() {
                     <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
                   </svg>
                 )}
-                <span>{loading ? "Signing in..." : "Continue with Google"}</span>
+                <span>{loading === "google" ? "Signing in..." : "Continue with Google"}</span>
+              </button>
+
+              {/* Microsoft / ISB SSO button */}
+              <button
+                type="button"
+                onClick={() => handleSignIn("microsoft")}
+                disabled={loading !== null}
+                className="group relative w-full h-[48px] rounded-xl transition-all duration-200 disabled:opacity-50 disabled:pointer-events-none active:scale-[0.98] select-none flex items-center justify-center gap-3 bg-white text-[#0d1f4b] font-semibold text-[13px] border border-black/[0.08] hover:border-black/[0.12] hover:bg-[#f7f9fc] shadow-[0_1px_2px_rgba(0,0,0,0.04)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.06)] mt-3"
+              >
+                {loading === "microsoft" ? (
+                  <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" className="opacity-20" />
+                    <path d="M4 12a8 8 0 018-8" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+                  </svg>
+                ) : (
+                  <svg className="h-4 w-4" viewBox="0 0 23 23" fill="none">
+                    <path d="M0 0h10.9v10.9H0V0z" fill="#F25022" />
+                    <path d="M12.1 0H23v10.9H12.1V0z" fill="#7FBA00" />
+                    <path d="M0 12.1h10.9V23H0V12.1z" fill="#00A4EF" />
+                    <path d="M12.1 12.1H23V23H12.1V12.1z" fill="#FFB900" />
+                  </svg>
+                )}
+                <span>{loading === "microsoft" ? "Signing in..." : "Sign in with ISB Microsoft"}</span>
               </button>
 
               {/* Error */}
