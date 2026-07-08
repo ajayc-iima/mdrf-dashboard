@@ -2,7 +2,10 @@
 
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-import { signInWithGoogle, signInWithMicrosoft, getRoleHome } from "@/lib/auth"
+import {
+  sendOtpToEmail, isOtpRedirect, completeOtpSignIn,
+  signInWithGoogle, getRoleHome,
+} from "@/lib/auth"
 import { getUserProfile, createUserProfile } from "@/lib/firestore"
 import { PROGRAM_META } from "@/lib/constants"
 import { AppLogo } from "@/components/shared/app-logo"
@@ -12,12 +15,53 @@ export default function LoginPage() {
   const [error, setError] = useState("")
   const [loading, setLoading] = useState<string | null>(null)
   const [visible, setVisible] = useState(false)
+  const [otpEmail, setOtpEmail] = useState("")
+  const [otpSent, setOtpSent] = useState(false)
   const router = useRouter()
 
   useEffect(() => {
     const t = setTimeout(() => setVisible(true), 100)
     return () => clearTimeout(t)
   }, [])
+
+  async function handleOtpRedirect() {
+    if (!isOtpRedirect()) return
+    setLoading("otp")
+    try {
+      const user = await completeOtpSignIn()
+      let profile = await getUserProfile(user.uid)
+      if (!profile) {
+        await createUserProfile(user.uid, {
+          name: user.displayName || user.email?.split("@")[0] || "User",
+          email: user.email || "",
+        })
+        profile = await getUserProfile(user.uid)
+      }
+      if (!profile) { setError("Profile not found. Contact the administrator."); return }
+      if (profile.status === "pending" || profile.status === "rejected") router.push("/pending")
+      else if (profile.role) router.push(getRoleHome(profile.role))
+      else router.push("/pending")
+    } catch (err: any) {
+      setError(err.message || "Sign in failed. Please request a new OTP.")
+      localStorage.removeItem("emailForSignIn")
+    } finally { setLoading(null) }
+  }
+
+  useEffect(() => { handleOtpRedirect() }, [])
+
+  async function handleSendOtp(e: React.FormEvent) {
+    e.preventDefault()
+    setError("")
+    const email = otpEmail.trim()
+    if (!email) { setError("Enter your email address."); return }
+    setLoading("otp")
+    try {
+      await sendOtpToEmail(email)
+      setOtpSent(true)
+    } catch (err: any) {
+      setError(err.message || "Failed to send OTP. Try again.")
+    } finally { setLoading(null) }
+  }
 
   useEffect(() => {
     let active = true
@@ -34,11 +78,11 @@ export default function LoginPage() {
     return () => { active = false }
   }, [router])
 
-  async function handleSignIn(provider: "google" | "microsoft") {
+  async function handleSignIn(provider: "google") {
     setError("")
     setLoading(provider)
     try {
-      const fn = provider === "google" ? signInWithGoogle : signInWithMicrosoft
+      const fn = provider === "google" ? signInWithGoogle : signInWithGoogle
       const user = await fn()
       let profile = await getUserProfile(user.uid)
       if (!profile) {
@@ -64,13 +108,11 @@ export default function LoginPage() {
       {/* ─── Hero Panel ─── */}
       <div className={`relative bg-[#0d1f4b] overflow-hidden transition-all duration-700 ${visible ? "opacity-100" : "opacity-0"} lg:w-[52%] lg:min-h-screen`}>
 
-        {/* Subtle grid texture */}
         <div className="absolute inset-0 opacity-[0.03]" style={{
           backgroundImage: "linear-gradient(rgba(255,255,255,.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.1) 1px, transparent 1px)",
           backgroundSize: "60px 60px"
         }} />
 
-        {/* Topographic accent lines */}
         <svg className="absolute top-0 left-0 w-full h-full opacity-[0.04]" viewBox="0 0 800 900" fill="none">
           <path d="M-100 200 C200 150, 400 300, 800 250" stroke="white" strokeWidth="1" />
           <path d="M-100 300 C200 250, 400 400, 800 350" stroke="white" strokeWidth="1" />
@@ -80,14 +122,11 @@ export default function LoginPage() {
           <path d="M-100 700 C200 650, 400 800, 800 750" stroke="white" strokeWidth="1" />
         </svg>
 
-        {/* Gradient glow */}
         <div className="absolute top-[-20%] left-[-10%] w-[400px] h-[400px] lg:w-[600px] lg:h-[600px] rounded-full bg-[#80edd9]/[0.06] blur-[100px] lg:blur-[120px]" />
         <div className="absolute bottom-[-15%] right-[-5%] w-[300px] h-[300px] lg:w-[400px] lg:h-[400px] rounded-full bg-white/[0.02] blur-[80px] lg:blur-[100px]" />
 
-        {/* Content */}
         <div className="relative z-10 flex flex-col justify-between h-full min-h-[340px] lg:min-h-screen p-8 sm:p-10 lg:p-10 xl:p-14">
 
-          {/* Top: Logo + Badge */}
           <div className={`flex items-center justify-between transition-all duration-500 delay-100 ${visible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4"}`}>
             <div className="flex items-center gap-3">
               <AppLogo size={28} />
@@ -105,10 +144,8 @@ export default function LoginPage() {
             </div>
           </div>
 
-          {/* Center: Hero */}
           <div className={`flex-1 flex flex-col justify-center max-w-lg transition-all duration-600 delay-200 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
 
-            {/* Institution label */}
             <div className="flex items-center gap-3 mb-6 lg:mb-8">
               <div className="w-8 h-[2px] rounded-full bg-[#80edd9]" />
               <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.18em] text-[#80edd9]/80">
@@ -116,7 +153,6 @@ export default function LoginPage() {
               </span>
             </div>
 
-            {/* Headline */}
             <h1 className="mb-6 lg:mb-8">
               <span className="block text-[2rem] sm:text-[2.5rem] lg:text-[2.75rem] xl:text-[3.5rem] font-editorial font-bold text-white leading-[1.08] tracking-[-0.02em]">
                 Research
@@ -127,15 +163,12 @@ export default function LoginPage() {
               </span>
             </h1>
 
-            {/* Separator */}
             <div className="w-16 h-px bg-gradient-to-r from-[#80edd9]/60 to-transparent mb-6 lg:mb-8" />
 
-            {/* Description */}
             <p className="text-[14px] lg:text-[15px] text-white/55 leading-relaxed max-w-md">
               Connecting Meghalaya&apos;s District & Legislative Research Fellows with Coordinators and Directors to drive meaningful governance impact.
             </p>
 
-            {/* Feature highlights */}
             <div className="flex flex-col gap-4 mt-8 lg:mt-12">
               {[
                 { icon: "M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2", label: "Weekly work tracking & reporting" },
@@ -154,7 +187,6 @@ export default function LoginPage() {
             </div>
           </div>
 
-          {/* Bottom: Footer */}
           <div className={`hidden lg:flex items-center justify-between transition-all duration-500 delay-300 ${visible ? "opacity-100" : "opacity-0"}`}>
             <p className="text-[11px] text-white/30 font-medium">&copy; {new Date().getFullYear()} Indian School of Business</p>
             <div className="flex items-center gap-3 text-[11px] text-white/30">
@@ -171,10 +203,9 @@ export default function LoginPage() {
 
         <div className="w-full max-w-[400px]">
 
-          {/* Card */}
           <div className="bg-white rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.04),0_8px_32px_rgba(0,0,0,0.06)] border border-black/[0.04] p-8 sm:p-10">
 
-            {/* Welcome text */}
+            {/* Welcome */}
             <div className={`mb-8 transition-all duration-500 delay-200 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
               <p className="text-[12px] font-extrabold uppercase tracking-[0.18em] text-[#0d1f4b] mb-3">Welcome</p>
               <h2 className="text-[22px] font-bold text-[#0d1f4b] tracking-[-0.01em]">Sign in to continue</h2>
@@ -208,21 +239,82 @@ export default function LoginPage() {
             </div>
 
             {/* Divider */}
-            <div className={`relative mb-8 transition-all duration-500 delay-[400ms] ${visible ? "opacity-100" : "opacity-0"}`}>
-              <div className="flex items-center gap-4">
-                <div className="flex-1 h-px bg-black/[0.06]" />
-                <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#bcc3cf]">Sign In</span>
-                <div className="flex-1 h-px bg-black/[0.06]" />
-              </div>
+            <div className={`flex items-center gap-4 mb-6 transition-all duration-500 delay-[400ms] ${visible ? "opacity-100" : "opacity-0"}`}>
+              <div className="flex-1 h-px bg-black/[0.06]" />
+              <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#bcc3cf] shrink-0">Sign In</span>
+              <div className="flex-1 h-px bg-black/[0.06]" />
+            </div>
+
+            {/* ─── Email OTP Section ─── */}
+            <div className={`transition-all duration-500 delay-[450ms] ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
+              {otpSent ? (
+                <div className="text-center py-4">
+                  <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[#0d1f4b]/5">
+                    <svg className="w-6 h-6 text-[#0d1f4b]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                      <polyline points="22,6 12,13 2,6" />
+                    </svg>
+                  </div>
+                  <p className="text-[14px] font-semibold text-[#0d1f4b]">Check your email</p>
+                  <p className="text-[12px] text-[#5d6f7a] mt-1 leading-relaxed">
+                    We sent a sign-in link to <span className="font-semibold text-[#0d1f4b]">{otpEmail}</span>
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => setOtpSent(false)}
+                    className="mt-4 text-[12px] font-semibold text-[#0d1f4b] hover:underline"
+                  >
+                    Use a different email
+                  </button>
+                </div>
+              ) : (
+                <form onSubmit={handleSendOtp}>
+                  <div className="mb-3">
+                    <input
+                      type="email"
+                      value={otpEmail}
+                      onChange={(e) => setOtpEmail(e.target.value)}
+                      placeholder="your@email.com"
+                      autoComplete="email"
+                      className="w-full h-[48px] rounded-xl border border-black/[0.08] bg-white px-4 text-[13px] text-[#0d1f4b] placeholder:text-[#bcc3cf] outline-none focus:border-[#0d1f4b]/30 focus:ring-2 focus:ring-[#0d1f4b]/5 transition-all duration-200"
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    disabled={loading === "otp"}
+                    className="w-full h-[48px] rounded-xl transition-all duration-200 disabled:opacity-50 disabled:pointer-events-none active:scale-[0.98] select-none flex items-center justify-center gap-2 bg-[#0d1f4b] text-white font-semibold text-[13px] hover:bg-[#131f70] shadow-[0_1px_2px_rgba(0,0,0,0.08)] hover:shadow-[0_4px_16px_rgba(13,31,75,0.25)]"
+                  >
+                    {loading === "otp" ? (
+                      <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
+                        <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" className="opacity-20" />
+                        <path d="M4 12a8 8 0 018-8" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+                      </svg>
+                    ) : (
+                      <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                        <polyline points="22,6 12,13 2,6" />
+                      </svg>
+                    )}
+                    <span>{loading === "otp" ? "Sending..." : "Send OTP via Email"}</span>
+                  </button>
+                </form>
+              )}
+            </div>
+
+            {/* Divider */}
+            <div className={`flex items-center gap-4 my-6 transition-all duration-500 delay-[500ms] ${visible ? "opacity-100" : "opacity-0"}`}>
+              <div className="flex-1 h-px bg-black/[0.04]" />
+              <span className="text-[10px] font-semibold tracking-[0.12em] text-[#bcc3cf] shrink-0">OR</span>
+              <div className="flex-1 h-px bg-black/[0.04]" />
             </div>
 
             {/* Google button */}
-            <div className={`transition-all duration-500 delay-[500ms] ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
+            <div className={`transition-all duration-500 delay-[550ms] ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
               <button
                 type="button"
                 onClick={() => handleSignIn("google")}
                 disabled={loading !== null}
-                className="group relative w-full h-[48px] rounded-xl transition-all duration-200 disabled:opacity-50 disabled:pointer-events-none active:scale-[0.98] select-none flex items-center justify-center gap-3 bg-[#0d1f4b] text-white font-semibold text-[13px] hover:bg-[#131f70] shadow-[0_1px_2px_rgba(0,0,0,0.08)] hover:shadow-[0_4px_16px_rgba(13,31,75,0.25)]"
+                className="group relative w-full h-[48px] rounded-xl transition-all duration-200 disabled:opacity-50 disabled:pointer-events-none active:scale-[0.98] select-none flex items-center justify-center gap-3 bg-white text-[#0d1f4b] font-semibold text-[13px] border border-black/[0.08] hover:border-black/[0.12] hover:bg-[#f7f9fc] shadow-[0_1px_2px_rgba(0,0,0,0.04)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.06)]"
               >
                 {loading === "google" ? (
                   <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
@@ -238,29 +330,6 @@ export default function LoginPage() {
                   </svg>
                 )}
                 <span>{loading === "google" ? "Signing in..." : "Continue with Google"}</span>
-              </button>
-
-              {/* Microsoft / ISB SSO button */}
-              <button
-                type="button"
-                onClick={() => handleSignIn("microsoft")}
-                disabled={loading !== null}
-                className="group relative w-full h-[48px] rounded-xl transition-all duration-200 disabled:opacity-50 disabled:pointer-events-none active:scale-[0.98] select-none flex items-center justify-center gap-3 bg-white text-[#0d1f4b] font-semibold text-[13px] border border-black/[0.08] hover:border-black/[0.12] hover:bg-[#f7f9fc] shadow-[0_1px_2px_rgba(0,0,0,0.04)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.06)] mt-3"
-              >
-                {loading === "microsoft" ? (
-                  <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
-                    <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" className="opacity-20" />
-                    <path d="M4 12a8 8 0 018-8" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
-                  </svg>
-                ) : (
-                  <svg className="h-4 w-4" viewBox="0 0 23 23" fill="none">
-                    <path d="M0 0h10.9v10.9H0V0z" fill="#F25022" />
-                    <path d="M12.1 0H23v10.9H12.1V0z" fill="#7FBA00" />
-                    <path d="M0 12.1h10.9V23H0V12.1z" fill="#00A4EF" />
-                    <path d="M12.1 12.1H23V23H12.1V12.1z" fill="#FFB900" />
-                  </svg>
-                )}
-                <span>{loading === "microsoft" ? "Signing in..." : "Sign in with ISB Microsoft"}</span>
               </button>
 
               {/* Error */}
@@ -279,7 +348,6 @@ export default function LoginPage() {
             </div>
           </div>
 
-          {/* Mobile footer */}
           <div className="lg:hidden mt-8 text-center">
             <p className="text-[11px] text-[#7c8698]">&copy; {new Date().getFullYear()} Indian School of Business</p>
           </div>

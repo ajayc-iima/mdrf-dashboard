@@ -1,31 +1,53 @@
 import {
-  signInWithPopup, GoogleAuthProvider, OAuthProvider, updateProfile,
-  onAuthStateChanged, User,
+  signInWithPopup, GoogleAuthProvider, updateProfile,
+  onAuthStateChanged, User, sendSignInLinkToEmail,
+  isSignInWithEmailLink, signInWithEmailLink,
 } from 'firebase/auth'
 import { auth } from './firebase'
 import { createUserProfile } from './firestore'
 import type { UserRole } from '@/types'
 
 const googleProvider = new GoogleAuthProvider()
-const microsoftProvider = new OAuthProvider('microsoft.com')
-microsoftProvider.setCustomParameters({
-  prompt: 'select_account',
-  tenant: 'common',
-})
+
+const EMAIL_OTP_KEY = 'emailForSignIn'
+
+export function getOtpRedirectUrl(): string {
+  if (typeof window !== 'undefined') {
+    return window.location.origin + window.location.pathname
+  }
+  return 'http://localhost:3000/'
+}
+
+export async function sendOtpToEmail(email: string) {
+  if (typeof navigator !== 'undefined' && !navigator.onLine) {
+    throw new Error('You appear to be offline. Please connect to the internet.')
+  }
+  const actionCodeSettings = {
+    url: getOtpRedirectUrl(),
+    handleCodeInApp: true,
+  }
+  await sendSignInLinkToEmail(auth, email, actionCodeSettings)
+  localStorage.setItem(EMAIL_OTP_KEY, email)
+}
+
+export function isOtpRedirect(): boolean {
+  if (typeof window === 'undefined') return false
+  return isSignInWithEmailLink(auth, window.location.href)
+}
+
+export async function completeOtpSignIn(): Promise<User> {
+  const email = localStorage.getItem(EMAIL_OTP_KEY)
+  if (!email) throw new Error('Email not found. Please request a new OTP.')
+  const cred = await signInWithEmailLink(auth, email, window.location.href)
+  localStorage.removeItem(EMAIL_OTP_KEY)
+  return cred.user
+}
 
 export async function signInWithGoogle() {
   if (typeof navigator !== 'undefined' && !navigator.onLine) {
     throw { code: 'offline', message: 'You appear to be offline. Please connect to the internet to sign in.' }
   }
   const cred = await signInWithPopup(auth, googleProvider)
-  return cred.user
-}
-
-export async function signInWithMicrosoft() {
-  if (typeof navigator !== 'undefined' && !navigator.onLine) {
-    throw { code: 'offline', message: 'You appear to be offline. Please connect to the internet to sign in.' }
-  }
-  const cred = await signInWithPopup(auth, microsoftProvider)
   return cred.user
 }
 
