@@ -32,26 +32,19 @@ export default function DirectorCompliancePage() {
       getWeeklyCompliance(weekKey, "mdrf", WEEKLY_LOG_TARGET),
       getWeeklyCompliance(weekKey, "mlrf", WEEKLY_LOG_TARGET),
     ])
-    setMdrfCompliance(mc)
-    setMlrfCompliance(lc)
+    setMdrfCompliance(mc); setMlrfCompliance(lc)
     setLoading(false)
   }
 
-  const all = programFilter === "all"
-    ? [...mdrfCompliance, ...mlrfCompliance]
-    : programFilter === "mdrf" ? mdrfCompliance : mlrfCompliance
-
+  const all = programFilter === "all" ? [...mdrfCompliance, ...mlrfCompliance] : programFilter === "mdrf" ? mdrfCompliance : mlrfCompliance
   const metCount = all.filter((c) => c.metTarget).length
   const totalCount = all.length
   const complianceRate = totalCount ? Math.round((metCount / totalCount) * 100) : 0
 
   function handleExport() {
     const data = all.map((c) => ({
-      Name: c.fellow.name,
-      Program: PROGRAM_META[c.fellow.program].label,
-      District: c.fellow.district,
-      "Week Logs": c.logCount,
-      "Met Target": c.metTarget ? "Yes" : "No",
+      Name: c.fellow.name, Program: PROGRAM_META[c.fellow.program].label, District: c.fellow.district,
+      "Week Logs": c.logCount, "Met Target": c.metTarget ? "Yes" : "No",
       Workload: c.pressure ? WORKLOAD_LABELS[c.pressure] : "Not declared",
       "Last Active": c.fellow.lastLogDate ? formatRelativeTime(c.fellow.lastLogDate) : "Never",
       Streak: c.fellow.streak || 0,
@@ -59,22 +52,13 @@ export default function DirectorCompliancePage() {
     downloadCSV(data, `director-compliance-${weekKey}`)
   }
 
-  if (selectedFellow) {
-    return (
-      <div className="max-w-3xl">
-        <FellowDetail fellow={selectedFellow} onClose={() => setSelectedFellow(null)} />
-      </div>
-    )
-  }
+  if (selectedFellow) return <div className="max-w-3xl"><FellowDetail fellow={selectedFellow} onClose={() => setSelectedFellow(null)} /></div>
 
   return (
     <div className="space-y-8 animate-fade-in">
-      <PageHeader
-        title="Compliance Overview"
-        icon={<ClipboardList className="h-6 w-6" />}
+      <PageHeader title="Compliance Overview" icon={<ClipboardList className="h-6 w-6" />}
         description={`Week of ${formatWeekRange(weekKey)} · Target: ${WEEKLY_LOG_TARGET} logs/week`}
-        actions={<Button variant="outline" size="sm" onClick={handleExport}><Download className="mr-1.5 h-4 w-4" /> Export</Button>}
-      />
+        actions={<Button variant="outline" size="sm" onClick={handleExport}><Download className="mr-1.5 h-4 w-4" /> Export</Button>} />
 
       <div className="grid grid-cols-2 gap-3 sm:gap-4 sm:grid-cols-3 stagger-children">
         <StatCard title="Total Fellows" value={totalCount} icon={<Users className="h-4 w-4" />} variant="default" />
@@ -102,7 +86,7 @@ export default function DirectorCompliancePage() {
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-[hsl(var(--border))] text-left text-xs font-medium uppercase tracking-wider text-[hsl(var(--text-3))]">
+                <tr className="border-b border-[hsl(var(--border))] text-left text-[11px] font-semibold uppercase tracking-wider text-[hsl(var(--text-4))]">
                   <th className="px-4 py-3">Fellow</th>
                   <th className="px-4 py-3">Program</th>
                   <th className="px-4 py-3">Location</th>
@@ -119,18 +103,18 @@ export default function DirectorCompliancePage() {
                   const status = getWorkloadStatus(f.lastLogDate)
                   return (
                     <tr key={f.id} className="hover:bg-[hsl(var(--bg-muted))]/50 transition-colors cursor-pointer" onClick={() => setSelectedFellow(f)}>
-                      <td className="px-4 py-3 text-sm font-medium text-[hsl(var(--text-1))]">{f.name}</td>
+                      <td className="px-4 py-3 text-[13px] font-semibold text-[hsl(var(--text-1))]">{f.name}</td>
                       <td className="px-4 py-3"><Badge variant="outline" className="text-[10px]">{PROGRAM_META[f.program].label}</Badge></td>
-                      <td className="px-4 py-3 text-sm text-[hsl(var(--text-3))]">{f.program === "mlrf" ? (f.constituencies?.join(", ") || "—") : f.district}</td>
+                      <td className="px-4 py-3 text-[13px] text-[hsl(var(--text-3))]">{f.program === "mlrf" ? (f.constituencies?.join(", ") || "—") : f.district}</td>
                       <td className="px-4 py-3">
-                        <span className={`text-sm font-bold ${c.metTarget ? "text-[hsl(var(--green))]" : "text-[hsl(var(--red))]"}`}>{c.logCount}</span>
-                        <span className="text-xs text-[hsl(var(--text-3))]">/{WEEKLY_LOG_TARGET}</span>
+                        <span className={`text-[13px] font-bold ${c.metTarget ? "text-[hsl(var(--green))]" : "text-[hsl(var(--red))]"}`}>{c.logCount}</span>
+                        <span className="text-[11px] text-[hsl(var(--text-3))]">/{WEEKLY_LOG_TARGET}</span>
                       </td>
                       <td className="px-4 py-3">
                         {c.pressure && <Badge variant={c.pressure === "over" ? "destructive" : c.pressure === "under" ? "warning" : "success"} className="text-[10px]">{WORKLOAD_LABELS[c.pressure]}</Badge>}
                       </td>
-                      <td className="px-4 py-3">{f.streak > 0 && <span className="flex items-center gap-1 text-sm"><Flame className="h-3.5 w-3.5 text-[hsl(var(--gold))]" />{f.streak}d</span>}</td>
-                      <td className="px-4 py-3 text-sm text-[hsl(var(--text-3))]">{f.lastLogDate ? formatRelativeTime(f.lastLogDate) : "Never"}</td>
+                      <td className="px-4 py-3">{f.streak > 0 && <span className="flex items-center gap-1 text-[13px]"><Flame className="h-3.5 w-3.5 text-[hsl(var(--gold))]" />{f.streak}d</span>}</td>
+                      <td className="px-4 py-3 text-[13px] text-[hsl(var(--text-3))]">{f.lastLogDate ? formatRelativeTime(f.lastLogDate) : "Never"}</td>
                       <td className="px-4 py-3"><Badge variant={status === "green" ? "success" : status === "yellow" ? "warning" : "destructive"}>
                         {status === "green" ? "Active" : status === "yellow" ? "Slowing" : "Silent"}</Badge></td>
                     </tr>

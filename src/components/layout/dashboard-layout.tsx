@@ -32,9 +32,12 @@ export function DashboardLayout({ children, allowedRoles }: DashboardLayoutProps
   if (loading) {
     return (
       <div className="flex h-screen items-center justify-center bg-[hsl(var(--bg-page))]">
-        <div className="flex flex-col items-center gap-3">
-          <div className="h-6 w-6 rounded-full border-2 border-[hsl(var(--border))] border-t-[hsl(var(--navy))] animate-spin" />
-          <p className="text-[13px] text-[hsl(var(--text-4))]">Loading...</p>
+        <div className="flex flex-col items-center gap-4">
+          <div className="relative h-8 w-8">
+            <div className="absolute inset-0 rounded-full border-2 border-[hsl(var(--border))]" />
+            <div className="absolute inset-0 rounded-full border-2 border-transparent border-t-[hsl(var(--navy))] animate-spin" />
+          </div>
+          <p className="text-[13px] text-[hsl(var(--text-4))] font-medium">Loading...</p>
         </div>
       </div>
     )
@@ -43,16 +46,18 @@ export function DashboardLayout({ children, allowedRoles }: DashboardLayoutProps
   if (!user || !profile) return null
 
   return (
-    <div className="grid h-screen w-full md:grid-cols-[240px_1fr] bg-[hsl(var(--bg-page))]">
+    <div className="grid h-screen w-full md:grid-cols-[256px_1fr] bg-[hsl(var(--bg-page))]">
       <div className="hidden md:block"><Sidebar /></div>
       <div className="flex flex-col overflow-hidden">
         {/* Mobile header */}
-        <header className="md:hidden flex items-center justify-between bg-white border-b border-[hsl(var(--border))] px-4 h-12 shrink-0">
-          <div className="flex items-center gap-2">
-            <AppLogoSmall size={20} />
-            <span className="text-[14px] font-semibold text-[hsl(var(--navy))]">{pageTitle}</span>
+        <header className="md:hidden flex items-center justify-between bg-white border-b border-[hsl(var(--border))] px-4 h-14 shrink-0">
+          <div className="flex items-center gap-3">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[hsl(var(--navy))]">
+              <AppLogoSmall size={18} />
+            </div>
+            <span className="text-[15px] font-semibold text-[hsl(var(--navy))]">{pageTitle}</span>
           </div>
-          <button onClick={() => signOut()} className="rounded-md p-2 text-[hsl(var(--text-4))] hover:bg-[hsl(var(--bg-muted))] transition-colors">
+          <button onClick={() => signOut()} className="rounded-lg p-2 text-[hsl(var(--text-4))] hover:bg-[hsl(var(--bg-muted))] transition-colors">
             <LogOut className="h-4 w-4" />
           </button>
         </header>

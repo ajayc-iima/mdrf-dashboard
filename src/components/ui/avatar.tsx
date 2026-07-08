@@ -7,7 +7,7 @@ const Avatar = React.forwardRef<
   React.ElementRef<typeof AvatarPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Root>
 >(({ className, ...props }, ref) => (
-  <AvatarPrimitive.Root ref={ref} className={cn("relative flex h-9 w-9 shrink-0 overflow-hidden rounded-full bg-[hsl(var(--bg-muted))]", className)} {...props} />
+  <AvatarPrimitive.Root ref={ref} className={cn("relative flex h-9 w-9 shrink-0 overflow-hidden rounded-xl bg-[hsl(var(--bg-muted))]", className)} {...props} />
 ))
 Avatar.displayName = AvatarPrimitive.Root.displayName
 
@@ -23,7 +23,7 @@ const AvatarFallback = React.forwardRef<
   React.ElementRef<typeof AvatarPrimitive.Fallback>,
   React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Fallback>
 >(({ className, ...props }, ref) => (
-  <AvatarPrimitive.Fallback ref={ref} className={cn("flex h-full w-full items-center justify-center rounded-full bg-[hsl(var(--bg-muted))] text-[hsl(var(--text-3))] text-xs font-medium", className)} {...props} />
+  <AvatarPrimitive.Fallback ref={ref} className={cn("flex h-full w-full items-center justify-center rounded-xl bg-[hsl(var(--bg-muted))] text-[hsl(var(--text-3))] text-xs font-semibold", className)} {...props} />
 ))
 AvatarFallback.displayName = AvatarPrimitive.Fallback.displayName
 

@@ -14,7 +14,7 @@ import { SUPPORT_CATEGORIES } from "@/types"
 import type { Program } from "@/types"
 import { AlertTriangle, Volume2, HelpCircle, ClipboardList, CheckCircle2, Clock } from "lucide-react"
 
-const INACTIVE_DAYS_THRESHOLD = 7
+const INACTIVE_DAYS_THRESHOLD = 3
 
 interface Props { program: Program }
 

@@ -1,6 +1,6 @@
 // ─── Core domain types — MDRF Connect / MLRF Connect ──────────────
 
-export type UserRole = 'admin' | 'director' | 'mdrf-coordinator' | 'mlrf-coordinator' | 'fellow'
+export type UserRole = 'admin' | 'director' | 'mdrf-coordinator' | 'mlrf-coordinator' | 'fellow' | 'data-scientist' | 'srf'
 export type Program = 'mdrf' | 'mlrf'
 /** @deprecated Use Program directly. Kept for backward compat during migration. */
 export type DashboardType = Program
@@ -26,12 +26,12 @@ export type AccountStatus = 'pending' | 'approved' | 'rejected'
 /** §3.3 Workload self-declaration. */
 export type WorkloadPressure = 'under' | 'optimal' | 'over'
 export type CaseType = 'case_study' | 'policy_brief' | 'field_breakthrough'
-export type CaseStatus = 'draft' | 'submitted' | 'published'
+export type CaseStatus = 'draft' | 'submitted' | 'under_review' | 'approved' | 'published'
 export type CourseStatus = 'not_started' | 'in_progress' | 'done'
 
 /** Roles an admin may assign to a user. */
 export const ASSIGNABLE_ROLES: UserRole[] = [
-  'fellow', 'mdrf-coordinator', 'mlrf-coordinator', 'director',
+  'fellow', 'data-scientist', 'srf', 'mdrf-coordinator', 'mlrf-coordinator', 'director',
 ]
 
 export interface UserProfile {
@@ -49,6 +49,8 @@ export interface UserProfile {
   streak: number
   totalLogs: number
   badges: string[]
+  /** Only for data-scientist and srf roles */
+  reportsTo?: string
 }
 
 export type RequestType = 'data_analysis' | 'policy_drafting' | 'subject_matter_expert' | 'administrative'
@@ -124,7 +126,12 @@ export interface CaseStudy {
   summary: string
   content: string
   attachmentName: string | null   // uploaded file name (metadata only)
+  onedriveLink?: string          // ISB OneDrive link for the document
   status: CaseStatus
+  reviewedBy?: string            // SRF or coordinator who reviewed
+  reviewedByName?: string
+  reviewedAt?: Date
+  reviewComments?: string
   tags: string[]
   createdAt: Date
   updatedAt: Date

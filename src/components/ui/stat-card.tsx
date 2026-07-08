@@ -25,14 +25,14 @@ const valueColor = {
 
 export function StatCard({ title, value, description, icon, variant = "default" }: StatCardProps) {
   return (
-    <Card className="transition-all duration-200 hover:shadow-md hover:-translate-y-0.5">
+    <Card className="transition-all duration-200 hover:shadow-card-hover hover:-translate-y-0.5">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="text-[13px] font-medium text-[hsl(var(--text-3))]">{title}</CardTitle>
-        {icon && <div className={cn("flex h-8 w-8 items-center justify-center rounded-lg", iconBg[variant])}>{icon}</div>}
+        {icon && <div className={cn("flex h-9 w-9 items-center justify-center rounded-xl", iconBg[variant])}>{icon}</div>}
       </CardHeader>
       <CardContent>
-        <div className={cn("text-[26px] font-semibold tracking-tight", valueColor[variant])}>{value}</div>
-        {description && <p className="text-xs text-[hsl(var(--text-4))] mt-1">{description}</p>}
+        <div className={cn("text-[28px] font-bold tracking-tight", valueColor[variant])}>{value}</div>
+        {description && <p className="text-[12px] text-[hsl(var(--text-4))] mt-1">{description}</p>}
       </CardContent>
     </Card>
   )

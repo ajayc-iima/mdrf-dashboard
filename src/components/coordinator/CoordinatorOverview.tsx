@@ -79,7 +79,7 @@ export function CoordinatorOverview({ program }: Props) {
   if (loading) {
     return (
       <div className="space-y-6 stagger-children">
-        {[...Array(4)].map((_, i) => <div key={i} className="h-32 animate-pulse rounded-xl bg-muted" />)}
+        {[...Array(4)].map((_, i) => <div key={i} className="h-32 animate-pulse rounded-2xl bg-[hsl(var(--bg-muted))]" />)}
       </div>
     )
   }
@@ -131,7 +131,7 @@ export function CoordinatorOverview({ program }: Props) {
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-[hsl(var(--border))] text-left text-xs font-medium uppercase tracking-wider text-[hsl(var(--text-3))]">
+                <tr className="border-b border-[hsl(var(--border))] text-left text-[11px] font-semibold uppercase tracking-wider text-[hsl(var(--text-4))]">
                   <th className="px-4 py-3">Fellow</th>
                   <th className="px-4 py-3">{isMDRF ? "District" : "Constituency"}</th>
                   <th className="px-4 py-3">Week Logs</th>
@@ -150,22 +150,22 @@ export function CoordinatorOverview({ program }: Props) {
                     <tr key={f.id} className="hover:bg-[hsl(var(--bg-muted))]/50 transition-colors cursor-pointer" onClick={() => setSelectedFellow(f)}>
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-2.5">
-                          <Avatar className="h-8 w-8"><AvatarFallback className="bg-[hsl(var(--bg-muted))] text-[hsl(var(--text-2))] text-xs">
+                          <Avatar className="h-8 w-8"><AvatarFallback className="bg-[hsl(var(--bg-muted))] text-[hsl(var(--text-2))] text-[10px] font-semibold">
                             {f.name.split(" ").map((w: string) => w[0]).join("").slice(0, 2).toUpperCase()}
                           </AvatarFallback></Avatar>
-                          <span className="text-sm font-medium text-[hsl(var(--text-1))]">{f.name}</span>
+                          <span className="text-[13px] font-semibold text-[hsl(var(--text-1))]">{f.name}</span>
                         </div>
                       </td>
-                      <td className="px-4 py-3 text-sm text-[hsl(var(--text-3))]">{loc}</td>
+                      <td className="px-4 py-3 text-[13px] text-[hsl(var(--text-3))]">{loc}</td>
                       <td className="px-4 py-3">
-                        <span className={`text-sm font-bold ${c.metTarget ? "text-[hsl(var(--green))]" : "text-[hsl(var(--red))]"}`}>{c.logCount}</span>
-                        <span className="text-xs text-[hsl(var(--text-3))]">/{WEEKLY_LOG_TARGET}</span>
+                        <span className={`text-[13px] font-bold ${c.metTarget ? "text-[hsl(var(--green))]" : "text-[hsl(var(--red))]"}`}>{c.logCount}</span>
+                        <span className="text-[11px] text-[hsl(var(--text-3))]">/{WEEKLY_LOG_TARGET}</span>
                       </td>
                       <td className="px-4 py-3">
                         {c.pressure && <Badge variant={c.pressure === "over" ? "destructive" : c.pressure === "under" ? "warning" : "success"} className="text-[10px]">{WORKLOAD_LABELS[c.pressure]}</Badge>}
                       </td>
-                      <td className="px-4 py-3">{f.streak > 0 && <span className="flex items-center gap-1 text-sm"><Flame className="h-3.5 w-3.5 text-[hsl(var(--gold))]" />{f.streak}d</span>}</td>
-                      <td className="px-4 py-3 text-sm text-[hsl(var(--text-3))]">{f.lastLogDate ? formatRelativeTime(f.lastLogDate) : "Never"}</td>
+                      <td className="px-4 py-3">{f.streak > 0 && <span className="flex items-center gap-1 text-[13px]"><Flame className="h-3.5 w-3.5 text-[hsl(var(--gold))]" />{f.streak}d</span>}</td>
+                      <td className="px-4 py-3 text-[13px] text-[hsl(var(--text-3))]">{f.lastLogDate ? formatRelativeTime(f.lastLogDate) : "Never"}</td>
                       <td className="px-4 py-3"><Badge variant={status === "green" ? "success" : status === "yellow" ? "warning" : "destructive"}>
                         {status === "green" ? "Active" : status === "yellow" ? "Slowing" : "Silent"}</Badge></td>
                     </tr>
@@ -185,11 +185,11 @@ export function CoordinatorOverview({ program }: Props) {
           </CardHeader>
           <CardContent className="pt-4">
             <div className="space-y-2 max-h-64 overflow-auto">
-              {stuckTasks.length === 0 ? <p className="py-4 text-center text-sm text-[hsl(var(--text-3))]">No stuck tasks</p> :
+              {stuckTasks.length === 0 ? <p className="py-4 text-center text-[13px] text-[hsl(var(--text-3))]">No stuck tasks</p> :
                 stuckTasks.slice(0, 10).map((t) => (
-                  <div key={t.id} className="flex items-center gap-3 rounded-lg border border-[hsl(var(--red))]/[0.12] bg-[hsl(var(--red))]/[0.02] px-3 py-2">
+                  <div key={t.id} className="flex items-center gap-3 rounded-xl border border-[hsl(var(--red))]/[0.12] bg-[hsl(var(--red))]/[0.02] px-3 py-2.5">
                     <AlertTriangle className="h-4 w-4 text-[hsl(var(--red))] shrink-0" />
-                    <div className="flex-1 min-w-0"><p className="text-sm font-medium text-[hsl(var(--text-1))]">{t.title}</p><p className="text-xs text-[hsl(var(--text-3))]">{t.fellowName} · {isMDRF ? t.district : "—"}</p></div>
+                    <div className="flex-1 min-w-0"><p className="text-[13px] font-semibold text-[hsl(var(--text-1))]">{t.title}</p><p className="text-[11px] text-[hsl(var(--text-3))]">{t.fellowName} · {isMDRF ? t.district : "—"}</p></div>
                   </div>
                 ))}
             </div>
@@ -201,13 +201,13 @@ export function CoordinatorOverview({ program }: Props) {
           </CardHeader>
           <CardContent className="pt-4">
             <div className="space-y-2 max-h-64 overflow-auto">
-              {openRequests.length === 0 ? <p className="py-4 text-center text-sm text-[hsl(var(--text-3))]">No open requests</p> :
+              {openRequests.length === 0 ? <p className="py-4 text-center text-[13px] text-[hsl(var(--text-3))]">No open requests</p> :
                 openRequests.slice(0, 10).map((r) => (
-                  <div key={r.id} className={`rounded-lg border p-3 ${r.urgency === "high" ? "border-[hsl(var(--red))]/20 bg-[hsl(var(--red))]/[0.02]" : "border-[hsl(var(--border))]"}`}>
-                    <div className="flex items-center justify-between"><span className="text-sm font-medium text-[hsl(var(--text-1))]">{r.fellowName}</span>
+                  <div key={r.id} className={`rounded-xl border p-3 ${r.urgency === "high" ? "border-[hsl(var(--red))]/20 bg-[hsl(var(--red))]/[0.02]" : "border-[hsl(var(--border))]"}`}>
+                    <div className="flex items-center justify-between"><span className="text-[13px] font-semibold text-[hsl(var(--text-1))]">{r.fellowName}</span>
                       <Badge variant={r.urgency === "high" ? "destructive" : r.urgency === "medium" ? "warning" : "secondary"}>{r.urgency}</Badge></div>
-                    <p className="mt-1 text-sm text-[hsl(var(--text-2))]">{r.description}</p>
-                    <p className="mt-1 text-xs text-[hsl(var(--text-3))]">{isMDRF ? r.district : "—"} · {formatRelativeTime(r.createdAt)}</p>
+                    <p className="mt-1 text-[13px] text-[hsl(var(--text-2))]">{r.description}</p>
+                    <p className="mt-1 text-[11px] text-[hsl(var(--text-3))]">{isMDRF ? r.district : "—"} · {formatRelativeTime(r.createdAt)}</p>
                   </div>
                 ))}
             </div>

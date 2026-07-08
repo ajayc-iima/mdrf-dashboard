@@ -37,12 +37,7 @@ export default function DirectorSupportPage() {
 
   return (
     <div className="space-y-8 animate-fade-in">
-      <PageHeader
-        title="Support Requests"
-        icon={<LifeBuoy className="h-6 w-6" />}
-        description="All support requests across MDRF & MLRF"
-      />
-
+      <PageHeader title="Support Requests" icon={<LifeBuoy className="h-6 w-6" />} description="All support requests across MDRF & MLRF" />
       <div className="flex flex-wrap gap-2">
         <Select value={programFilter} onValueChange={(v) => setProgramFilter(v as "all" | Program)}>
           <SelectTrigger className="w-40"><SelectValue placeholder="Program" /></SelectTrigger>
@@ -58,28 +53,27 @@ export default function DirectorSupportPage() {
           </Button>
         ))}
       </div>
-
       <Card>
         <CardContent className="pt-6">
           <div className="space-y-4">
             {loading ? (
-              <div className="space-y-3">{[...Array(3)].map((_, i) => <div key={i} className="h-20 animate-pulse rounded-lg bg-muted" />)}</div>
+              <div className="space-y-3">{[...Array(3)].map((_, i) => <div key={i} className="h-20 animate-pulse rounded-2xl bg-[hsl(var(--bg-muted))]" />)}</div>
             ) : filtered.length === 0 ? (
               <EmptyState title="No requests" description="No support requests match your filters." />
             ) : (
               filtered.map((req) => (
-                <div key={req.id} className={`rounded-lg border p-4 ${req.urgency === "high" ? "border-[hsl(var(--red))]/20 bg-[hsl(var(--red))]/[0.02]" : "border-[hsl(var(--border))]"}`}>
+                <div key={req.id} className={`rounded-xl border p-4 ${req.urgency === "high" ? "border-[hsl(var(--red))]/20 bg-[hsl(var(--red))]/[0.02]" : "border-[hsl(var(--border))]"}`}>
                   <div className="flex items-start justify-between">
                     <div className="min-w-0">
                       <div className="flex items-center gap-2 mb-1">
-                        <span className="text-sm font-medium text-[hsl(var(--text-1))]">{req.fellowName}</span>
+                        <span className="text-[13px] font-semibold text-[hsl(var(--text-1))]">{req.fellowName}</span>
                         <Badge variant="outline" className="text-[10px]">{req.program?.toUpperCase()}</Badge>
                         <Badge variant="secondary" className="text-[10px]">{SUPPORT_CATEGORIES.find((c) => c.value === req.category)?.label}</Badge>
                         <Badge variant={req.urgency === "high" ? "destructive" : req.urgency === "medium" ? "warning" : "secondary"}>{req.urgency}</Badge>
                         <Badge variant={req.status === "resolved" ? "success" : req.status === "in_progress" ? "default" : "warning"}>{req.status.replace("_", " ")}</Badge>
                       </div>
-                      <p className="text-sm text-[hsl(var(--text-2))]">{req.description}</p>
-                      <p className="mt-1 text-xs text-[hsl(var(--text-3))]">{req.program === "mlrf" ? "—" : req.district} · {formatRelativeTime(req.createdAt)}</p>
+                      <p className="text-[13px] text-[hsl(var(--text-2))]">{req.description}</p>
+                      <p className="mt-1 text-[11px] text-[hsl(var(--text-3))]">{req.program === "mlrf" ? "—" : req.district} · {formatRelativeTime(req.createdAt)}</p>
                     </div>
                     <div className="flex gap-2 shrink-0">
                       {req.status === "open" && <Button size="sm" variant="outline" onClick={() => handleStatusChange(req.id, "in_progress")}>Start</Button>}

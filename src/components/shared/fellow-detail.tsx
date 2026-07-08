@@ -33,10 +33,10 @@ export function FellowDetail({ fellow, onClose }: Props) {
 
   return (
     <Card>
-      <button onClick={onClose} className="absolute top-4 right-4 rounded-md p-1 text-[hsl(var(--text-4))] hover:bg-[hsl(var(--bg-muted))] transition-colors"><X className="h-4 w-4" /></button>
+      <button onClick={onClose} className="absolute top-4 right-4 rounded-lg p-1.5 text-[hsl(var(--text-4))] hover:bg-[hsl(var(--bg-muted))] transition-colors"><X className="h-4 w-4" /></button>
       <CardHeader className="border-b border-[hsl(var(--border))]">
         <div className="flex items-center gap-3">
-          <Avatar className="h-10 w-10">
+          <Avatar className="h-11 w-11">
             <AvatarFallback>{fellow.name.split(" ").map((w) => w[0]).join("").slice(0, 2).toUpperCase()}</AvatarFallback>
           </Avatar>
           <div className="min-w-0">
@@ -55,18 +55,18 @@ export function FellowDetail({ fellow, onClose }: Props) {
         </div>
       </CardHeader>
       <CardContent className="pt-4 space-y-5">
-        {loading ? <div className="space-y-3">{[...Array(3)].map((_, i) => <div key={i} className="h-12 animate-pulse rounded-lg bg-[hsl(var(--bg-muted))]" />)}</div> : (
+        {loading ? <div className="space-y-3">{[...Array(3)].map((_, i) => <div key={i} className="h-12 animate-pulse rounded-xl bg-[hsl(var(--bg-muted))]" />)}</div> : (
           <>
             <WeeklyProgress count={weekCount} />
             <div>
-              <h4 className="text-[11px] font-medium uppercase tracking-wider text-[hsl(var(--text-4))] mb-2">Recent Logs</h4>
-              <div className="space-y-1 max-h-64 overflow-auto">
+              <h4 className="text-[11px] font-semibold uppercase tracking-wider text-[hsl(var(--text-4))] mb-2">Recent Logs</h4>
+              <div className="space-y-1.5 max-h-64 overflow-auto">
                 {logs.length === 0 ? <p className="py-4 text-center text-[12px] text-[hsl(var(--text-4))]">No logs yet</p> : logs.slice(0, 15).map((l) => (
-                  <div key={l.id} className="flex gap-2 rounded-lg border border-[hsl(var(--border))] p-2.5">
+                  <div key={l.id} className="flex gap-2.5 rounded-xl border border-[hsl(var(--border))] p-3">
                     <span className="text-sm shrink-0">{WORK_CATEGORIES.find((c) => c.value === l.category)?.emoji || "📌"}</span>
                     <div className="flex-1 min-w-0">
                       <p className="text-[13px] text-[hsl(var(--text-1))] line-clamp-2">{l.description}</p>
-                      <p className="text-[11px] text-[hsl(var(--text-4))]">
+                      <p className="text-[11px] text-[hsl(var(--text-4))] mt-0.5">
                         {WORK_CATEGORIES.find((c) => c.value === l.category)?.label} · {LOG_TYPES.find((t) => t.value === l.type)?.label} · {formatDate(l.date)}
                       </p>
                     </div>

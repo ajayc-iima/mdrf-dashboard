@@ -33,24 +33,25 @@ export function CaseDiscussion({ caseStudy, currentUserId, currentUserName, curr
 
   const csType = CASE_TYPES.find((t) => t.value === caseStudy.type)
   const isAuthor = currentUserId === caseStudy.authorId
+  const canPublish = ["srf", "mdrf-coordinator", "mlrf-coordinator", "director", "admin"].includes(currentUserRole)
 
   return (
     <div className="space-y-4">
-      <button onClick={onBack} className="flex items-center gap-1.5 text-[13px] text-[hsl(var(--text-3))] hover:text-[hsl(var(--text-1))] transition-colors">
+      <button onClick={onBack} className="flex items-center gap-1.5 text-[13px] font-medium text-[hsl(var(--text-3))] hover:text-[hsl(var(--text-1))] transition-colors">
         <ArrowLeft className="h-4 w-4" /> Back
       </button>
       <Card>
         <CardHeader className="border-b border-[hsl(var(--border))]">
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div className="min-w-0">
-              <div className="flex items-center gap-2 mb-1">
+              <div className="flex items-center gap-2 mb-1.5">
                 <Badge variant="secondary" className="text-[11px]">{csType?.label}</Badge>
                 <Badge variant={caseStudy.status === "published" ? "success" : caseStudy.status === "submitted" ? "default" : "outline"}>{caseStudy.status}</Badge>
               </div>
               <CardTitle className="text-[16px]">{caseStudy.title}</CardTitle>
               <p className="text-[12px] text-[hsl(var(--text-3))] mt-0.5">{caseStudy.authorName} · {caseStudy.program === "mlrf" ? "" : caseStudy.district + " · "}{formatRelativeTime(caseStudy.createdAt)}</p>
             </div>
-            {!isAuthor && caseStudy.status !== "published" && <Button size="sm" onClick={() => changeStatus("published")}>Publish</Button>}
+            {canPublish && !isAuthor && caseStudy.status !== "published" && <Button size="sm" onClick={() => changeStatus("published")}>Publish</Button>}
             {isAuthor && caseStudy.status === "draft" && <Button size="sm" onClick={() => changeStatus("submitted")}>Submit</Button>}
           </div>
         </CardHeader>
@@ -60,16 +61,16 @@ export function CaseDiscussion({ caseStudy, currentUserId, currentUserName, curr
       </Card>
       <Card>
         <CardHeader className="border-b border-[hsl(var(--border))]">
-          <CardTitle className="flex items-center gap-2 text-[14px]"><MessageSquare className="h-4 w-4 text-[hsl(var(--blue))]" /> Discussion ({comments.length})</CardTitle>
+          <CardTitle className="flex items-center gap-2.5 text-[14px]"><MessageSquare className="h-4 w-4 text-[hsl(var(--blue))]" /> Discussion ({comments.length})</CardTitle>
         </CardHeader>
         <CardContent className="pt-4 space-y-3">
-          {loading ? <div className="space-y-2">{[...Array(2)].map((_, i) => <div key={i} className="h-12 animate-pulse rounded-lg bg-[hsl(var(--bg-muted))]" />)}</div>
+          {loading ? <div className="space-y-2">{[...Array(2)].map((_, i) => <div key={i} className="h-12 animate-pulse rounded-xl bg-[hsl(var(--bg-muted))]" />)}</div>
             : comments.length === 0 ? <p className="py-6 text-center text-[13px] text-[hsl(var(--text-4))]">No comments yet.</p>
             : comments.map((c) => (
-              <div key={c.id} className={cn("rounded-lg border p-3", c.action === "publish" ? "border-[hsl(var(--green))]/20 bg-[hsl(var(--green-soft))]" : "border-[hsl(var(--border))]")}>
-                <div className="flex items-center gap-2 mb-1">
+              <div key={c.id} className={cn("rounded-xl border p-3.5", c.action === "publish" ? "border-[hsl(var(--green))]/20 bg-[hsl(var(--green-soft))]" : "border-[hsl(var(--border))]")}>
+                <div className="flex items-center gap-2 mb-1.5">
                   <Avatar className="h-5 w-5"><AvatarFallback className="text-[9px]">{c.authorName.split(" ").map((w) => w[0]).join("").slice(0, 2).toUpperCase()}</AvatarFallback></Avatar>
-                  <span className="text-[13px] font-medium text-[hsl(var(--text-1))]">{c.authorName}</span>
+                  <span className="text-[13px] font-semibold text-[hsl(var(--text-1))]">{c.authorName}</span>
                   <Badge variant="outline" className="text-[10px]">{c.authorRole}</Badge>
                   {c.action !== "discuss" && <Badge variant={c.action === "publish" ? "success" : "default"} className="text-[10px]">{c.action}</Badge>}
                   <span className="ml-auto text-[11px] text-[hsl(var(--text-4))]">{formatRelativeTime(c.createdAt)}</span>
@@ -77,12 +78,12 @@ export function CaseDiscussion({ caseStudy, currentUserId, currentUserName, curr
                 <p className="text-[13px] text-[hsl(var(--text-2))]">{c.content}</p>
               </div>
             ))}
-          <div className="space-y-2 border-t border-[hsl(var(--border))] pt-3">
-            <div className="flex gap-1">
+          <div className="space-y-2.5 border-t border-[hsl(var(--border))] pt-3">
+            <div className="flex gap-1.5">
               {(["discuss", "publish", "analyze"] as const).map((a) => (
                 <button key={a} onClick={() => setAction(a)}
-                  className={cn("rounded-md border px-2 py-1 text-[11px] font-medium transition-colors",
-                    action === a ? "border-[hsl(var(--blue))]/30 bg-[hsl(var(--blue-soft))] text-[hsl(var(--blue))]" : "border-[hsl(var(--border))] text-[hsl(var(--text-4))] hover:text-[hsl(var(--text-2))]")}>
+                  className={cn("rounded-lg border px-2.5 py-1 text-[11px] font-semibold transition-colors",
+                    action === a ? "border-[hsl(var(--navy))]/20 bg-[hsl(var(--navy))]/[0.06] text-[hsl(var(--navy))]" : "border-[hsl(var(--border))] text-[hsl(var(--text-4))] hover:text-[hsl(var(--text-2))]")}>
                   {a}
                 </button>
               ))}

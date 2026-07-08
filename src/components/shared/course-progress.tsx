@@ -27,12 +27,12 @@ export function CourseProgress({ fellowId, program, progress, onToggle }: Props)
     <Card>
       <CardHeader className="border-b border-[hsl(var(--border))]">
         <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center gap-2 text-[15px]">
+          <CardTitle className="flex items-center gap-2.5 text-[15px]">
             <GraduationCap className="h-4 w-4 text-[hsl(var(--blue))]" /> Certificate Programme
           </CardTitle>
-          <span className={cn("text-[14px] font-semibold", pct === 100 ? "text-[hsl(var(--green))]" : "text-[hsl(var(--text-1))]")}>{pct}%</span>
+          <span className={cn("text-[14px] font-bold", pct === 100 ? "text-[hsl(var(--green))]" : "text-[hsl(var(--text-1))]")}>{pct}%</span>
         </div>
-        <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-[hsl(var(--bg-muted))]">
+        <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-[hsl(var(--bg-muted))]">
           <div className="h-full rounded-full bg-[hsl(var(--blue))] transition-all duration-500" style={{ width: `${pct}%` }} />
         </div>
       </CardHeader>
@@ -42,14 +42,14 @@ export function CourseProgress({ fellowId, program, progress, onToggle }: Props)
             const isDone = local.get(c.key) === "done"
             return (
               <button key={c.key} onClick={() => toggle(c.key)} disabled={busy === c.key}
-                className={cn("flex w-full items-start gap-3 rounded-lg px-3 py-2 text-left transition-colors", isDone ? "bg-[hsl(var(--green-soft))]" : "hover:bg-[hsl(var(--bg-muted))]")}>
+                className={cn("flex w-full items-start gap-3 rounded-xl px-3 py-2.5 text-left transition-colors", isDone ? "bg-[hsl(var(--green-soft))]" : "hover:bg-[hsl(var(--bg-muted))]")}>
                 <span className="mt-0.5 shrink-0">
                   {busy === c.key ? <Loader2 className="h-4 w-4 animate-spin text-[hsl(var(--text-4))]" />
                     : isDone ? <Check className="h-4 w-4 text-[hsl(var(--green))]" />
                     : <Circle className="h-4 w-4 text-[hsl(var(--text-4))]" />}
                 </span>
                 <div className="flex-1 min-w-0">
-                  <p className={cn("text-[13px] font-medium", isDone ? "text-[hsl(var(--green))]" : "text-[hsl(var(--text-1))]")}>{c.title}</p>
+                  <p className={cn("text-[13px] font-semibold", isDone ? "text-[hsl(var(--green))]" : "text-[hsl(var(--text-1))]")}>{c.title}</p>
                   <p className="text-[12px] text-[hsl(var(--text-4))]">{c.description}</p>
                 </div>
               </button>
@@ -57,7 +57,7 @@ export function CourseProgress({ fellowId, program, progress, onToggle }: Props)
           })}
         </div>
         {pct === 100
-          ? <p className="mt-4 text-center text-[13px] font-medium text-[hsl(var(--green))]">Programme complete.</p>
+          ? <p className="mt-4 text-center text-[13px] font-semibold text-[hsl(var(--green))]">Programme complete.</p>
           : <p className="mt-4 text-center text-[12px] text-[hsl(var(--text-4))]">{applicable.length - doneCount} module{applicable.length - doneCount === 1 ? "" : "s"} remaining.</p>}
       </CardContent>
     </Card>

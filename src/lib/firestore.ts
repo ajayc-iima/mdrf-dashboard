@@ -445,6 +445,18 @@ export async function getCourseProgress(fellowId: string): Promise<CourseProgres
   return snap.docs.map(d => serializeDoc<CourseProgress>(d))
 }
 
+export async function getAllFellowsCourseProgress(program: Program): Promise<CourseProgress[]> {
+  const fellows = await getFellows(program)
+  const fellowIds = fellows.map(f => f.id)
+  if (fellowIds.length === 0) return []
+
+  const snap = await getDocs(query(
+    collection(db, 'courseProgress'),
+    where('fellowId', 'in', fellowIds),
+  ))
+  return snap.docs.map(d => serializeDoc<CourseProgress>(d))
+}
+
 export async function setCourseProgress(
   fellowId: string,
   courseKey: string,
@@ -624,4 +636,61 @@ export async function getNoteComments(noteId: string): Promise<NoteComment[]> {
     orderBy('createdAt', 'asc'),
   ))
   return snap.docs.map(d => serializeDoc<NoteComment>(d))
+}
+
+// ─── Notifications (§8) ────────────────────────────────────────────
+
+export interface Notification {
+  id: string
+  fromId: string
+  fromName: string
+  fromRole: UserRole
+  toRole: 'data-scientist' | 'srf'
+  type: 'help_request' | 'message'
+  title: string
+  message: string
+  status: 'unread' | 'read' | 'resolved'
+  createdAt: Date
+}
+
+export async function sendNotification(data: {
+  fromId: string
+  fromName: string
+  fromRole: UserRole
+  toRole: 'data-scientist' | 'srf'
+  type: 'help_request' | 'message'
+  title: string
+  message: string
+}): Promise<string> {
+  const ref = await addDoc(collection(db, 'notifications'), {
+    ...data,
+    status: 'unread',
+    createdAt: serverTimestamp(),
+  })
+  return ref.id
+}
+
+export async function getNotifications(toRole: 'data-scientist' | 'srf', status?: string): Promise<Notification[]> {
+  const c: QueryConstraint[] = [where('toRole', '==', toRole)]
+  if (status) c.push(where('status', '==', status))
+  c.push(orderBy('createdAt', 'desc'))
+  const snap = await getDocs(query(collection(db, 'notifications'), ...c))
+  return snap.docs.map(d => serializeDoc<Notification>(d))
+}
+
+export async function markNotificationRead(id: string): Promise<void> {
+  await updateDoc(doc(db, 'notifications', id), { status: 'read' } as any)
+}
+
+export async function markNotificationResolved(id: string): Promise<void> {
+  await updateDoc(doc(db, 'notifications', id), { status: 'resolved' } as any)
+}
+
+export async function getUnreadCount(toRole: 'data-scientist' | 'srf'): Promise<number> {
+  const snap = await getDocs(query(
+    collection(db, 'notifications'),
+    where('toRole', '==', toRole),
+    where('status', '==', 'unread'),
+  ))
+  return snap.size
 }

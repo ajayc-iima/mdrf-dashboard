@@ -10,6 +10,15 @@ import type { UserRole } from '@/types'
 const googleProvider = new GoogleAuthProvider()
 
 const EMAIL_OTP_KEY = 'emailForSignIn'
+const ALLOWED_DOMAIN = 'isb.edu'
+
+export function validateIsbEmail(email: string): string | null {
+  if (!email.trim()) return 'Enter your email address.'
+  const domain = email.split('@')[1]?.toLowerCase()
+  if (!domain) return 'Enter a valid email address.'
+  if (domain !== ALLOWED_DOMAIN) return `Only @${ALLOWED_DOMAIN} emails are allowed.`
+  return null
+}
 
 export function getOtpRedirectUrl(): string {
   if (typeof window !== 'undefined') {
@@ -19,6 +28,8 @@ export function getOtpRedirectUrl(): string {
 }
 
 export async function sendOtpToEmail(email: string) {
+  const validationError = validateIsbEmail(email)
+  if (validationError) throw new Error(validationError)
   if (typeof navigator !== 'undefined' && !navigator.onLine) {
     throw new Error('You appear to be offline. Please connect to the internet.')
   }

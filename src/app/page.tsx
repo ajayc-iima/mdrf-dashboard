@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import {
   sendOtpToEmail, isOtpRedirect, completeOtpSignIn,
-  signInWithGoogle, getRoleHome,
+  signInWithGoogle, getRoleHome, validateIsbEmail,
 } from "@/lib/auth"
 import { getUserProfile, createUserProfile } from "@/lib/firestore"
 import { PROGRAM_META } from "@/lib/constants"
@@ -53,7 +53,8 @@ export default function LoginPage() {
     e.preventDefault()
     setError("")
     const email = otpEmail.trim()
-    if (!email) { setError("Enter your email address."); return }
+    const validationError = validateIsbEmail(email)
+    if (validationError) { setError(validationError); return }
     setLoading("otp")
     try {
       await sendOtpToEmail(email)
@@ -274,7 +275,7 @@ export default function LoginPage() {
                       type="email"
                       value={otpEmail}
                       onChange={(e) => setOtpEmail(e.target.value)}
-                      placeholder="your@email.com"
+                      placeholder="name@isb.edu"
                       autoComplete="email"
                       className="w-full h-[48px] rounded-xl border border-black/[0.08] bg-white px-4 text-[13px] text-[#0d1f4b] placeholder:text-[#bcc3cf] outline-none focus:border-[#0d1f4b]/30 focus:ring-2 focus:ring-[#0d1f4b]/5 transition-all duration-200"
                     />

@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { EmptyState } from "@/components/shared/empty-state"
 import { PageHeader } from "@/components/shared/page-header"
+import { RequestHelpForm } from "@/components/shared/request-help-form"
 import { addSupportRequest, getSupportRequests } from "@/lib/firestore"
 import { formatRelativeTime } from "@/lib/utils"
 import { SUPPORT_CATEGORIES, type SupportCategory, type Urgency } from "@/types"
@@ -70,6 +71,8 @@ export default function FellowSupport() {
       />
 
       <div className="grid gap-6 lg:grid-cols-2">
+        <RequestHelpForm />
+
         <Card>
           <CardHeader className="border-b border-[hsl(var(--border))]">
             <CardTitle>New Support Request</CardTitle>

@@ -24,7 +24,7 @@ export function CoordinatorSupport({ program }: Props) {
 
   async function loadData() {
     setLoading(true)
-    const data = await getSupportRequests()
+    const data = await getSupportRequests({ program })
     setRequests(data)
     setLoading(false)
   }
@@ -36,13 +36,13 @@ export function CoordinatorSupport({ program }: Props) {
 
   const filtered = filter === "all" ? requests : requests.filter((r) => r.status === filter)
 
-  if (loading) return <div className="h-64 animate-pulse rounded-xl bg-muted" />
+  if (loading) return <div className="h-64 animate-pulse rounded-2xl bg-[hsl(var(--bg-muted))]" />
 
   return (
     <div className="space-y-8 animate-fade-in">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">{title}</h1>
-        <p className="text-muted-foreground">{subtitle}</p>
+        <h1 className="text-[24px] font-bold tracking-tight text-[hsl(var(--text-1))]">{title}</h1>
+        <p className="text-[14px] text-[hsl(var(--text-3))] mt-1">{subtitle}</p>
       </div>
 
       <div className="flex gap-2">
@@ -57,25 +57,25 @@ export function CoordinatorSupport({ program }: Props) {
         <CardContent className="pt-6">
           <div className="space-y-4">
             {filtered.length === 0 ? (
-              <p className="py-8 text-center text-muted-foreground">No requests found</p>
+              <p className="py-8 text-center text-[13px] text-[hsl(var(--text-3))]">No requests found</p>
             ) : (
               filtered.map((req) => (
                 <div
                   key={req.id}
-                  className={`rounded-lg border p-4 ${
+                  className={`rounded-xl border p-4 ${
                     req.urgency === "high" ? "border-[hsl(var(--red))]/30 bg-[hsl(var(--red))]/5" :
-                    req.urgency === "medium" ? "border-[hsl(var(--orange))]/30 bg-[hsl(var(--orange))]/5" : ""
+                    req.urgency === "medium" ? "border-[hsl(var(--orange))]/30 bg-[hsl(var(--orange))]/5" : "border-[hsl(var(--border))]"
                   }`}
                 >
                   <div className="flex items-start justify-between">
                     <div>
                       <div className="flex items-center gap-2">
-                        <span className="font-medium">{req.fellowName}</span>
+                        <span className="text-[13px] font-semibold text-[hsl(var(--text-1))]">{req.fellowName}</span>
                         <Badge variant={req.urgency === "high" ? "destructive" : req.urgency === "medium" ? "warning" : "secondary"}>{req.urgency}</Badge>
                         <Badge variant={req.status === "resolved" ? "success" : req.status === "in_progress" ? "default" : "warning"}>{req.status.replace("_", " ")}</Badge>
                       </div>
-                      <p className="mt-1 text-sm text-muted-foreground">{req.description}</p>
-                      <p className="mt-2 text-xs text-muted-foreground">
+                      <p className="mt-1.5 text-[13px] text-[hsl(var(--text-2))]">{req.description}</p>
+                      <p className="mt-1 text-[11px] text-[hsl(var(--text-3))]">
                         {SUPPORT_CATEGORIES.find((c) => c.value === req.category)?.label} &bull; {req.program === "mlrf" ? "—" : req.district} &bull; {formatRelativeTime(req.createdAt)}
                       </p>
                     </div>

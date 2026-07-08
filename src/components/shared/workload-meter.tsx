@@ -36,7 +36,7 @@ export function WorkloadMeter({ fellowId, fellowName, district, program }: Props
   return (
     <Card>
       <CardHeader className="border-b border-[hsl(var(--border))]">
-        <CardTitle className="flex items-center gap-2 text-[15px]"><Gauge className="h-4 w-4 text-[hsl(var(--blue))]" /> Workload this week</CardTitle>
+        <CardTitle className="flex items-center gap-2.5 text-[15px]"><Gauge className="h-4 w-4 text-[hsl(var(--blue))]" /> Workload this week</CardTitle>
         <CardDescription>How is your work pressure this week?</CardDescription>
       </CardHeader>
       <CardContent className="pt-5">
@@ -47,16 +47,16 @@ export function WorkloadMeter({ fellowId, fellowName, district, program }: Props
                 const active = pressure === o.value
                 return (
                   <button key={o.value} onClick={() => save(o.value, note)} disabled={saving}
-                    className={cn("flex flex-col items-center gap-1.5 rounded-lg border-2 px-2 py-3 text-center transition-all",
+                    className={cn("flex flex-col items-center gap-1.5 rounded-xl border-2 px-2 py-3.5 text-center transition-all",
                       active ? o.activeBorder : "border-[hsl(var(--border))] bg-white text-[hsl(var(--text-4))] hover:border-[hsl(var(--border-strong))]")}>
                     <span className="text-lg">{o.emoji}</span>
-                    <span className="text-[11px] font-medium">{WORKLOAD_LABELS[o.value]}</span>
+                    <span className="text-[11px] font-semibold">{WORKLOAD_LABELS[o.value]}</span>
                   </button>
                 )
               })}
             </div>
             <Textarea value={note} onChange={(e) => setNote(e.target.value)} onBlur={() => pressure && save(pressure, note)} rows={2} maxLength={200} placeholder="Optional note..." className="mt-3" />
-            {savedAt && <p className="mt-2 text-[12px] text-[hsl(var(--green))] font-medium">Saved</p>}
+            {savedAt && <p className="mt-2 text-[12px] text-[hsl(var(--green))] font-semibold">Saved</p>}
           </>
         )}
       </CardContent>
