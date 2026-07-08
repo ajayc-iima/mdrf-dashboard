@@ -8,7 +8,10 @@ import type { UserRole } from '@/types'
 
 const googleProvider = new GoogleAuthProvider()
 const microsoftProvider = new OAuthProvider('microsoft.com')
-microsoftProvider.setCustomParameters({ prompt: 'select_account' })
+microsoftProvider.setCustomParameters({
+  prompt: 'select_account',
+  tenant: 'common',
+})
 
 export async function signInWithGoogle() {
   if (typeof navigator !== 'undefined' && !navigator.onLine) {
