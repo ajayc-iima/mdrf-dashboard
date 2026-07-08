@@ -260,6 +260,9 @@ export default function LoginPage() {
                   <p className="text-[12px] text-[#5d6f7a] mt-1 leading-relaxed">
                     We sent a sign-in link to <span className="font-semibold text-[#0d1f4b]">{otpEmail}</span>
                   </p>
+                  <p className="text-[11px] text-amber-600/70 mt-2 leading-relaxed">
+                    Also check your <span className="font-semibold">Junk Email</span> folder if you don&apos;t see it in your inbox.
+                  </p>
                   <button
                     type="button"
                     onClick={() => setOtpSent(false)}
@@ -270,6 +273,11 @@ export default function LoginPage() {
                 </div>
               ) : (
                 <form onSubmit={handleSendOtp}>
+                  {error && (
+                    <div className="mb-3 rounded-xl bg-red-50 border border-red-100 px-4 py-3 text-[12px] text-red-600 text-center font-medium" style={{ animation: "heroFadeIn 0.3s ease-out" }}>
+                      {error}
+                    </div>
+                  )}
                   <div className="mb-3">
                     <input
                       type="email"
@@ -332,13 +340,6 @@ export default function LoginPage() {
                 )}
                 <span>{loading === "google" ? "Signing in..." : "Continue with Google"}</span>
               </button>
-
-              {/* Error */}
-              {error && (
-                <div className="mt-4 rounded-xl bg-red-50 border border-red-100 px-4 py-3 text-[12px] text-red-600 text-center font-medium" style={{ animation: "heroFadeIn 0.3s ease-out" }}>
-                  {error}
-                </div>
-              )}
             </div>
 
             {/* Terms */}
