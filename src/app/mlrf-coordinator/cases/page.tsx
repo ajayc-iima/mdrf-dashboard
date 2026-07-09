@@ -11,7 +11,7 @@ import { EmptyState } from "@/components/shared/empty-state"
 import { useCaseStudies } from "@/hooks/useQueries"
 import { formatRelativeTime } from "@/lib/utils"
 import { CASE_TYPES, type CaseStudy } from "@/types"
-import { BookOpen, Clock, CheckCircle2, AlertCircle } from "lucide-react"
+import { BookOpen, Clock, CheckCircle2, AlertCircle, AlertTriangle } from "lucide-react"
 
 export default function MLRFCoordinatorCasesPage() {
   const { profile } = useAuth()

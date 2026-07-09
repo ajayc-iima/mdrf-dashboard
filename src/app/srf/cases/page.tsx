@@ -11,7 +11,7 @@ import { EmptyState } from "@/components/shared/empty-state"
 import { getCaseStudies, updateCaseStudy } from "@/lib/firestore"
 import { formatRelativeTime } from "@/lib/utils"
 import { CASE_TYPES, type CaseStudy } from "@/types"
-import { BookOpen, Check, X, Clock, AlertCircle, CheckCircle2, MessageSquare } from "lucide-react"
+import { BookOpen, Check, X, Clock, AlertCircle, CheckCircle2, MessageSquare, AlertTriangle } from "lucide-react"
 
 export default function SrfCasesPage() {
   const { profile } = useAuth()
