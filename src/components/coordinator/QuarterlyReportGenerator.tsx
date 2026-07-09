@@ -133,7 +133,7 @@ export function QuarterlyReportGenerator({ program }: { program: "mdrf" | "mlrf"
 
           {/* Report Type */}
           <div>
-            <label className="block text-[12px] font-bold uppercase tracking-[0.1em] text-[#0d1f4b]/60 mb-3">Report Type</label>
+            <label className="block text-[12px] font-bold uppercase tracking-[0.1em] text-[hsl(var(--navy)/0.6)] mb-3">Report Type</label>
             <div className="grid grid-cols-2 gap-3">
               {[
                 { value: "individual" as ReportType, label: "Individual Fellow", icon: User },
@@ -144,12 +144,12 @@ export function QuarterlyReportGenerator({ program }: { program: "mdrf" | "mlrf"
                   onClick={() => setReportType(value)}
                   className={`flex items-center gap-3 p-4 rounded-xl border transition-all duration-200 text-left ${
                     reportType === value
-                      ? "border-[#0d1f4b]/20 bg-[#0d1f4b]/[0.03]"
+                      ? "border-[hsl(var(--navy)/0.2)] bg-[hsl(var(--navy)/0.03)]"
                       : "border-black/[0.06] hover:border-black/[0.12]"
                   }`}
                 >
-                  <Icon className={`w-5 h-5 ${reportType === value ? "text-[#0d1f4b]" : "text-[#7c8698]"}`} />
-                  <span className={`text-[13px] font-semibold ${reportType === value ? "text-[#0d1f4b]" : "text-[#5d6f7a]"}`}>{label}</span>
+                  <Icon className={`w-5 h-5 ${reportType === value ? "text-[hsl(var(--navy))]" : "text-[#7c8698]"}`} />
+                  <span className={`text-[13px] font-semibold ${reportType === value ? "text-[hsl(var(--navy))]" : "text-[#5d6f7a]"}`}>{label}</span>
                 </button>
               ))}
             </div>
@@ -158,11 +158,11 @@ export function QuarterlyReportGenerator({ program }: { program: "mdrf" | "mlrf"
           {/* Fellow Selector */}
           {reportType === "individual" && (
             <div>
-              <label className="block text-[12px] font-bold uppercase tracking-[0.1em] text-[#0d1f4b]/60 mb-3">Select Fellow</label>
+              <label className="block text-[12px] font-bold uppercase tracking-[0.1em] text-[hsl(var(--navy)/0.6)] mb-3">Select Fellow</label>
               <select
                 value={selectedFellow}
                 onChange={(e) => setSelectedFellow(e.target.value)}
-                className="w-full h-11 px-4 rounded-xl border border-black/[0.08] bg-white text-[13px] text-[#0d1f4b] focus:outline-none focus:border-[#0d1f4b]/30 transition-colors"
+                className="w-full h-11 px-4 rounded-xl border border-black/[0.08] bg-white text-[13px] text-[hsl(var(--navy))] focus:outline-none focus:border-[hsl(var(--navy)/0.3)] transition-colors"
               >
                 <option value="">Choose a fellow...</option>
                 {fellows.map((f) => (
@@ -174,7 +174,7 @@ export function QuarterlyReportGenerator({ program }: { program: "mdrf" | "mlrf"
 
           {/* Date Mode */}
           <div>
-            <label className="block text-[12px] font-bold uppercase tracking-[0.1em] text-[#0d1f4b]/60 mb-3">Date Range</label>
+            <label className="block text-[12px] font-bold uppercase tracking-[0.1em] text-[hsl(var(--navy)/0.6)] mb-3">Date Range</label>
             <div className="grid grid-cols-2 gap-3 mb-4">
               {[
                 { value: "quarter" as DateMode, label: "Preset Quarter" },
@@ -185,23 +185,23 @@ export function QuarterlyReportGenerator({ program }: { program: "mdrf" | "mlrf"
                   onClick={() => setDateMode(value)}
                   className={`flex items-center gap-3 p-4 rounded-xl border transition-all duration-200 text-left ${
                     dateMode === value
-                      ? "border-[#0d1f4b]/20 bg-[#0d1f4b]/[0.03]"
+                      ? "border-[hsl(var(--navy)/0.2)] bg-[hsl(var(--navy)/0.03)]"
                       : "border-black/[0.06] hover:border-black/[0.12]"
                   }`}
                 >
-                  <Calendar className={`w-5 h-5 ${dateMode === value ? "text-[#0d1f4b]" : "text-[#7c8698]"}`} />
-                  <span className={`text-[13px] font-semibold ${dateMode === value ? "text-[#0d1f4b]" : "text-[#5d6f7a]"}`}>{label}</span>
+                  <Calendar className={`w-5 h-5 ${dateMode === value ? "text-[hsl(var(--navy))]" : "text-[#7c8698]"}`} />
+                  <span className={`text-[13px] font-semibold ${dateMode === value ? "text-[hsl(var(--navy))]" : "text-[#5d6f7a]"}`}>{label}</span>
                 </button>
               ))}
             </div>
 
             {/* Year */}
             <div className="mb-4">
-              <label className="block text-[11px] font-bold text-[#0d1f4b]/50 mb-2">Year</label>
+              <label className="block text-[11px] font-bold text-[hsl(var(--navy)/0.5)] mb-2">Year</label>
               <select
                 value={year}
                 onChange={(e) => setYear(Number(e.target.value))}
-                className="w-full h-10 px-3 rounded-lg border border-black/[0.08] bg-white text-[13px] text-[#0d1f4b] focus:outline-none focus:border-[#0d1f4b]/30"
+                className="w-full h-10 px-3 rounded-lg border border-black/[0.08] bg-white text-[13px] text-[hsl(var(--navy))] focus:outline-none focus:border-[hsl(var(--navy)/0.3)]"
               >
                 {[2024, 2025, 2026, 2027].map((y) => (
                   <option key={y} value={y}>{y}</option>
@@ -217,7 +217,7 @@ export function QuarterlyReportGenerator({ program }: { program: "mdrf" | "mlrf"
                     onClick={() => setSelectedQuarter(q)}
                     className={`p-3 rounded-lg border text-[13px] font-medium transition-all ${
                       selectedQuarter.value === q.value
-                        ? "border-[#0d1f4b]/20 bg-[#0d1f4b]/[0.03] text-[#0d1f4b]"
+                        ? "border-[hsl(var(--navy)/0.2)] bg-[hsl(var(--navy)/0.03)] text-[hsl(var(--navy))]"
                         : "border-black/[0.06] text-[#5d6f7a] hover:border-black/[0.12]"
                     }`}
                   >
@@ -228,7 +228,7 @@ export function QuarterlyReportGenerator({ program }: { program: "mdrf" | "mlrf"
             ) : (
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[11px] font-bold text-[#0d1f4b]/50 mb-2">Start Month</label>
+                  <label className="block text-[11px] font-bold text-[hsl(var(--navy)/0.5)] mb-2">Start Month</label>
                   <select
                     value={startMonth}
                     onChange={(e) => {
@@ -236,7 +236,7 @@ export function QuarterlyReportGenerator({ program }: { program: "mdrf" | "mlrf"
                       setStartMonth(v)
                       if (v > endMonth) setEndMonth(v)
                     }}
-                    className="w-full h-10 px-3 rounded-lg border border-black/[0.08] bg-white text-[13px] text-[#0d1f4b] focus:outline-none focus:border-[#0d1f4b]/30"
+                    className="w-full h-10 px-3 rounded-lg border border-black/[0.08] bg-white text-[13px] text-[hsl(var(--navy))] focus:outline-none focus:border-[hsl(var(--navy)/0.3)]"
                   >
                     {MONTHS.map((m, i) => (
                       <option key={i} value={i}>{m}</option>
@@ -244,11 +244,11 @@ export function QuarterlyReportGenerator({ program }: { program: "mdrf" | "mlrf"
                   </select>
                 </div>
                 <div>
-                  <label className="block text-[11px] font-bold text-[#0d1f4b]/50 mb-2">End Month</label>
+                  <label className="block text-[11px] font-bold text-[hsl(var(--navy)/0.5)] mb-2">End Month</label>
                   <select
                     value={endMonth}
                     onChange={(e) => setEndMonth(Number(e.target.value))}
-                    className="w-full h-10 px-3 rounded-lg border border-black/[0.08] bg-white text-[13px] text-[#0d1f4b] focus:outline-none focus:border-[#0d1f4b]/30"
+                    className="w-full h-10 px-3 rounded-lg border border-black/[0.08] bg-white text-[13px] text-[hsl(var(--navy))] focus:outline-none focus:border-[hsl(var(--navy)/0.3)]"
                   >
                     {MONTHS.map((m, i) => (
                       <option key={i} value={i} disabled={i < startMonth}>{m}</option>
@@ -270,7 +270,7 @@ export function QuarterlyReportGenerator({ program }: { program: "mdrf" | "mlrf"
           <button
             onClick={handleGenerate}
             disabled={!canGenerate || generating}
-            className="w-full h-12 rounded-xl bg-[#0d1f4b] text-white font-semibold text-[13px] flex items-center justify-center gap-2 hover:bg-[#131f70] disabled:opacity-50 disabled:pointer-events-none transition-all duration-200 shadow-[0_1px_2px_rgba(0,0,0,0.08)] hover:shadow-[0_4px_16px_rgba(13,31,75,0.25)]"
+            className="w-full h-12 rounded-xl bg-[hsl(var(--navy))] text-white font-semibold text-[13px] flex items-center justify-center gap-2 hover:bg-[hsl(var(--navy-dark))] disabled:opacity-50 disabled:pointer-events-none transition-all duration-200 shadow-[0_1px_2px_rgba(0,0,0,0.08)] hover:shadow-[0_4px_16px_hsl(var(--navy)/0.25)]"
           >
             {generating ? (
               <>

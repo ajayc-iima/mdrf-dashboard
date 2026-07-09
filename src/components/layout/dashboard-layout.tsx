@@ -46,7 +46,7 @@ export function DashboardLayout({ children, allowedRoles }: DashboardLayoutProps
   if (!user || !profile) return null
 
   return (
-    <div className="grid h-screen w-full md:grid-cols-[256px_1fr] bg-[hsl(var(--bg-page))]">
+    <div data-role={profile.role} className="grid h-screen w-full md:grid-cols-[256px_1fr] bg-[hsl(var(--bg-page))]">
       <div className="hidden md:block"><Sidebar /></div>
       <div className="flex flex-col overflow-hidden">
         {/* Mobile header */}
