@@ -32,7 +32,7 @@ export default function MLRFCoordinatorCasesPage() {
     )
   }
 
-  const pendingReview = cases.filter((c) => c.status === "submitted")
+  const pendingReview = cases.filter((c) => c.status === "submitted" || c.status === "revision")
   const underReview = cases.filter((c) => c.status === "under_review")
   const approved = cases.filter((c) => c.status === "approved")
   const published = cases.filter((c) => c.status === "published")
@@ -51,6 +51,7 @@ export default function MLRFCoordinatorCasesPage() {
       case "under_review": return <Badge variant="secondary"><AlertCircle className="h-3 w-3 mr-1" /> Under Review</Badge>
       case "approved": return <Badge variant="success"><CheckCircle2 className="h-3 w-3 mr-1" /> Approved</Badge>
       case "published": return <Badge variant="success">Published</Badge>
+      case "revision": return <Badge variant="warning"><AlertTriangle className="h-3 w-3 mr-1" /> Revision</Badge>
       default: return <Badge variant="outline">{status}</Badge>
     }
   }

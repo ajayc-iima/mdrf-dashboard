@@ -127,7 +127,7 @@ export async function approveUser(
 }
 
 export async function rejectUser(uid: string): Promise<void> {
-  await updateDoc(doc(db, 'users', uid), { status: 'rejected', isActive: false } as any)
+  await updateDoc(doc(db, 'users', uid), { status: 'rejected', isActive: false, role: null } as any)
 }
 
 export async function updateUserRole(uid: string, role: UserRole): Promise<void> {
@@ -142,9 +142,13 @@ export async function updateUserProfile(uid: string, data: Partial<UserProfile>)
   await updateDoc(doc(db, 'users', uid), data as any)
 }
 
-/** All fellows, optionally scoped to a programme. */
+/** All approved active fellows, optionally scoped to a programme. */
 export async function getFellows(program?: Program): Promise<UserProfile[]> {
-  const constraints: QueryConstraint[] = [where('role', '==', 'fellow')]
+  const constraints: QueryConstraint[] = [
+    where('role', '==', 'fellow'),
+    where('status', '==', 'approved'),
+    where('isActive', '==', true),
+  ]
   if (program) constraints.push(where('program', '==', program))
   const q = query(collection(db, 'users'), ...constraints)
   const snap = await getDocs(q)

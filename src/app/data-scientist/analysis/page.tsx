@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 import { useAuth } from "@/hooks/useAuth"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -17,6 +18,7 @@ import { BarChart3, Plus, Send } from "lucide-react"
 
 export default function DataScientistAnalysisPage() {
   const { profile } = useAuth()
+  const router = useRouter()
   const { cases, loading } = useCaseStudies({ authorId: profile?.id })
   const [showForm, setShowForm] = useState(false)
   const [form, setForm] = useState({ title: "", summary: "", content: "", type: "case_study" as CaseType, onedriveLink: "" })
@@ -43,7 +45,7 @@ export default function DataScientistAnalysisPage() {
     setForm({ title: "", summary: "", content: "", type: "case_study", onedriveLink: "" })
     setShowForm(false)
     setSubmitting(false)
-    window.location.reload()
+    router.refresh()
   }
 
   return (

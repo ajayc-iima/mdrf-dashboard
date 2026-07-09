@@ -26,7 +26,7 @@ export type AccountStatus = 'pending' | 'approved' | 'rejected'
 /** §3.3 Workload self-declaration. */
 export type WorkloadPressure = 'under' | 'optimal' | 'over'
 export type CaseType = 'case_study' | 'policy_brief' | 'field_breakthrough'
-export type CaseStatus = 'draft' | 'submitted' | 'under_review' | 'approved' | 'published'
+export type CaseStatus = 'draft' | 'submitted' | 'under_review' | 'approved' | 'published' | 'revision'
 export type CourseStatus = 'not_started' | 'in_progress' | 'done'
 
 /** Roles an admin may assign to a user. */
@@ -88,6 +88,7 @@ export interface WorkLog {
   type: LogType
   dueDate?: Date
   createdAt: Date
+  attachmentName?: string | null
 }
 
 export interface Task {

@@ -1,6 +1,7 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
 import { useAuth } from "@/hooks/useAuth"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -17,6 +18,7 @@ import { Award, Plus, Send } from "lucide-react"
 
 export default function SrfResearchPage() {
   const { profile } = useAuth()
+  const router = useRouter()
   const { cases, loading } = useCaseStudies({ authorId: profile?.id })
   const [showForm, setShowForm] = useState(false)
   const [form, setForm] = useState({ title: "", summary: "", content: "", type: "case_study" as CaseType, onedriveLink: "" })
@@ -30,7 +32,7 @@ export default function SrfResearchPage() {
       authorId: profile.id,
       authorName: profile.name,
       district: profile.district,
-      program: "mdrf",
+      program: profile.program,
       type: form.type,
       title: form.title.trim(),
       summary: form.summary.trim(),
@@ -43,7 +45,7 @@ export default function SrfResearchPage() {
     setForm({ title: "", summary: "", content: "", type: "case_study", onedriveLink: "" })
     setShowForm(false)
     setSubmitting(false)
-    window.location.reload()
+    router.refresh()
   }
 
   return (

@@ -157,7 +157,7 @@ export default function FellowCases() {
                 <CardHeader className="pb-2">
                   <div className="flex items-center gap-2 mb-1.5">
                     <span>{type?.emoji}</span>
-                    <Badge variant={cs.status === "published" ? "success" : cs.status === "submitted" ? "default" : "outline"}>{cs.status}</Badge>
+                    <Badge variant={cs.status === "published" ? "success" : cs.status === "submitted" ? "default" : cs.status === "revision" ? "warning" : "outline"}>{cs.status === "revision" ? "Needs Revision" : cs.status}</Badge>
                   </div>
                   <CardTitle className="text-[15px] line-clamp-2">{cs.title}</CardTitle>
                 </CardHeader>

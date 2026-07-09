@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1150 750" font-family="Arial, sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#555"/></marker>
+    <style>
+      .box{fill:#fff;stroke:#1a2c6e;stroke-width:2;rx:8;ry:8}
+      .box2{fill:#e8f0fe;stroke:#1a2c6e;stroke-width:2;rx:8;ry:8}
+      .box3{fill:#fff;stroke:#999;stroke-width:1.5;rx:6;ry:6}
+      .box-green{fill:#e8f5e9;stroke:#388e3c;stroke-width:1.5;rx:6;ry:6}
+      .box-amber{fill:#fff3e0;stroke:#e8942a;stroke-width:1.5;rx:6;ry:6}
+      .label{fill:#333;font-size:11;text-anchor:middle;dominant-baseline:middle}
+      .label-sm{fill:#555;font-size:9;text-anchor:middle;dominant-baseline:middle}
+      .label-xs{fill:#888;font-size:8;text-anchor:middle;dominant-baseline:middle}
+      .arrow{stroke:#555;stroke-width:1.5;fill:none;marker-end:url(#arrow)}
+      .section{fill:#fafafa;stroke:#ccc;stroke-width:1;rx:10;ry:10}
+      .section-title{fill:#666;font-size:9;font-weight:bold}
+    </style>
+  </defs>
+
+  <text x="575" y="18" font-size="16" fill="#1a2c6e" text-anchor="middle" font-weight="bold">Monthly Export Pipeline — 9-Sheet Workbook</text>
+
+  <!-- ===== TOP: Pipeline ===== -->
+  <rect x="15" y="30" width="1120" height="150" class="section"/>
+  <text x="575" y="48" class="section-title" text-anchor="middle">DATA FLOW</text>
+
+  <rect x="25" y="60" width="100" height="45" class="box"/><text x="75" y="78" class="label-sm">User picks</text><text x="75" y="92" class="label-sm">month/year</text>
+
+  <path d="M125,82 L155,82" class="arrow"/>
+  <rect x="160" y="60" width="140" height="45" class="box2"/><text x="230" y="75" class="label-sm">MonthlyExport</text><text x="230" y="88" class="label-sm">Button</text><text x="230" y="101" class="label-sm">(popover UI)</text>
+
+  <path d="M300,82 L330,82" class="arrow"/>
+  <rect x="335" y="60" width="150" height="45" class="box"/><text x="410" y="78" class="label-sm">build(program,</text><text x="410" y="92" class="label-sm">year, month)</text><text x="410" y="105" class="label-xs">callback</text>
+
+  <path d="M485,82 L515,82" class="arrow"/>
+  <rect x="520" y="60" width="130" height="45" class="box-amber"/><text x="585" y="78" class="label-sm">getMonthRange()</text><text x="585" y="92" class="label-sm">→ [from, to]</text>
+
+  <path d="M650,82 L680,82" class="arrow"/>
+  <rect x="685" y="50" width="200" height="65" class="box2"/><text x="785" y="68" class="label-sm">Promise.all() — 7</text><text x="785" y="82" class="label-sm">parallel Firestore</text><text x="785" y="96" class="label-sm">queries</text>
+
+  <path d="M885,82 L915,82" class="arrow"/>
+  <rect x="920" y="50" width="200" height="70" class="box-green"/><text x="1020" y="68" class="label-sm">Build 9 ExportSheet</text><text x="1020" y="82" class="label-sm">objects (Record[])</text><text x="1020" y="98" class="label-sm">→ Download</text>
+
+  <!-- ===== MIDDLE: Queries Detail ===== -->
+  <rect x="15" y="195" width="1120" height="280" class="section"/>
+  <text x="575" y="213" class="section-title" text-anchor="middle">7 PARALLEL FIRESTORE QUERIES</text>
+
+  <!-- Query blocks in a grid -->
+  <rect x="25" y="228" width="350" height="55" class="box3"/><text x="200" y="245" class="label-sm">① getWorkLogs(program, from, to, 10000)</text><text x="200" y="260" class="label-xs">workLogs: program=, date≥, date≤, limit, orderBy desc</text>
+  <rect x="25" y="293" width="350" height="55" class="box3"/><text x="200" y="310" class="label-sm">② getFellows(program)</text><text x="200" y="325" class="label-xs">users: role='fellow', program=</text>
+  <rect x="25" y="358" width="350" height="55" class="box3"/><text x="200" y="375" class="label-sm">③ getSupportRequests({ program })</text><text x="200" y="390" class="label-xs">supportRequests: program= + in-memory date filter</text>
+
+  <rect x="400" y="228" width="350" height="55" class="box3"/><text x="575" y="245" class="label-sm">④ getCaseStudies({ program })</text><text x="575" y="260" class="label-xs">caseStudies: program= + in-memory date filter</text>
+  <rect x="400" y="293" width="350" height="55" class="box3"/><text x="575" y="310" class="label-sm">⑤ getAllFellowsCourseProgress(program)</text><text x="575" y="325" class="label-xs">courseProgress: fellowId in [fellowIds]</text>
+  <rect x="400" y="358" width="350" height="55" class="box3"/><text x="575" y="375" class="label-sm">⑥ getDailyActivity(program, 31)</text><text x="575" y="390" class="label-xs">workLogs: program=, date≥31d ago, count per day</text>
+
+  <rect x="775" y="228" width="350" height="55" class="box3"/><text x="950" y="245" class="label-sm">⑦ getCategoryStats(program, from, to)</text><text x="950" y="260" class="label-xs">workLogs: program=, date range, count per category</text>
+
+  <!-- Weekly compliance loop -->
+  <rect x="775" y="358" width="350" height="55" class="box-amber"/>
+  <text x="950" y="375" class="label-sm">⚠ Extra: Weekly Compliance loop</text>
+  <text x="950" y="390" class="label-sm">weeksInRange(from, to) → for each week:</text>
+  <text x="950" y="405" class="label-sm">getWeeklyCompliance(weekKey, program, 5)</text>
+  <text x="950" y="418" class="label-xs">(fetches workLogs + workloadCheckins per week)</text>
+
+  <!-- ===== BOTTOM: 9 Sheets ===== -->
+  <rect x="15" y="490" width="1120" height="240" class="section"/>
+  <text x="575" y="508" class="section-title" text-anchor="middle">9 SHEETS IN WORKBOOK</text>
+
+  <!-- Row 1 -->
+  <rect x="25" y="520" width="240" height="90" class="box"/><text x="145" y="538" class="label">1. Summary</text><line x1="35" y1="548" x2="255" y2="548" stroke="#ddd"/><text x="35" y="563" class="label-xs" text-anchor="start">Programme, Month, Fellows</text><text x="35" y="578" class="label-xs" text-anchor="start">Logs, Support, Cases counts</text><text x="35" y="593" class="label-xs" text-anchor="start">Weekly target (5)</text>
+  <rect x="275" y="520" width="240" height="90" class="box"/><text x="395" y="538" class="label">2. Work Logs</text><line x1="285" y1="548" x2="505" y2="548" stroke="#ddd"/><text x="285" y="563" class="label-xs" text-anchor="start">Date, Week, Fellow, District</text><text x="285" y="578" class="label-xs" text-anchor="start">Constituency, Category, Status</text><text x="285" y="593" class="label-xs" text-anchor="start">Activity, Output/Deliverable</text>
+  <rect x="525" y="520" width="170" height="90" class="box"/><text x="610" y="538" class="label">3. Fellows</text><line x1="535" y1="548" x2="685" y2="548" stroke="#ddd"/><text x="535" y="563" class="label-xs" text-anchor="start">Name, Email, District</text><text x="535" y="578" class="label-xs" text-anchor="start">Constituencies, Total Logs</text><text x="535" y="593" class="label-xs" text-anchor="start">Streak, Last Active, Active</text>
+  <rect x="705" y="520" width="200" height="90" class="box-amber"/><text x="805" y="538" class="label">4. Weekly Compliance</text><line x1="715" y1="548" x2="895" y2="548" stroke="#ddd"/><text x="715" y="563" class="label-xs" text-anchor="start">Week, Fellow, District</text><text x="715" y="578" class="label-xs" text-anchor="start">Logs This Week, Met Target</text><text x="715" y="593" class="label-xs" text-anchor="start">Workload (under/optimal/over)</text>
+  <rect x="915" y="520" width="210" height="90" class="box"/><text x="1020" y="538" class="label">5. Support Requests</text><line x1="925" y1="548" x2="1115" y2="548" stroke="#ddd"/><text x="925" y="563" class="label-xs" text-anchor="start">Date, Fellow, District</text><text x="925" y="578" class="label-xs" text-anchor="start">Category, Type, Urgency</text><text x="925" y="593" class="label-xs" text-anchor="start">Status, Description, Resolved At</text>
+
+  <!-- Row 2 -->
+  <rect x="25" y="625" width="200" height="90" class="box"/><text x="125" y="643" class="label">6. Case Studies</text><line x1="35" y1="653" x2="215" y2="653" stroke="#ddd"/><text x="35" y="668" class="label-xs" text-anchor="start">Date, Title, Type, Author</text><text x="35" y="683" class="label-xs" text-anchor="start">District, Status, Tags</text>
+  <rect x="235" y="625" width="200" height="90" class="box"/><text x="335" y="643" class="label">7. Course Progress</text><line x1="245" y1="653" x2="425" y2="653" stroke="#ddd"/><text x="245" y="668" class="label-xs" text-anchor="start">Course Status × Count</text><text x="245" y="683" class="label-xs" text-anchor="start">(not_started, in_progress, done)</text>
+  <rect x="445" y="625" width="200" height="90" class="box"/><text x="545" y="643" class="label">8. Daily Activity</text><line x1="455" y1="653" x2="635" y2="653" stroke="#ddd"/><text x="455" y="668" class="label-xs" text-anchor="start">Date × Work Logs count</text><text x="455" y="683" class="label-xs" text-anchor="start">Filtered to month range</text>
+  <rect x="655" y="625" width="200" height="90" class="box"/><text x="755" y="643" class="label">9. Categories</text><line x1="665" y1="653" x2="845" y2="653" stroke="#ddd"/><text x="665" y="668" class="label-xs" text-anchor="start">Category × Work Logs count</text><text x="665" y="683" class="label-xs" text-anchor="start">(research, fieldwork, report,</text><text x="665" y="698" class="label-xs" text-anchor="start">admin, capacity, other)</text>
+
+  <!-- Entry points -->
+  <rect x="870" y="625" width="260" height="90" class="box-green"/>
+  <text x="1000" y="643" class="label">Available On</text>
+  <line x1="880" y1="653" x2="1120" y2="653" stroke="#ddd"/>
+  <text x="880" y="668" class="label-sm" text-anchor="start">Coordinator Overview (MDRF or MLRF)</text>
+  <text x="880" y="683" class="label-sm" text-anchor="start">Director Dashboard (MDRF + MLRF)</text>
+  <text x="880" y="698" class="label-sm" text-anchor="start">Admin Dashboard (selectable program)</text>
+
+</svg>

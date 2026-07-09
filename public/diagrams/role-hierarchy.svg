@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 560" font-family="Arial, sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#888"/></marker>
+    <style>.admin{fill:#1a2c6e}.director{fill:#2d1f6e}.mdrf-c{fill:#1f7a5a}.mlrf-c{fill:#1a6a7a}.fellow{fill:#d48924}.ds{fill:#2d4a8a}.srf{fill:#1f6b40}.mdrf-fellow{fill:#d48924}.mlrf-fellow{fill:#1a6a7a}.label{fill:#fff;font-size:13;text-anchor:middle;dominant-baseline:middle}.sublabel{fill:#888;font-size:10;text-anchor:middle;dominant-baseline:middle}.caption{fill:#666;font-size:9;text-anchor:middle}.line{stroke:#bbb;stroke-width:1.5;fill:none;marker-end:url(#arrow)}.line2{stroke:#bbb;stroke-width:1;fill:none;stroke-dasharray:5,3;marker-end:url(#arrow)}</style>
+  </defs>
+
+  <!-- Top level: Admin -->
+  <rect x="310" y="10" width="200" height="50" rx="10" class="admin"/><text x="410" y="40" class="label">Administrator</text>
+  <rect x="310" y="65" width="200" height="30" rx="6" fill="#f0f0f0" stroke="#ddd"/><text x="410" y="84" class="sublabel">Full system access, user approvals</text>
+  <path d="M410,95 L410,120" class="line"/>
+
+  <!-- Director -->
+  <rect x="310" y="125" width="200" height="50" rx="10" class="director"/><text x="410" y="155" class="label">Director</text>
+  <rect x="310" y="180" width="200" height="30" rx="6" fill="#f0f0f0" stroke="#ddd"/><text x="410" y="199" class="sublabel">Cross-programme compliance oversight</text>
+  <path d="M340,210 L255,250" class="line"/>
+  <path d="M480,210 L565,250" class="line"/>
+
+  <!-- Coordinators row -->
+  <rect x="80" y="255" width="210" height="50" rx="10" class="mdrf-c"/><text x="185" y="285" class="label">MDRF Coordinator</text>
+  <rect x="80" y="310" width="210" height="30" rx="6" fill="#f0f0f0" stroke="#ddd"/><text x="185" y="329" class="sublabel">District-level oversight</text>
+
+  <rect x="530" y="255" width="210" height="50" rx="10" class="mlrf-c"/><text x="635" y="285" class="label">MLRF Coordinator</text>
+  <rect x="530" y="310" width="210" height="30" rx="6" fill="#f0f0f0" stroke="#ddd"/><text x="635" y="329" class="sublabel">Constituency-level oversight</text>
+
+  <!-- Lines from MDRF Coordinator to MDRF roles -->
+  <path d="M125,340 L95,390" class="line2"/>
+  <path d="M185,340 L245,390" class="line2"/>
+  <path d="M245,340 L395,390" class="line2"/>
+
+  <!-- Lines from MLRF Coordinator to MLRF Fellow -->
+  <path d="M635,340 L635,390" class="line2"/>
+
+  <!-- MDRF Fellows row (under MDRF Coordinator) -->
+  <rect x="10" y="395" width="160" height="50" rx="10" class="fellow"/><text x="90" y="425" class="label">MDRF Fellow</text>
+  <rect x="10" y="450" width="160" height="30" rx="6" fill="#f0f0f0" stroke="#ddd"/><text x="90" y="469" class="sublabel">Logs work, tasks, LMS</text>
+
+  <rect x="185" y="395" width="160" height="50" rx="10" class="ds"/><text x="265" y="425" class="label">Data Scientist</text>
+  <rect x="185" y="450" width="160" height="30" rx="6" fill="#f0f0f0" stroke="#ddd"/><text x="265" y="469" class="sublabel">Analysis, data support</text>
+
+  <rect x="360" y="395" width="150" height="50" rx="10" class="srf"/><text x="435" y="425" class="label">SRF</text>
+  <rect x="360" y="450" width="150" height="30" rx="6" fill="#f0f0f0" stroke="#ddd"/><text x="435" y="469" class="sublabel">Case review, research</text>
+
+  <!-- MLRF Fellow (under MLRF Coordinator) -->
+  <rect x="550" y="395" width="160" height="50" rx="10" class="fellow"/><text x="630" y="425" class="label">MLRF Fellow</text>
+  <rect x="550" y="450" width="160" height="30" rx="6" fill="#f0f0f0" stroke="#ddd"/><text x="630" y="469" class="sublabel">Logs work, tasks, LMS</text>
+
+  <!-- Legend -->
+  <rect x="250" y="520" width="320" height="30" rx="6" fill="#f9f9f9" stroke="#eee"/>
+  <text x="410" y="540" class="sublabel">Each role has a unique colour theme applied via data-role attribute + CSS variables</text>
+</svg>

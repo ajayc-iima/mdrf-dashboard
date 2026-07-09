@@ -1,0 +1,150 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 650" font-family="Arial, sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#555"/></marker>
+    <marker id="arrow-dash" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#999"/></marker>
+    <style>
+      .box{fill:#fff;stroke:#2d4a8a;stroke-width:2;rx:8;ry:8}
+      .box2{fill:#e8f0fe;stroke:#2d4a8a;stroke-width:2;rx:8;ry:8}
+      .box-dr{fill:#fff3e0;stroke:#e8942a;stroke-width:2;rx:8;ry:8}
+      .box-ap{fill:#e8f5e9;stroke:#388e3c;stroke-width:2;rx:8;ry:8}
+      .box-rj{fill:#fce4ec;stroke:#d32f2f;stroke-width:2;rx:8;ry:8}
+      .box3{fill:#fff;stroke:#999;stroke-width:1.5;rx:6;ry:6}
+      .label{fill:#333;font-size:12;text-anchor:middle;dominant-baseline:middle}
+      .label-sm{fill:#555;font-size:9;text-anchor:middle;dominant-baseline:middle}
+      .label-xs{fill:#888;font-size:8;text-anchor:middle;dominant-baseline:middle}
+      .arrow{stroke:#555;stroke-width:1.5;fill:none;marker-end:url(#arrow)}
+      .arrow-dash{stroke:#999;stroke-width:1;fill:none;stroke-dasharray:5,3;marker-end:url(#arrow-dash)}
+      .section{fill:#fafafa;stroke:#ccc;stroke-width:1;rx:10;ry:10}
+      .section-title{fill:#666;font-size:9;font-weight:bold}
+    </style>
+  </defs>
+
+  <text x="550" y="18" font-size="16" fill="#2d4a8a" text-anchor="middle" font-weight="bold">Support Request &amp; Notification System</text>
+
+  <!-- ===== COLUMN 1: Support Request Pipeline ===== -->
+  <rect x="15" y="35" width="350" height="595" class="section"/>
+  <text x="190" y="53" class="section-title" text-anchor="middle">1. SUPPORT REQUEST PIPELINE</text>
+
+  <rect x="25" y="65" width="330" height="75" class="box"/>
+  <text x="190" y="82" class="label">Creation — Two Paths</text>
+  <line x1="35" y1="95" x2="345" y2="95" stroke="#ddd"/>
+  <text x="35" y="110" class="label-sm" text-anchor="start">A. Inline form (fellow/support page):</text>
+  <text x="45" y="125" class="label-xs" text-anchor="start">Category + Urgency + Description (max 1000 chars)</text>
+  <text x="35" y="138" class="label-sm" text-anchor="start">B. Dedicated page (/fellow/submit-support):</text>
+  <text x="45" y="150" class="label-xs" text-anchor="start">RequestType + Urgency + Description (max 500 chars)</text>
+
+  <path d="M190,140 L190,160" class="arrow"/>
+  <rect x="25" y="160" width="330" height="55" class="box2"/><text x="190" y="178" class="label">addSupportRequest() → Firestore</text><text x="190" y="193" class="label-sm">supportRequests collection</text><text x="190" y="208" class="label-sm">Default: status="open", createdAt=serverTimestamp()</text>
+
+  <path d="M190,215 L190,235" class="arrow"/>
+
+  <!-- State machine -->
+  <rect x="25" y="235" width="95" height="40" class="box2"/><text x="72" y="255" class="label-sm">🔴 Open</text>
+  <path d="M120,255 L155,255" class="arrow"/>
+  <rect x="155" y="235" width="95" height="40" class="box-dr"/><text x="202" y="255" class="label-sm">🟡 In Progress</text>
+  <path d="M250,255 L285,255" class="arrow"/>
+  <rect x="285" y="235" width="70" height="40" class="box-ap"/><text x="320" y="255" class="label-sm">✅ Resolved</text>
+
+  <!-- Direct resolve path -->
+  <path d="M72,275 L72,300 L320,300 L320,275" class="arrow" style="stroke:#999;stroke-width:1;stroke-dasharray:5,3;fill:none"/>
+
+  <rect x="25" y="320" width="330" height="80" class="box"/>
+  <text x="190" y="338" class="label">Categories (SupportCategory)</text>
+  <line x1="35" y1="348" x2="345" y2="348" stroke="#ddd"/>
+  <text x="35" y="363" class="label-sm" text-anchor="start">🧠 Knowledge  📦 Data  📐 Analysis</text>
+  <text x="35" y="378" class="label-sm" text-anchor="start">🔧 Technical  🚚 Logistics  🎓 Capacity-building</text>
+
+  <rect x="25" y="420" width="330" height="55" class="box-ap"/>
+  <text x="190" y="438" class="label">Urgency Levels</text>
+  <line x1="35" y1="448" x2="345" y2="448" stroke="#ddd"/>
+  <text x="35" y="463" class="label-sm" text-anchor="start">🟢 Low — 🟡 Medium — 🔴 High (red card highlight)</text>
+
+  <rect x="25" y="495" width="330" height="120" class="box3"/>
+  <text x="190" y="513" class="label-sm">Request Types (submit-support page only)</text>
+  <line x1="35" y1="520" x2="345" y2="520" stroke="#ddd"/>
+  <text x="35" y="535" class="label-xs" text-anchor="start">data_analysis — Policy_drafting</text>
+  <text x="35" y="550" class="label-xs" text-anchor="start">subject_matter_expert — administrative</text>
+  <text x="35" y="568" class="label-xs" text-anchor="start">(category hardcoded to "knowledge")</text>
+
+  <!-- ===== COLUMN 2: Role Views ===== -->
+  <rect x="385" y="35" width="330" height="595" class="section"/>
+  <text x="550" y="53" class="section-title" text-anchor="middle">2. ROLE-SPECIFIC VIEWS</text>
+
+  <rect x="395" y="65" width="310" height="90" class="box2"/>
+  <text x="550" y="82" class="label">Fellow / DS / SRF (/fellow/support)</text>
+  <line x1="405" y1="95" x2="695" y2="95" stroke="#ddd"/>
+  <text x="405" y="110" class="label-sm" text-anchor="start">• Create requests (inline form)</text>
+  <text x="405" y="125" class="label-sm" text-anchor="start">• View own requests only</text>
+  <text x="405" y="140" class="label-sm" text-anchor="start">• Read-only — cannot change status</text>
+
+  <rect x="395" y="175" width="310" height="90" class="box"/>
+  <text x="550" y="192" class="label">Coordinator (/mdrf-coordinator/support)</text>
+  <line x1="405" y1="205" x2="695" y2="205" stroke="#ddd"/>
+  <text x="405" y="220" class="label-sm" text-anchor="start">• All requests for their program</text>
+  <text x="405" y="235" class="label-sm" text-anchor="start">• "Start" btn → open → in_progress</text>
+  <text x="405" y="250" class="label-sm" text-anchor="start">• "Resolve" btn → any → resolved</text>
+
+  <rect x="395" y="285" width="310" height="90" class="box-pb"/>
+  <text x="550" y="302" class="label">Director (/director/support)</text>
+  <line x1="405" y1="315" x2="695" y2="315" stroke="#ddd"/>
+  <text x="405" y="330" class="label-sm" text-anchor="start">• All requests across both programs</text>
+  <text x="405" y="345" class="label-sm" text-anchor="start">• Can update status (Start/Resolve)</text>
+
+  <rect x="395" y="395" width="310" height="80" class="box-dr"/>
+  <text x="550" y="412" class="label">Admin (/admin — dashboard card)</text>
+  <line x1="405" y1="425" x2="695" y2="425" stroke="#ddd"/>
+  <text x="405" y="440" class="label-sm" text-anchor="start">• Shows first 5 non-resolved requests</text>
+  <text x="405" y="455" class="label-sm" text-anchor="start">• Read-only — no status changes</text>
+
+  <rect x="395" y="495" width="310" height="65" class="box3"/>
+  <text x="550" y="512" class="label-sm">CoordinatorAlerts Integration</text>
+  <line x1="405" y1="520" x2="695" y2="520" stroke="#ddd"/>
+  <text x="405" y="535" class="label-xs" text-anchor="start">• Urgent Requests: open + high urgency</text>
+  <text x="405" y="550" class="label-xs" text-anchor="start">• Open Requests list with "Take" button</text>
+
+  <!-- ===== COLUMN 3: Notification System ===== -->
+  <rect x="735" y="35" width="350" height="595" class="section"/>
+  <text x="910" y="53" class="section-title" text-anchor="middle">3. NOTIFICATION SYSTEM (Separate Track)</text>
+
+  <rect x="745" y="65" width="330" height="130" class="box"/>
+  <text x="910" y="82" class="label">RequestHelpForm Component</text>
+  <line x1="755" y1="95" x2="1065" y2="95" stroke="#ddd"/>
+  <text x="755" y="110" class="label-sm" text-anchor="start">• Separate from support requests</text>
+  <text x="755" y="125" class="label-sm" text-anchor="start">• Rendered on Fellow support page</text>
+  <text x="755" y="143" class="label-sm" text-anchor="start">• Sends to specific role:</text>
+  <text x="755" y="158" class="label-sm" text-anchor="start">  toRole: "data-scientist" | "srf"</text>
+  <text x="755" y="173" class="label-sm" text-anchor="start">• Free-text title + message</text>
+  <text x="755" y="188" class="label-sm" text-anchor="start">• Type: "help_request" | "message"</text>
+
+  <path d="M910,195 L910,220" class="arrow"/>
+  <rect x="745" y="220" width="330" height="45" class="box2"/><text x="910" y="238" class="label">sendNotification() → notifications collection</text><text x="910" y="255" class="label-sm">status = "unread"</text>
+
+  <path d="M910,265 L910,290" class="arrow"/>
+
+  <rect x="745" y="290" width="330" height="60" class="box-ap"/>
+  <text x="910" y="308" class="label">Notification Inbox (NotificationsPage)</text>
+  <line x1="755" y1="318" x2="1065" y2="318" stroke="#ddd"/>
+  <text x="755" y="333" class="label-sm" text-anchor="start">Tabs: All | Unread | Resolved</text>
+  <text x="755" y="348" class="label-sm" text-anchor="start">Actions: Mark Read → Resolve</text>
+
+  <rect x="745" y="370" width="330" height="50" class="box-amber"/>
+  <text x="910" y="388" class="label">NotificationBadge (Nav)</text>
+  <line x1="755" y1="398" x2="1065" y2="398" stroke="#ddd"/>
+  <text x="755" y="413" class="label-sm" text-anchor="start">• Unread count badge on sidebar + mobile nav</text>
+  <text x="755" y="428" class="label-sm" text-anchor="start">• Auto-polled every 30 seconds</text>
+
+  <rect x="745" y="445" width="330" height="65" class="box3"/>
+  <text x="910" y="463" class="label-sm">Notification Status Lifecycle</text>
+  <line x1="755" y1="470" x2="1065" y2="470" stroke="#ddd"/>
+  <text x="755" y="485" class="label-xs" text-anchor="start">unread → read → resolved</text>
+  <text x="755" y="500" class="label-xs" text-anchor="start">Recipients: data-scientist, srf only</text>
+  <text x="755" y="515" class="label-xs" text-anchor="start">(NOTIFIABLE_ROLES constant)</text>
+
+  <rect x="745" y="535" width="330" height="80" class="box"/>
+  <text x="910" y="553" class="label">Export Integration</text>
+  <line x1="755" y1="563" x2="1065" y2="563" stroke="#ddd"/>
+  <text x="755" y="578" class="label-sm" text-anchor="start">📊 Monthly Export Sheet: Support Requests</text>
+  <text x="755" y="593" class="label-sm" text-anchor="start">   Date, Fellow, District, Category, Type,</text>
+  <text x="755" y="608" class="label-sm" text-anchor="start">   Urgency, Status, Description, Resolved At</text>
+
+</svg>

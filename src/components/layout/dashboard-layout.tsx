@@ -27,6 +27,7 @@ export function DashboardLayout({ children, allowedRoles }: DashboardLayoutProps
     if (loading) return
     if (!user) { router.push("/"); return }
     if (profile && (profile.status === "pending" || profile.status === "rejected")) { router.push("/pending"); return }
+    if (profile && profile.isActive === false) { router.push("/"); return }
     if (profile && profile.status === "approved" && !profile.role) { router.push("/pending"); return }
     if (profile && profile.role && profile.role !== "admin" && !allowedRoles.includes(profile.role)) { router.push(getRoleHome(profile.role)) }
   }, [user, profile, loading, router, allowedRoles])

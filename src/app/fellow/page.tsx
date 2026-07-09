@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
 import { useAuth } from "@/hooks/useAuth"
 import { useFellowData, useWeekLogCount, useCourseProgress } from "@/hooks/useQueries"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
@@ -29,6 +30,7 @@ import {
 
 export default function FellowDashboard() {
   const { profile } = useAuth()
+  const router = useRouter()
   const { logs, tasks, loading } = useFellowData(profile?.id)
   const weekCount = useWeekLogCount(profile?.id)
   const courseProg = useCourseProgress(profile?.id)
@@ -44,6 +46,7 @@ export default function FellowDashboard() {
   const [listeningActivity, setListeningActivity] = useState(false)
   const [listeningOutput, setListeningOutput] = useState(false)
   const [fileError, setFileError] = useState("")
+  const [selectedFile, setSelectedFile] = useState<File | null>(null)
 
   const SpeechRecognition = typeof window !== 'undefined'
     ? (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
@@ -113,12 +116,14 @@ export default function FellowDashboard() {
       outputDeliverable: out,
       description: `${act}${out ? ` — ${out}` : ''}`,
       type: logType,
+      attachmentName: selectedFile?.name || null,
     })
     setLogActivity("")
     setLogOutput("")
+    setSelectedFile(null)
     showToast("Work logged successfully!")
     setSubmitting(false)
-    window.location.reload()
+    router.refresh()
   }
 
   async function handleTaskAdd(e: React.FormEvent) {
@@ -133,7 +138,7 @@ export default function FellowDashboard() {
       dueDate: null,
     })
     setTaskTitle("")
-    window.location.reload()
+    router.refresh()
   }
 
   function showToast(msg: string) {
@@ -299,21 +304,24 @@ export default function FellowDashboard() {
               {/* File upload validation */}
               <div>
                 <label className="text-[12px] font-semibold text-[hsl(var(--text-2))] block mb-1.5">Attachment (optional)</label>
-                <input
-                  type="file"
-                  accept=".pdf,.doc,.docx,.xls,.xlsx,.csv,.png,.jpg,.jpeg"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0]
-                    if (file && file.size > 5 * 1024 * 1024) {
-                      setFileError("File exceeds 5MB limit. Please choose a smaller file.")
-                      e.target.value = ''
-                    } else {
-                      setFileError("")
-                    }
-                  }}
-                  className="block w-full text-[12px] text-[hsl(var(--text-3))] file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-[12px] file:font-semibold file:bg-[hsl(var(--navy))]/[0.08] file:text-[hsl(var(--navy))] hover:file:bg-[hsl(var(--navy))]/[0.12] file:transition-colors file:cursor-pointer"
-                />
-                {fileError && <p className="mt-1 text-[11px] text-[hsl(var(--red))]">{fileError}</p>}
+                  <input
+                    type="file"
+                    accept=".pdf,.doc,.docx,.xls,.xlsx,.csv,.png,.jpg,.jpeg"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0]
+                      if (file && file.size > 5 * 1024 * 1024) {
+                        setFileError("File exceeds 5MB limit. Please choose a smaller file.")
+                        e.target.value = ''
+                        setSelectedFile(null)
+                      } else if (file) {
+                        setFileError("")
+                        setSelectedFile(file)
+                      }
+                    }}
+                    className="block w-full text-[12px] text-[hsl(var(--text-3))] file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-[12px] file:font-semibold file:bg-[hsl(var(--navy))]/[0.08] file:text-[hsl(var(--navy))] hover:file:bg-[hsl(var(--navy))]/[0.12] file:transition-colors file:cursor-pointer"
+                  />
+                  {fileError && <p className="mt-1 text-[11px] text-[hsl(var(--red))]">{fileError}</p>}
+                  {selectedFile && <p className="text-[11px] text-[hsl(var(--green))]">✓ {selectedFile.name}</p>}
               </div>
 
               <div className="flex items-center justify-between">
@@ -356,7 +364,7 @@ export default function FellowDashboard() {
               ) : (
                 tasks.map((task) => (
                   <div key={task.id} className="flex items-center gap-2.5 rounded-xl border border-[hsl(var(--border))] px-3 py-2.5 hover:bg-[hsl(var(--bg-muted))]/50 transition-colors">
-                    <button onClick={() => updateTaskStatus(task.id, task.status === "completed" ? "ongoing" : "completed").then(() => window.location.reload())}>
+                    <button onClick={() => updateTaskStatus(task.id, task.status === "completed" ? "ongoing" : "completed").then(() => router.refresh())}>
                       {task.status === "completed" ? (
                         <CheckCircle2 className="h-4.5 w-4.5 text-[hsl(var(--green))]" />
                       ) : task.status === "stuck" ? (
@@ -370,7 +378,7 @@ export default function FellowDashboard() {
                     </span>
                     <select
                       value={task.status}
-                      onChange={(e) => updateTaskStatus(task.id, e.target.value as TaskStatus).then(() => window.location.reload())}
+                      onChange={(e) => updateTaskStatus(task.id, e.target.value as TaskStatus).then(() => router.refresh())}
                       className="rounded-lg border border-[hsl(var(--border))] bg-transparent px-2 py-1 text-[11px] font-medium text-[hsl(var(--text-3))]"
                     >
                       <option value="ongoing">Ongoing</option>

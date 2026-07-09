@@ -1,0 +1,155 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 780" font-family="Arial, sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#555"/></marker>
+    <marker id="arrow-dash" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#999"/></marker>
+    <style>
+      .box{fill:#fff;stroke:#d48924;stroke-width:2;rx:8;ry:8}
+      .box2{fill:#fef3e2;stroke:#d48924;stroke-width:2;rx:8;ry:8}
+      .box3{fill:#fff;stroke:#999;stroke-width:1.5;rx:6;ry:6;stroke-dasharray:6,3}
+      .box-green{fill:#e8f5e9;stroke:#388e3c;stroke-width:1.5;rx:6;ry:6}
+      .box-red{fill:#fce4ec;stroke:#d32f2f;stroke-width:1.5;rx:6;ry:6}
+      .box-blue{fill:#e3f2fd;stroke:#1a6a7a;stroke-width:1.5;rx:6;ry:6}
+      .box-amber{fill:#fff3e0;stroke:#e8942a;stroke-width:1.5;rx:6;ry:6}
+      .label{fill:#333;font-size:11;text-anchor:middle;dominant-baseline:middle}
+      .label-sm{fill:#555;font-size:9;text-anchor:middle;dominant-baseline:middle}
+      .label-xs{fill:#888;font-size:8;text-anchor:middle;dominant-baseline:middle}
+      .arrow{stroke:#555;stroke-width:1.5;fill:none;marker-end:url(#arrow)}
+      .arrow-dash{stroke:#999;stroke-width:1;fill:none;stroke-dasharray:5,3;marker-end:url(#arrow-dash)}
+      .section{fill:#fafafa;stroke:#ccc;stroke-width:1;rx:10;ry:10}
+      .section-title{fill:#666;font-size:9;font-weight:bold}
+    </style>
+  </defs>
+
+  <text x="550" y="18" font-size="16" fill="#d48924" text-anchor="middle" font-weight="bold">Work Log Flow — Fellow Dashboard</text>
+
+  <!-- ===== COLUMN 1: Creation Form ===== -->
+  <rect x="10" y="30" width="340" height="730" class="section"/>
+  <text x="180" y="48" class="section-title" text-anchor="middle">1. WORK LOG CREATION FORM</text>
+
+  <rect x="20" y="58" width="320" height="85" class="box"/><text x="180" y="75" class="label">Category</text><text x="180" y="90" class="label-sm">🔬 Research  🚶 Fieldwork  📝 Report</text><text x="180" y="105" class="label-sm">🧩 Admin  📚 Capacity-building  📌 Other</text>
+  <text x="180" y="120" class="label-sm">Source: WORK_CATEGORIES constant</text>
+
+  <path d="M180,143 L180,158" class="arrow"/>
+  <rect x="20" y="158" width="320" height="40" class="box"/><text x="180" y="173" class="label">Status (LogType)</text><text x="180" y="190" class="label-sm">✅ Completed  🔄 Ongoing  📋 Planned</text>
+
+  <path d="M180,198 L180,218" class="arrow"/>
+  <rect x="20" y="218" width="320" height="55" class="box"/><text x="180" y="233" class="label">Activity Description</text><text x="180" y="248" class="label-sm">"What did you do?" — Min 10 chars, Max 500 chars</text>
+
+  <path d="M180,273 L180,293" class="arrow"/>
+  <rect x="20" y="293" width="320" height="40" class="box"/><text x="180" y="308" class="label">Output / Deliverable</text><text x="180" y="323" class="label-sm">"What did you produce?" — Optional, Max 500 chars</text>
+
+  <path d="M180,333 L180,353" class="arrow"/>
+  <rect x="20" y="353" width="320" height="40" class="box"/><text x="180" y="370" class="label">Combined Length Validation</text><text x="180" y="385" class="label-sm">Activity + Output ≤ 1000 chars total</text>
+
+  <path d="M180,393 L180,413" class="arrow"/>
+  <rect x="20" y="413" width="320" height="40" class="box-amber"/><text x="180" y="428" class="label">Voice Input (Optional)</text><text x="180" y="448" class="label-sm">🎤 webkitSpeechRecognition, lang=en-IN</text>
+  <rect x="20" y="413" width="320" height="40" class="box3" fill="none"/>
+
+  <path d="M180,453 L180,473" class="arrow"/>
+  <rect x="20" y="473" width="320" height="45" class="box"/><text x="180" y="488" class="label">File Upload (Optional)</text><text x="180" y="503" class="label-sm">📎 .pdf,.doc,.docx,.xls,.xlsx,.csv,.png,.jpg</text><text x="180" y="515" class="label-sm">Max 5MB — UI only, no upload to storage</text>
+
+  <path d="M180,518 L180,538" class="arrow"/>
+  <rect x="20" y="538" width="320" height="40" class="box2"/><text x="180" y="558" class="label">Submit → addWorkLog()</text>
+  <rect x="20" y="538" width="320" height="40" class="box" fill="none"/>
+
+  <path d="M180,578 L180,598" class="arrow"/>
+  <rect x="20" y="598" width="320" height="45" class="box-green"/><text x="180" y="613" class="label">Firestore: workLogs collection</text><text x="180" y="628" class="label-sm">Fields: fellowId, fellowName, district, program,</text><text x="180" y="640" class="label-sm">date, weekKey, category, type, description</text>
+
+  <path d="M180,643 L180,663" class="arrow"/>
+  <rect x="20" y="663" width="320" height="45" class="box-blue"/><text x="180" y="678" class="label">Streak Tracking</text><text x="180" y="693" class="label-sm">totalLogs++ | If lastLog &lt; 48h: streak++</text><text x="180" y="705" class="label-sm">Else: streak=1 | lastLogDate=serverTimestamp()</text>
+
+  <!-- ===== COLUMN 2: Compliance Pipeline ===== -->
+  <rect x="370" y="30" width="340" height="730" class="section"/>
+  <text x="540" y="48" class="section-title" text-anchor="middle">2. COMPLIANCE &amp; TRACKING</text>
+
+  <path d="M340,620 L365,620" class="arrow"/>
+  <rect x="380" y="85" width="320" height="40" class="box3"/><text x="540" y="100" class="label-sm">Weekly Target: WEEKLY_LOG_TARGET = 5 logs</text><text x="540" y="115" class="label-sm">Deadline: WEEKLY_DEADLINE = Sunday 18:00</text>
+
+  <path d="M340,66 L380,100" class="arrow-dash"/>
+
+  <rect x="380" y="145" width="320" height="40" class="box-amber"/><text x="540" y="160" class="label">Deadline Countdown Banner</text><text x="540" y="178" class="label-sm">Shows "2d 5h left" | Urgent red when &lt; 1 day</text>
+
+  <path d="M540,130 L540,140" class="arrow"/>
+
+  <rect x="380" y="205" width="320" height="50" class="box"/><text x="540" y="220" class="label">getWeeklyCompliance(weekKey, program)</text><text x="540" y="235" class="label-sm">1. Fetch all fellows for program</text><text x="540" y="248" class="label-sm">2. Fetch all work logs for week + program</text>
+
+  <path d="M540,195 L540,200" class="arrow"/>
+  <path d="M540,255 L540,270" class="arrow"/>
+
+  <rect x="380" y="270" width="320" height="35" class="box-green"/><text x="540" y="285" class="label">Met Target? (logCount ≥ 5)</text><text x="540" y="298" class="label-sm">Green checkmark if met, red cross if not</text>
+
+  <path d="M540,305 L540,320" class="arrow"/>
+  <rect x="380" y="320" width="320" height="45" class="box3"/><text x="540" y="335" class="label">Workload Self-Declaration</text><text x="540" y="350" class="label-sm">🟦 Under-worked  🟩 Optimal  🟥 Over-worked</text><text x="540" y="362" class="label-sm">Stored in workloadCheckins: fellowId_weekKey</text>
+
+  <path d="M540,365 L540,385" class="arrow"/>
+  <rect x="380" y="385" width="320" height="45" class="box-amber"/><text x="540" y="400" class="label">Fellow Activity Status</text><text x="540" y="415" class="label-sm">🟢 Active (&lt;2d)  🟡 Slowing (2-4d)  🔴 Silent (&gt;4d)</text><text x="540" y="428" class="label-sm">Based on getWorkloadStatus()</text>
+
+  <path d="M540,430 L540,450" class="arrow"/>
+  <rect x="380" y="450" width="320" height="45" class="box-blue"/><text x="540" y="465" class="label">Coordinator Alerts</text><text x="540" y="480" class="label-sm">⚠ Silent Fellows (no log 3+ days)</text><text x="540" y="493" class="label-sm">⚠ Stuck Tasks  ⚠ Overdue Deliverables</text>
+
+  <path d="M540,495 L540,515" class="arrow"/>
+  <rect x="380" y="515" width="320" height="55" class="box"/><text x="540" y="530" class="label">Weekly Progress Bar</text><text x="540" y="548" class="label-sm">Shows logCount / 5 on Fellow dashboard</text>
+
+  <!-- Viewers -->
+  <rect x="380" y="595" width="320" height="130" class="box3"/>
+  <text x="540" y="612" class="label-sm" font-weight="bold">Role-Specific Views</text>
+  <line x1="390" y1="618" x2="690" y2="618" stroke="#ddd"/>
+  <text x="390" y="633" class="label-xs" text-anchor="start">Fellow: Own logs (create + view history)</text>
+  <text x="390" y="648" class="label-xs" text-anchor="start">Data Scientist: Own logs + Fellow detail view</text>
+  <text x="390" y="663" class="label-xs" text-anchor="start">SRF: Own logs + Fellow detail view</text>
+  <text x="390" y="678" class="label-xs" text-anchor="start">Coordinator: All logs in program (compliance table)</text>
+  <text x="390" y="693" class="label-xs" text-anchor="start">Director: All logs across both programs</text>
+  <text x="390" y="708" class="label-xs" text-anchor="start">Admin: User management only (no log views)</text>
+
+  <text x="540" y="80" font-size="9" fill="#d32f2f" text-anchor="middle" font-weight="bold">① workLog entry → compliance pipeline</text>
+
+  <!-- ===== COLUMN 3: Role Dashboards & Export ===== -->
+  <rect x="735" y="30" width="350" height="730" class="section"/>
+  <text x="910" y="48" class="section-title" text-anchor="middle">3. DASHBOARDS &amp; EXPORT</text>
+
+  <rect x="745" y="65" width="330" height="90" class="box"/><text x="910" y="82" class="label">Fellow Dashboard (/fellow)</text>
+  <line x1="755" y1="95" x2="1065" y2="95" stroke="#ddd"/>
+  <text x="755" y="110" class="label-xs" text-anchor="start">• Stat cards: This Week, Streak, Progress, Workload</text>
+  <text x="755" y="125" class="label-xs" text-anchor="start">• Quick log form (inline creation)</text>
+  <text x="755" y="140" class="label-xs" text-anchor="start">• Recent Activity (last 10 logs) + Tasks</text>
+
+  <rect x="745" y="175" width="330" height="70" class="box-blue"/><text x="910" y="192" class="label">Fellow History (/fellow/history)</text>
+  <line x1="755" y1="205" x2="1065" y2="205" stroke="#ddd"/>
+  <text x="755" y="220" class="label-xs" text-anchor="start">• All logs grouped by week (max 200)</text>
+  <text x="755" y="235" class="label-xs" text-anchor="start">• Filters: Week dropdown, Category dropdown</text>
+
+  <rect x="745" y="265" width="330" height="120" class="box"/>
+  <text x="910" y="282" class="label">Coordinator Overview</text>
+  <line x1="755" y1="295" x2="1065" y2="295" stroke="#ddd"/>
+  <text x="755" y="310" class="label-xs" text-anchor="start">• Stats: Fellows count, Compliance %, Silent/Delinquents</text>
+  <text x="755" y="325" class="label-xs" text-anchor="start">• Compliance table: Fellow, District, Logs, Workload,</text>
+  <text x="755" y="340" class="label-xs" text-anchor="start">  Streak, Last Active, Status</text>
+  <text x="755" y="355" class="label-xs" text-anchor="start">• Filter by district, Export button</text>
+  <text x="755" y="370" class="label-xs" text-anchor="start">• Stuck Tasks + Open Support cards</text>
+
+  <rect x="745" y="405" width="330" height="70" class="box-blue"/><text x="910" y="422" class="label">Director Compliance (/director)</text>
+  <line x1="755" y1="435" x2="1065" y2="435" stroke="#ddd"/>
+  <text x="755" y="450" class="label-xs" text-anchor="start">• Cross-program compliance table with CSV export</text>
+  <text x="755" y="465" class="label-xs" text-anchor="start">• 8-week trend bar chart, district compliance chart</text>
+
+  <rect x="745" y="495" width="330" height="70" class="box"/>
+  <text x="910" y="512" class="label">Quarterly Report Generator</text>
+  <line x1="755" y1="525" x2="1065" y2="525" stroke="#ddd"/>
+  <text x="755" y="540" class="label-xs" text-anchor="start">• Individual fellow .docx (profile + log table + cases)</text>
+  <text x="755" y="555" class="label-xs" text-anchor="start">• Program-level .docx (exec summary + district breakdown)</text>
+  <text x="755" y="570" class="label-xs" text-anchor="start">• Uses getAllUsers() — includes DS + SRF</text>
+
+  <rect x="745" y="585" width="330" height="70" class="box-amber"/>
+  <text x="910" y="602" class="label">Monthly Export (XLSX / CSV)</text>
+  <line x1="755" y1="615" x2="1065" y2="615" stroke="#ddd"/>
+  <text x="755" y="630" class="label-xs" text-anchor="start">• 9-sheet Excel workbook (see Export Pipeline SVG)</text>
+  <text x="755" y="645" class="label-xs" text-anchor="start">• Available on: Coordinator, Director, Admin pages</text>
+
+  <rect x="745" y="675" width="330" height="70" class="box3"/>
+  <text x="910" y="692" class="label-sm" font-weight="bold">Validation Summary</text>
+  <line x1="755" y1="700" x2="1065" y2="700" stroke="#ddd"/>
+  <text x="755" y="715" class="label-xs" text-anchor="start">• Min 10 chars for activity (client-side)</text>
+  <text x="755" y="728" class="label-xs" text-anchor="start">• Max 500 chars each, 1000 combined</text>
+  <text x="755" y="741" class="label-xs" text-anchor="start">• File max 5MB | Category + Status required</text>
+
+</svg>

@@ -58,13 +58,13 @@ export function CaseDiscussion({ caseStudy, currentUserId, currentUserName, curr
             <div className="min-w-0">
               <div className="flex items-center gap-2 mb-1.5">
                 <Badge variant="secondary" className="text-[11px]">{csType?.label}</Badge>
-                <Badge variant={caseStudy.status === "published" ? "success" : caseStudy.status === "submitted" ? "default" : "outline"}>{caseStudy.status}</Badge>
+                <Badge variant={caseStudy.status === "published" ? "success" : caseStudy.status === "submitted" ? "default" : caseStudy.status === "revision" ? "warning" : "outline"}>{caseStudy.status === "revision" ? "Needs Revision" : caseStudy.status}</Badge>
               </div>
               <CardTitle className="text-[16px]">{caseStudy.title}</CardTitle>
               <p className="text-[12px] text-[hsl(var(--text-3))] mt-0.5">{caseStudy.authorName} · {caseStudy.program === "mlrf" ? "" : caseStudy.district + " · "}{formatRelativeTime(caseStudy.createdAt)}</p>
             </div>
             {canPublish && !isAuthor && caseStudy.status !== "published" && <Button size="sm" onClick={() => changeStatus("published")}>Publish</Button>}
-            {isAuthor && caseStudy.status === "draft" && <Button size="sm" onClick={() => changeStatus("submitted")}>Submit</Button>}
+            {isAuthor && (caseStudy.status === "draft" || caseStudy.status === "revision") && <Button size="sm" onClick={() => changeStatus("submitted")}>Submit</Button>}
           </div>
         </CardHeader>
         <CardContent className="pt-5">

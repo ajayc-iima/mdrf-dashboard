@@ -73,6 +73,7 @@ export default function LoginPage() {
         if (!profile) return
         if (profile.status === "pending" || profile.status === "rejected") router.push("/pending")
         else if (profile.role) router.push(getRoleHome(profile.role))
+        else router.push("/pending")
       })
     })()
     return () => { active = false }

@@ -1,0 +1,166 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 700" font-family="Arial, sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#555"/></marker>
+    <marker id="arrow-dash" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#999"/></marker>
+    <style>
+      .box{fill:#fff;stroke:#1a2c6e;stroke-width:2;rx:8;ry:8}
+      .box2{fill:#e8f0fe;stroke:#1a2c6e;stroke-width:2;rx:8;ry:8}
+      .box3{fill:#fff;stroke:#999;stroke-width:1.5;rx:6;ry:6;stroke-dasharray:6,3}
+      .box-red{fill:#fce4ec;stroke:#d32f2f;stroke-width:1.5;rx:6;ry:6}
+      .box-green{fill:#e8f5e9;stroke:#388e3c;stroke-width:1.5;rx:6;ry:6}
+      .box-amber{fill:#fff3e0;stroke:#e8942a;stroke-width:1.5;rx:6;ry:6}
+      .label{fill:#333;font-size:12;text-anchor:middle;dominant-baseline:middle}
+      .label-sm{fill:#555;font-size:9;text-anchor:middle;dominant-baseline:middle}
+      .label-xs{fill:#888;font-size:8;text-anchor:middle;dominant-baseline:middle}
+      .arrow{stroke:#555;stroke-width:1.5;fill:none;marker-end:url(#arrow)}
+      .arrow-dash{stroke:#999;stroke-width:1;fill:none;stroke-dasharray:5,3;marker-end:url(#arrow-dash)}
+      .section{fill:#fafafa;stroke:#ccc;stroke-width:1;rx:10;ry:10}
+      .section-title{fill:#666;font-size:9;font-weight:bold}
+    </style>
+  </defs>
+
+  <!-- Title -->
+  <text x="550" y="18" font-size="16" font-weight="bold" fill="#1a2c6e" text-anchor="middle">Authentication Flow — MDRF/MLRF Connect</text>
+
+  <!-- ===== COLUMN 1: Sign-In Methods ===== -->
+  <rect x="10" y="30" width="300" height="650" class="section"/>
+  <text x="160" y="48" class="section-title" text-anchor="middle">1. SIGN-IN METHODS</text>
+
+  <!-- Email OTP path -->
+  <rect x="25" y="58" width="270" height="40" class="box"/><text x="160" y="73" class="label">Enter Email</text><text x="160" y="88" class="label-sm">Must be @isb.edu domain</text>
+  <text x="15" y="63" font-size="9" fill="#d32f2f" font-weight="bold">A</text>
+
+  <path d="M160,98 L160,120" class="arrow"/>
+  <rect x="25" y="120" width="270" height="35" class="box2"/><text x="160" y="140" class="label">Firebase sendSignInLinkToEmail()</text><text x="160" y="152" class="label-sm">Magic link sent to inbox</text>
+
+  <path d="M160,155 L160,175" class="arrow"/>
+  <rect x="25" y="175" width="270" height="35" class="box"/><text x="160" y="193" class="label">User clicks link → Redirect back</text>
+
+  <path d="M160,210 L160,230" class="arrow"/>
+  <rect x="25" y="230" width="270" height="35" class="box2"/><text x="160" y="248" class="label">isOtpRedirect() detected</text><text x="160" y="262" class="label-sm">Retrieves email from localStorage</text>
+
+  <path d="M160,265 L160,285" class="arrow"/>
+  <rect x="25" y="285" width="270" height="35" class="box2"/><text x="160" y="303" class="label">signInWithEmailLink() completes</text><text x="160" y="318" class="label-sm">localStorage emailForSignIn removed</text>
+
+  <!-- Google Sign-In path -->
+  <rect x="25" y="360" width="270" height="40" class="box"/><text x="160" y="375" class="label">Google Sign-In</text><text x="160" y="390" class="label-sm">signInWithPopup(GoogleAuthProvider)</text>
+  <text x="15" y="365" font-size="9" fill="#d48924" font-weight="bold">B</text>
+  <text x="160" y="348" font-size="10" fill="#999" text-anchor="middle">— OR —</text>
+
+  <path d="M160,400 L160,420" class="arrow"/>
+  <rect x="25" y="420" width="270" height="40" class="box-red"/><text x="160" y="435" class="label">Error: popup-closed-by-user</text><text x="160" y="450" class="label-sm">Silently swallowed, no redirect</text>
+
+  <path d="M160,460 L160,480" class="arrow"/>
+  <rect x="25" y="480" width="270" height="35" class="box2"/><text x="160" y="498" class="label">Offline check: navigator.onLine</text><text x="160" y="510" class="label-sm">Blocks Google sign-in if offline</text>
+
+  <path d="M160,515 L160,535" class="arrow"/>
+  <rect x="25" y="535" width="270" height="35" class="box"/><text x="160" y="553" class="label">Firebase Auth</text><text x="160" y="568" class="label-sm">Restricted to @isb.edu domain</text>
+
+  <path d="M160,570 L160,590" class="arrow"/>
+  <rect x="25" y="590" width="270" height="35" class="box-amber"/><text x="160" y="608" class="label">onAuthChange listener fires</text><text x="160" y="622" class="label-sm">useEffect in AuthProvider</text>
+
+  <!-- ===== COLUMN 2: Profile Check ===== -->
+  <rect x="340" y="30" width="320" height="650" class="section"/>
+  <text x="500" y="48" class="section-title" text-anchor="middle">2. PROFILE LIFECYCLE</text>
+
+  <path d="M295,607 L335,607" class="arrow"/>
+  <rect x="350" y="575" width="300" height="50" class="box"/><text x="500" y="593" class="label">getUserProfile(uid) from Firestore</text><text x="500" y="610" class="label-sm">Fetches users/{uid} document</text>
+
+  <path d="M500,625 L500,650" class="arrow"/>
+  <!-- Branch: New vs Existing -->
+  <rect x="350" y="655" width="120" height="25" class="box3"/><text x="410" y="667" class="label-sm">Profile exists?</text>
+  <rect x="530" y="655" width="120" height="25" class="box3"/><text x="590" y="667" class="label-sm">First user?</text>
+
+  <path d="M410,680 L410,710" class="arrow"/>
+  <path d="M590,680 L590,710" class="arrow"/>
+
+  <!-- New user path - goes to next column -->
+  <rect x="350" y="710" width="120" height="40" class="box-amber"/><text x="410" y="725" class="label">← Auto-create profile</text><text x="410" y="740" class="label-sm">createUserProfile() transaction</text>
+
+  <!-- Existing user path -->
+  <rect x="530" y="710" width="120" height="40" class="box-green"/><text x="590" y="725" class="label">← Bootstrap check:</text><text x="590" y="740" class="label-sm">config/bootstrap.adminAssigned</text>
+
+  <!-- Bootstrap branches -->
+  <path d="M530,750 L470,770" class="arrow"/>
+  <path d="M650,730 L680,730" class="arrow"/>
+  <rect x="350" y="775" width="120" height="35" class="box-green"/><text x="410" y="790" class="label">First ever?</text><text x="410" y="803" class="label-sm">role=admin, approved</text>
+  <rect x="350" y="825" width="120" height="35" class="box-amber"/><text x="410" y="840" class="label">Subsequent?</text><text x="410" y="853" class="label-sm">role=null, status=pending</text>
+  <path d="M410,810 L410,820" class="arrow"/>
+
+  <path d="M680,745 L700,745 L700,845 L470,845" class="arrow"/>
+
+  <!-- ===== COLUMN 3: Routing ===== -->
+  <rect x="720" y="30" width="360" height="650" class="section"/>
+  <text x="900" y="48" class="section-title" text-anchor="middle">3. ROUTING &amp; ACCESS CONTROL</text>
+
+  <path d="M470,800 L715,800" class="arrow"/>
+  <rect x="730" y="580" width="340" height="55" class="box"/><text x="900" y="598" class="label">Route Decision</text><text x="900" y="615" class="label-sm">DashboardLayout allowedRoles check</text>
+
+  <path d="M900,635 L900,665" class="arrow"/>
+  <!-- Branch points -->
+  <rect x="730" y="665" width="100" height="25" class="box3"/><text x="780" y="678" class="label-xs">status?</text>
+  <rect x="860" y="665" width="100" height="25" class="box3"/><text x="910" y="678" class="label-xs">role in allowed?</text>
+  <rect x="990" y="665" width="80" height="25" class="box3"/><text x="1030" y="678" class="label-xs">isActive?</text>
+
+  <path d="M780,690 L780,720" class="arrow"/>
+  <path d="M910,690 L910,720" class="arrow"/>
+  <path d="M1030,690 L1030,720" class="arrow"/>
+
+  <!-- Status outcomes -->
+  <rect x="730" y="720" width="100" height="40" class="box-amber"/><text x="780" y="735" class="label-sm">pending → /pending</text><text x="780" y="750" class="label-sm">Shows clock icon</text>
+  <rect x="730" y="770" width="100" height="40" class="box-red"/><text x="780" y="785" class="label-sm">rejected → /pending</text><text x="780" y="800" class="label-sm">Shows X-circle icon</text>
+  <rect x="730" y="820" width="100" height="40" class="box-green"/><text x="780" y="835" class="label-sm">approved → proceed</text><text x="780" y="850" class="label-sm">Check role mapping</text>
+  <path d="M780,760 L780,765" class="arrow"/>
+
+  <!-- Role check outcomes -->
+  <rect x="860" y="720" width="100" height="40" class="box-red"/><text x="910" y="735" class="label-sm">NOT in allowedRoles</text><text x="910" y="750" class="label-sm">→ getRoleHome(role)</text>
+  <rect x="860" y="770" width="100" height="40" class="box-green"/><text x="910" y="785" class="label-sm">In allowedRoles</text><text x="910" y="800" class="label-sm">→ Render children</text>
+
+  <!-- isActive -->
+  <rect x="990" y="720" width="80" height="40" class="box-amber"/><text x="1030" y="735" class="label-sm">No active check</text><text x="1030" y="750" class="label-sm">(not implemented)</text>
+
+  <!-- Role routing table -->
+  <rect x="735" y="260" width="340" height="185" class="box3"/>
+  <text x="905" y="278" class="label" font-weight="bold">getRoleHome() Routing Table</text>
+  <line x1="745" y1="285" x2="1065" y2="285" stroke="#ddd"/>
+  <text x="750" y="300" class="label-sm" text-anchor="start">admin           →  /admin</text>
+  <text x="750" y="315" class="label-sm" text-anchor="start">director       →  /director</text>
+  <text x="750" y="330" class="label-sm" text-anchor="start">fellow          →  /fellow</text>
+  <text x="750" y="345" class="label-sm" text-anchor="start">data-scientist →  /data-scientist</text>
+  <text x="750" y="360" class="label-sm" text-anchor="start">srf              →  /srf</text>
+  <text x="750" y="375" class="label-sm" text-anchor="start">mdrf-coordinator → /mdrf-coordinator</text>
+  <text x="750" y="390" class="label-sm" text-anchor="start">mlrf-coordinator → /mlrf-coordinator</text>
+  <text x="750" y="405" class="label-sm" text-anchor="start">null/no role     →  /pending</text>
+  <text x="750" y="420" class="label-sm" text-anchor="start">unknown         →  /pending</text>
+
+  <!-- Admin approval box -->
+  <rect x="735" y="75" width="340" height="170" class="box"/>
+  <text x="905" y="95" class="label" font-weight="bold">Admin Approval Flow (users/{uid})</text>
+  <line x1="745" y1="105" x2="1065" y2="105" stroke="#ddd"/>
+  <text x="750" y="120" class="label-sm" text-anchor="start">• Admin selects: Role (ASSIGNABLE_ROLES)</text>
+  <text x="750" y="135" class="label-sm" text-anchor="start">  Program (MDRF / MLRF)</text>
+  <text x="750" y="150" class="label-sm" text-anchor="start">  District, Constituencies (if MLRF Fellow)</text>
+  <text x="750" y="168" class="label-sm" text-anchor="start">• approveUser() → Firestore transaction</text>
+  <text x="750" y="183" class="label-sm" text-anchor="start">  Sets: status=approved, role=assigned,</text>
+  <text x="750" y="198" class="label-sm" text-anchor="start">  program, district, constituencies</text>
+  <text x="750" y="216" class="label-sm" text-anchor="start">• rejectUser() → status=rejected, isActive=false</text>
+  <text x="750" y="233" class="label-sm" text-anchor="start">• updateUserRole() for role changes</text>
+
+  <!-- Layout guards note -->
+  <rect x="735" y="470" width="340" height="85" class="box-amber"/>
+  <text x="905" y="488" class="label-sm">DashboardLayout Gate</text>
+  <text x="750" y="505" class="label-sm" text-anchor="start">if loading → spinner</text>
+  <text x="750" y="520" class="label-sm" text-anchor="start">if !user → redirect /</text>
+  <text x="750" y="535" class="label-sm" text-anchor="start">if pending/rejected → redirect /pending</text>
+  <text x="750" y="550" class="label-sm" text-anchor="start">if role not in allowedRoles → redirect home</text>
+
+  <path d="M900,250 L900,255" class="arrow"/>
+  <path d="M900,250 L900,255" class="arrow"/>
+
+  <!-- Edge cases -->
+  <rect x="735" y="580" width="340" height="170" class="box3"/>
+  <text x="905" y="870" class="label-sm font-weight:bold" fill="#d32f2f">Edge Cases</text>
+  <text x="750" y="890" class="label-sm" text-anchor="start">• approved + null role → /pending (stuck!)</text>
+  <text x="750" y="905" class="label-sm" text-anchor="start">• isActive=false + approved → no check</text>
+  <text x="750" y="920" class="label-sm" text-anchor="start">• Offline: createUserProfile uses setDoc</text>
+</svg>

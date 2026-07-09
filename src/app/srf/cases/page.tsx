@@ -57,7 +57,7 @@ export default function SrfCasesPage() {
 
   async function handleReject(caseId: string) {
     await updateCaseStudy(caseId, {
-      status: "submitted",
+      status: "revision",
       reviewedBy: profile?.id,
       reviewedByName: profile?.name,
       reviewedAt: new Date(),
@@ -68,7 +68,7 @@ export default function SrfCasesPage() {
     setSelectedCase(null)
   }
 
-  const pendingCases = cases.filter((c) => c.status === "submitted")
+  const pendingCases = cases.filter((c) => c.status === "submitted" || c.status === "revision")
   const underReviewCases = cases.filter((c) => c.status === "under_review")
   const approvedCases = cases.filter((c) => c.status === "approved")
 
@@ -84,6 +84,7 @@ export default function SrfCasesPage() {
       case "under_review": return <Badge variant="secondary"><AlertCircle className="h-3 w-3 mr-1" /> Under Review</Badge>
       case "approved": return <Badge variant="success"><CheckCircle2 className="h-3 w-3 mr-1" /> Approved</Badge>
       case "published": return <Badge variant="success">Published</Badge>
+      case "revision": return <Badge variant="warning"><AlertTriangle className="h-3 w-3 mr-1" /> Revision</Badge>
       default: return <Badge variant="outline">{status}</Badge>
     }
   }
