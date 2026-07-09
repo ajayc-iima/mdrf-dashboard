@@ -42,7 +42,7 @@ export default function AdminDashboard() {
   const totalLogs = Object.values(stats).reduce((acc: number, d: any) => acc + (d.totalLogs || 0), 0)
   const activeFellows = Object.values(stats).reduce((acc: number, d: any) => acc + (d.activeFellows || 0), 0)
   const openRequests = requests.filter((r) => r.status === "open")
-  const NON_FELLOW_ROLES = ["admin", "director", "mdrf-coordinator", "mlrf-coordinator", "coordinator"]
+  const NON_FELLOW_ROLES = ["admin", "director", "mdrf-coordinator", "mlrf-coordinator", "data-scientist", "srf"]
   const fellowOnly = fellows.filter((f) => !NON_FELLOW_ROLES.includes(f.role || ""))
   const silentFellows = fellowOnly.filter((f) => !f.lastLogDate || (Date.now() - f.lastLogDate.getTime()) / 86400000 > 3)
 

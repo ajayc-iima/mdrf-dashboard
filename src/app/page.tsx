@@ -189,7 +189,7 @@ export default function LoginPage() {
           </div>
 
           <div className={`hidden lg:flex items-center justify-between transition-all duration-500 delay-300 ${visible ? "opacity-100" : "opacity-0"}`}>
-            <p className="text-[11px] text-white/30 font-medium">&copy; {new Date().getFullYear()} Indian School of Business</p>
+            <p className="text-[11px] text-white/30 font-medium">&copy; {new Date().getFullYear()} Bharti Institute of Public Policy</p>
             <div className="flex items-center gap-3 text-[11px] text-white/30">
               <span>Meghalaya</span>
               <span className="w-1 h-1 rounded-full bg-white/20" />
@@ -351,7 +351,7 @@ export default function LoginPage() {
           </div>
 
           <div className="lg:hidden mt-8 text-center">
-            <p className="text-[11px] text-[#7c8698]">&copy; {new Date().getFullYear()} Indian School of Business</p>
+            <p className="text-[11px] text-[#7c8698]">&copy; {new Date().getFullYear()} Bharti Institute of Public Policy</p>
           </div>
         </div>
       </div>

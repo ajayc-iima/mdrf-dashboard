@@ -89,7 +89,7 @@ export function getRoleHome(role: UserRole): string {
     'mdrf-coordinator': '/mdrf-coordinator',
     'mlrf-coordinator': '/mlrf-coordinator',
   }
-  return routes[role]
+  return routes[role] || '/pending'
 }
 
 export const ROLE_LABELS: Record<UserRole, string> = {

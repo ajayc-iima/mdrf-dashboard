@@ -8,24 +8,32 @@ export function useNotifications(toRole: 'data-scientist' | 'srf') {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    getNotifications(toRole).then((n) => {
-      setNotifications(n)
-      setLoading(false)
-    })
+    getNotifications(toRole)
+      .then(setNotifications)
+      .catch(console.error)
+      .finally(() => setLoading(false))
   }, [toRole])
 
-  return { notifications, loading, refresh: () => getNotifications(toRole).then(setNotifications) }
+  return {
+    notifications,
+    loading,
+    refresh: () => getNotifications(toRole).then(setNotifications).catch(console.error)
+  }
 }
 
 export function useUnreadCount(toRole: 'data-scientist' | 'srf') {
   const [count, setCount] = useState(0)
 
   useEffect(() => {
-    getUnreadCount(toRole).then(setCount)
-    const interval = setInterval(() => {
-      getUnreadCount(toRole).then(setCount)
-    }, 30000)
-    return () => clearInterval(interval)
+    let mounted = true
+    const fetchCount = () => {
+      getUnreadCount(toRole)
+        .then((c) => { if (mounted) setCount(c) })
+        .catch(console.error)
+    }
+    fetchCount()
+    const interval = setInterval(fetchCount, 30000)
+    return () => { mounted = false; clearInterval(interval) }
   }, [toRole])
 
   return count

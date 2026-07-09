@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useRef, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
@@ -21,26 +21,36 @@ export function RequestHelpForm({ onSuccess }: Props) {
   const [message, setMessage] = useState("")
   const [submitting, setSubmitting] = useState(false)
   const [sent, setSent] = useState(false)
+  const timeoutRef = useRef<NodeJS.Timeout>()
+
+  useEffect(() => {
+    return () => { if (timeoutRef.current) clearTimeout(timeoutRef.current) }
+  }, [])
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (!profile || !title.trim() || !message.trim()) return
     setSubmitting(true)
-    await sendNotification({
-      fromId: profile.id,
-      fromName: profile.name,
-      fromRole: profile.role!,
-      toRole,
-      type: "help_request",
-      title: title.trim(),
-      message: message.trim(),
-    })
-    setSubmitting(false)
-    setSent(true)
-    setTitle("")
-    setMessage("")
-    onSuccess?.()
-    setTimeout(() => setSent(false), 3000)
+    try {
+      await sendNotification({
+        fromId: profile.id,
+        fromName: profile.name,
+        fromRole: profile.role!,
+        toRole,
+        type: "help_request",
+        title: title.trim(),
+        message: message.trim(),
+      })
+      setSent(true)
+      setTitle("")
+      setMessage("")
+      onSuccess?.()
+      timeoutRef.current = setTimeout(() => setSent(false), 3000)
+    } catch (err) {
+      console.error("Failed to send notification:", err)
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (

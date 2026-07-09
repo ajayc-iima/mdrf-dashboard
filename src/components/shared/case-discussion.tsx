@@ -20,13 +20,25 @@ export function CaseDiscussion({ caseStudy, currentUserId, currentUserName, curr
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
 
-  useEffect(() => { getCaseComments(caseStudy.id).then((c) => { setComments(c); setLoading(false) }) }, [caseStudy.id])
+  useEffect(() => {
+    getCaseComments(caseStudy.id)
+      .then((c) => { setComments(c) })
+      .catch(console.error)
+      .finally(() => setLoading(false))
+  }, [caseStudy.id])
 
   async function handleSubmit() {
     if (!newComment.trim()) return
     setSubmitting(true)
-    await addCaseComment({ caseId: caseStudy.id, authorId: currentUserId, authorName: currentUserName, authorRole: currentUserRole, content: newComment.trim(), action })
-    setComments(await getCaseComments(caseStudy.id)); setNewComment(""); setSubmitting(false)
+    try {
+      await addCaseComment({ caseId: caseStudy.id, authorId: currentUserId, authorName: currentUserName, authorRole: currentUserRole, content: newComment.trim(), action })
+      setComments(await getCaseComments(caseStudy.id))
+      setNewComment("")
+    } catch (err) {
+      console.error("Failed to submit comment:", err)
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   async function changeStatus(status: CaseStatus) { await setCaseStatus(caseStudy.id, status); onStatusChange?.() }

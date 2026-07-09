@@ -60,6 +60,7 @@ export function QuarterlyReportGenerator({ program }: { program: "mdrf" | "mlrf"
   const [startMonth, setStartMonth] = useState(0)
   const [endMonth, setEndMonth] = useState(2)
   const [generating, setGenerating] = useState(false)
+  const [error, setError] = useState("")
 
   useEffect(() => {
     getFellows(program).then((data) => {
@@ -69,6 +70,7 @@ export function QuarterlyReportGenerator({ program }: { program: "mdrf" | "mlrf"
 
   async function handleGenerate() {
     setGenerating(true)
+    setError("")
     try {
       const { start, end } = getDateRange(dateMode, selectedQuarter, year, startMonth, endMonth)
       const { where } = await import("firebase/firestore")
@@ -77,20 +79,22 @@ export function QuarterlyReportGenerator({ program }: { program: "mdrf" | "mlrf"
         const fellow = fellows.find((f) => f.id === selectedFellow)
         if (!fellow) return
 
+        const { Timestamp } = await import("firebase/firestore")
         const [logs, caseStudies, supportRequests, courseProgress] = await Promise.all([
-          fetchDocs<WorkLog>("workLogs", where("fellowId", "==", fellow.id), where("date", ">=", start.toISOString().split("T")[0]), where("date", "<=", end.toISOString().split("T")[0])),
-          fetchDocs<CaseStudy>("caseStudies", where("authorId", "==", fellow.id), where("createdAt", ">=", start.toISOString()), where("createdAt", "<=", end.toISOString())),
-          fetchDocs<SupportRequest>("supportRequests", where("fellowId", "==", fellow.id), where("createdAt", ">=", start.toISOString()), where("createdAt", "<=", end.toISOString())),
+          fetchDocs<WorkLog>("workLogs", where("fellowId", "==", fellow.id), where("date", ">=", Timestamp.fromDate(start)), where("date", "<=", Timestamp.fromDate(end))),
+          fetchDocs<CaseStudy>("caseStudies", where("authorId", "==", fellow.id), where("createdAt", ">=", Timestamp.fromDate(start)), where("createdAt", "<=", Timestamp.fromDate(end))),
+          fetchDocs<SupportRequest>("supportRequests", where("fellowId", "==", fellow.id), where("createdAt", ">=", Timestamp.fromDate(start)), where("createdAt", "<=", Timestamp.fromDate(end))),
           fetchDocs<CourseProgress>("courseProgress", where("fellowId", "==", fellow.id)),
         ])
 
         const blob = await generateIndividualReport({ fellow, logs, caseStudies, supportRequests, courseProgress, startDate: start, endDate: end, program })
         downloadBlob(blob, `${program}-fellow-report-${fellow.name.replace(/\s+/g, "-").toLowerCase()}-${year}.docx`)
       } else {
+        const { Timestamp } = await import("firebase/firestore")
         const [logs, caseStudies, supportRequests] = await Promise.all([
-          fetchDocs<WorkLog>("workLogs", where("program", "==", program), where("date", ">=", start.toISOString().split("T")[0]), where("date", "<=", end.toISOString().split("T")[0])),
-          fetchDocs<CaseStudy>("caseStudies", where("program", "==", program), where("createdAt", ">=", start.toISOString()), where("createdAt", "<=", end.toISOString())),
-          fetchDocs<SupportRequest>("supportRequests", where("program", "==", program), where("createdAt", ">=", start.toISOString()), where("createdAt", "<=", end.toISOString())),
+          fetchDocs<WorkLog>("workLogs", where("program", "==", program), where("date", ">=", Timestamp.fromDate(start)), where("date", "<=", Timestamp.fromDate(end))),
+          fetchDocs<CaseStudy>("caseStudies", where("program", "==", program), where("createdAt", ">=", Timestamp.fromDate(start)), where("createdAt", "<=", Timestamp.fromDate(end))),
+          fetchDocs<SupportRequest>("supportRequests", where("program", "==", program), where("createdAt", ">=", Timestamp.fromDate(start)), where("createdAt", "<=", Timestamp.fromDate(end))),
         ])
 
         const blob = await generateProgramReport({ fellows, logs, caseStudies, supportRequests, courseProgress: [], startDate: start, endDate: end, program })
@@ -98,6 +102,7 @@ export function QuarterlyReportGenerator({ program }: { program: "mdrf" | "mlrf"
       }
     } catch (err) {
       console.error("Failed to generate report:", err)
+      setError("Failed to generate report. Please try again.")
     } finally {
       setGenerating(false)
     }
@@ -251,6 +256,13 @@ export function QuarterlyReportGenerator({ program }: { program: "mdrf" | "mlrf"
               </div>
             )}
           </div>
+
+          {/* Error Message */}
+          {error && (
+            <div className="rounded-xl bg-red-50 border border-red-100 px-4 py-3 text-[12px] text-red-600 text-center font-medium">
+              {error}
+            </div>
+          )}
 
           {/* Generate Button */}
           <button
