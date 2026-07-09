@@ -12,6 +12,8 @@ import { getWeeklyCompliance, getFellows, getWeeklyTrend, getSupportRequests, ty
 import { formatRelativeTime, getWorkloadStatus, getCurrentWeekKey, formatWeekRange } from "@/lib/utils"
 import { WEEKLY_LOG_TARGET, PROGRAM_META, CHART_COLORS } from "@/lib/constants"
 import type { Program, UserProfile } from "@/types"
+import { MonthlyExportButton } from "@/components/shared/monthly-export"
+import { buildMonthlyExport } from "@/lib/export"
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from "recharts"
 import { BarChart3, Building2, MapPin, Users, TrendingUp, AlertTriangle, HelpCircle, ArrowRight } from "lucide-react"
 import Link from "next/link"
@@ -84,7 +86,12 @@ export default function DirectorOverviewPage() {
 
   return (
     <div className="space-y-8 animate-fade-in">
-      <PageHeader title="Director Overview" icon={<BarChart3 className="h-6 w-6" />} description={`Big picture across MDRF & MLRF — Week of ${formatWeekRange(weekKey)}`} />
+      <PageHeader title="Director Overview" icon={<BarChart3 className="h-6 w-6" />} description={`Big picture across MDRF & MLRF — Week of ${formatWeekRange(weekKey)}`}
+        actions={<div className="flex gap-2 items-center">
+          <MonthlyExportButton label="MDRF Export" build={(y, m) => buildMonthlyExport("mdrf", y, m)} />
+          <MonthlyExportButton label="MLRF Export" build={(y, m) => buildMonthlyExport("mlrf", y, m)} />
+        </div>}
+      />
 
       <div className="grid grid-cols-2 gap-3 sm:gap-4 sm:grid-cols-4 stagger-children">
         <StatCard title="Total Fellows" value={totalFellows} icon={<Users className="h-4 w-4" />} variant="default" />

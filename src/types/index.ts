@@ -34,6 +34,23 @@ export const ASSIGNABLE_ROLES: UserRole[] = [
   'fellow', 'data-scientist', 'srf', 'mdrf-coordinator', 'mlrf-coordinator', 'director',
 ]
 
+/** A user is a "fellow" only when their role is exactly this. */
+export const FELLOW_ROLES: UserRole[] = ['fellow']
+export const IS_FELLOW = (role: UserRole | null | undefined): boolean => role === 'fellow'
+
+/** Everyone except fellows (coordinators, directors, DS, SRF, admins). */
+export const NON_FELLOW_ROLES: UserRole[] = [
+  'admin', 'director', 'mdrf-coordinator', 'mlrf-coordinator', 'data-scientist', 'srf',
+]
+
+/** Roles that receive support/notification alerts. */
+export const NOTIFIABLE_ROLES: UserRole[] = ['data-scientist', 'srf']
+
+/** All roles in the system, for completeness checks. */
+export const ALL_ROLES: UserRole[] = [
+  'admin', 'director', 'mdrf-coordinator', 'mlrf-coordinator', 'fellow', 'data-scientist', 'srf',
+]
+
 export interface UserProfile {
   id: string
   name: string

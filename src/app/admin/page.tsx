@@ -11,7 +11,9 @@ import {
 } from "@/lib/firestore"
 import { ROLE_LABELS } from "@/lib/auth"
 import { formatRelativeTime } from "@/lib/utils"
-import { ASSIGNABLE_ROLES, DISTRICTS, CONSTITUENCIES, type Program, type UserProfile, type UserRole } from "@/types"
+import { ASSIGNABLE_ROLES, DISTRICTS, CONSTITUENCIES, NON_FELLOW_ROLES, type Program, type UserProfile, type UserRole } from "@/types"
+import { MonthlyExportButton } from "@/components/shared/monthly-export"
+import { buildMonthlyExport } from "@/lib/export"
 import { Users, Activity, FileText, HelpCircle, AlertTriangle, Trophy, Shield, Check, X, Building2, MapPin } from "lucide-react"
 
 interface ApprovalDraft { role: UserRole; program: Program; district: string; constituencies: string[] }
@@ -29,21 +31,25 @@ export default function AdminDashboard() {
 
   async function loadData() {
     setLoading(true)
-    const [users, districtStats, reqs, pendingUsers] = await Promise.all([
-      getAllUsers(dashboardType), getDistrictStats(dashboardType), getSupportRequests({ program: dashboardType }), getPendingUsers(),
-    ])
-    setFellows(users); setStats(districtStats); setRequests(reqs); setPending(pendingUsers)
-    const next: Record<string, ApprovalDraft> = {}
-    for (const p of pendingUsers) next[p.id] = { role: "fellow", program: dashboardType, district: DISTRICTS[0], constituencies: [] }
-    setDrafts(next)
-    setLoading(false)
+    try {
+      const [users, districtStats, reqs, pendingUsers] = await Promise.all([
+        getAllUsers(dashboardType), getDistrictStats(dashboardType), getSupportRequests({ program: dashboardType }), getPendingUsers(),
+      ])
+      setFellows(users); setStats(districtStats); setRequests(reqs); setPending(pendingUsers)
+      const next: Record<string, ApprovalDraft> = {}
+      for (const p of pendingUsers) next[p.id] = { role: "fellow", program: dashboardType, district: DISTRICTS[0], constituencies: [] }
+      setDrafts(next)
+    } catch (e) {
+      console.error("Failed to load admin data", e)
+    } finally {
+      setLoading(false)
+    }
   }
 
   const totalLogs = Object.values(stats).reduce((acc: number, d: any) => acc + (d.totalLogs || 0), 0)
   const activeFellows = Object.values(stats).reduce((acc: number, d: any) => acc + (d.activeFellows || 0), 0)
   const openRequests = requests.filter((r) => r.status === "open")
-  const NON_FELLOW_ROLES = ["admin", "director", "mdrf-coordinator", "mlrf-coordinator", "data-scientist", "srf"]
-  const fellowOnly = fellows.filter((f) => !NON_FELLOW_ROLES.includes(f.role || ""))
+  const fellowOnly = fellows.filter((f) => f.role && !NON_FELLOW_ROLES.includes(f.role))
   const silentFellows = fellowOnly.filter((f) => !f.lastLogDate || (Date.now() - f.lastLogDate.getTime()) / 86400000 > 3)
 
   const districtSummary = Object.entries(stats)
@@ -78,35 +84,38 @@ export default function AdminDashboard() {
         <p className="text-[14px] text-[hsl(var(--text-3))] mt-1">Programme oversight & account approvals</p>
       </div>
 
-      <div className="flex gap-3">
-        <button onClick={() => setDashboardType("mdrf")}
-          className={`flex-1 flex items-center gap-3 rounded-2xl px-4 sm:px-6 py-3 sm:py-4 text-left transition-all duration-200 ${
-            dashboardType === "mdrf"
-              ? "bg-[hsl(var(--navy))] text-white shadow-md ring-2 ring-[hsl(var(--navy))]/30"
-              : "bg-white text-[hsl(var(--text-2))] border-2 border-[hsl(var(--border))] hover:border-[hsl(var(--navy))]/30 hover:bg-[hsl(var(--bg-muted))]"
-          }`}>
-          <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${dashboardType === "mdrf" ? "bg-white/15" : "bg-[hsl(var(--bg-muted))]"}`}>
-            <Building2 className="h-5 w-5" />
-          </div>
-          <div>
-            <p className="font-bold text-[13px]">MDRF</p>
-            <p className={`text-[11px] ${dashboardType === "mdrf" ? "text-white/60" : "text-[hsl(var(--text-3))]"}`}>District Research Fellows</p>
-          </div>
-        </button>
-        <button onClick={() => setDashboardType("mlrf")}
-          className={`flex-1 flex items-center gap-3 rounded-2xl px-4 sm:px-6 py-3 sm:py-4 text-left transition-all duration-200 ${
-            dashboardType === "mlrf"
-              ? "bg-[hsl(var(--green))] text-white shadow-md ring-2 ring-[hsl(var(--green))]"
-              : "bg-white text-[hsl(var(--text-2))] border-2 border-[hsl(var(--border))] hover:border-[hsl(var(--green))]/80 hover:bg-[hsl(var(--green))]/[0.06]"
-          }`}>
-          <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${dashboardType === "mlrf" ? "bg-white/15" : "bg-[hsl(var(--green))]/[0.12]"}`}>
-            <MapPin className="h-5 w-5" />
-          </div>
-          <div>
-            <p className="font-bold text-[13px]">MLRF</p>
-            <p className={`text-[11px] ${dashboardType === "mlrf" ? "text-white/60" : "text-[hsl(var(--text-3))]"}`}>Legislative Research Fellows</p>
-          </div>
-        </button>
+      <div className="flex items-center gap-3">
+        <div className="flex gap-3 flex-1">
+          <button onClick={() => setDashboardType("mdrf")}
+            className={`flex-1 flex items-center gap-3 rounded-2xl px-4 sm:px-6 py-3 sm:py-4 text-left transition-all duration-200 ${
+              dashboardType === "mdrf"
+                ? "bg-[hsl(var(--navy))] text-white shadow-md ring-2 ring-[hsl(var(--navy))]/30"
+                : "bg-white text-[hsl(var(--text-2))] border-2 border-[hsl(var(--border))] hover:border-[hsl(var(--navy))]/30 hover:bg-[hsl(var(--bg-muted))]"
+            }`}>
+            <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${dashboardType === "mdrf" ? "bg-white/15" : "bg-[hsl(var(--bg-muted))]"}`}>
+              <Building2 className="h-5 w-5" />
+            </div>
+            <div>
+              <p className="font-bold text-[13px]">MDRF</p>
+              <p className={`text-[11px] ${dashboardType === "mdrf" ? "text-white/60" : "text-[hsl(var(--text-3))]"}`}>District Research Fellows</p>
+            </div>
+          </button>
+          <button onClick={() => setDashboardType("mlrf")}
+            className={`flex-1 flex items-center gap-3 rounded-2xl px-4 sm:px-6 py-3 sm:py-4 text-left transition-all duration-200 ${
+              dashboardType === "mlrf"
+                ? "bg-[hsl(var(--green))] text-white shadow-md ring-2 ring-[hsl(var(--green))]"
+                : "bg-white text-[hsl(var(--text-2))] border-2 border-[hsl(var(--border))] hover:border-[hsl(var(--green))]/80 hover:bg-[hsl(var(--green))]/[0.06]"
+            }`}>
+            <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${dashboardType === "mlrf" ? "bg-white/15" : "bg-[hsl(var(--green))]/[0.12]"}`}>
+              <MapPin className="h-5 w-5" />
+            </div>
+            <div>
+              <p className="font-bold text-[13px]">MLRF</p>
+              <p className={`text-[11px] ${dashboardType === "mlrf" ? "text-white/60" : "text-[hsl(var(--text-3))]"}`}>Legislative Research Fellows</p>
+            </div>
+          </button>
+        </div>
+        <MonthlyExportButton label="Export" build={(y, m) => buildMonthlyExport(dashboardType, y, m)} />
       </div>
 
       <div id="approvals">

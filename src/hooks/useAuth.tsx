@@ -27,21 +27,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const refreshProfile = async () => {
     if (user) {
-      const p = await getUserProfile(user.uid)
-      setProfile(p)
+      try {
+        const p = await getUserProfile(user.uid)
+        setProfile(p)
+      } catch (e) {
+        console.error("Failed to refresh profile", e)
+      }
     }
   }
 
   useEffect(() => {
     const unsub = onAuthChange(async (firebaseUser) => {
       setUser(firebaseUser)
-      if (firebaseUser) {
-        const p = await getUserProfile(firebaseUser.uid)
-        setProfile(p)
-      } else {
-        setProfile(null)
+      try {
+        if (firebaseUser) {
+          const p = await getUserProfile(firebaseUser.uid)
+          setProfile(p)
+        } else {
+          setProfile(null)
+        }
+      } catch (e) {
+        console.error("Failed to load user profile", e)
+      } finally {
+        setLoading(false)
       }
-      setLoading(false)
     })
     return unsub
   }, [])

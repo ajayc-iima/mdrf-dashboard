@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { StatCard } from "@/components/ui/stat-card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -11,11 +10,13 @@ import { PageHeader } from "@/components/shared/page-header"
 import { FellowDetail } from "@/components/shared/fellow-detail"
 import { EmptyState } from "@/components/shared/empty-state"
 import { getWeeklyCompliance, getAllTasks, getSupportRequests, type WeeklyCompliance as WC } from "@/lib/firestore"
-import { downloadCSV, formatRelativeTime, getWorkloadStatus, getCurrentWeekKey, formatWeekRange } from "@/lib/utils"
+import { formatRelativeTime, getWorkloadStatus, getCurrentWeekKey, formatWeekRange } from "@/lib/utils"
 import { WEEKLY_LOG_TARGET, PROGRAM_META } from "@/lib/constants"
 import { DISTRICTS, CONSTITUENCIES, WORKLOAD_LABELS } from "@/types"
 import type { Program, UserProfile } from "@/types"
-import { Map, Download, Users, AlertTriangle, HelpCircle, Flame, Gauge } from "lucide-react"
+import { MonthlyExportButton } from "@/components/shared/monthly-export"
+import { buildMonthlyExport } from "@/lib/export"
+import { Map, Users, AlertTriangle, HelpCircle, Flame, Gauge } from "lucide-react"
 
 interface Props { program: Program }
 
@@ -61,21 +62,6 @@ export function CoordinatorOverview({ program }: Props) {
     return (Date.now() - c.fellow.lastLogDate.getTime()) / 86400000 > 3
   })
 
-  function handleExport() {
-    const data = filtered.map((c) => ({
-      Name: c.fellow.name,
-      District: c.fellow.district,
-      Constituencies: c.fellow.constituencies?.join(", ") || "",
-      "Week Logs": c.logCount,
-      "Met Target": c.metTarget ? "Yes" : "No",
-      Workload: c.pressure ? WORKLOAD_LABELS[c.pressure] : "Not declared",
-      "Last Active": c.fellow.lastLogDate ? formatRelativeTime(c.fellow.lastLogDate) : "Never",
-      Streak: c.fellow.streak || 0,
-      "Total Logs": c.fellow.totalLogs || 0,
-    }))
-    downloadCSV(data, `${program}-compliance-${weekKey}`)
-  }
-
   if (loading) {
     return (
       <div className="space-y-6 stagger-children">
@@ -98,7 +84,7 @@ export function CoordinatorOverview({ program }: Props) {
         title={`${meta.app} Overview`}
         icon={<Map className="h-6 w-6" />}
         description={`${meta.full} — Week of ${formatWeekRange(weekKey)}`}
-        actions={<Button variant="outline" size="sm" onClick={handleExport}><Download className="mr-1.5 h-4 w-4" /> Export</Button>}
+        actions={<MonthlyExportButton label="Export" build={(y, m) => buildMonthlyExport(program, y, m)} />}
       />
 
       <div className="grid grid-cols-2 gap-3 sm:gap-4 sm:grid-cols-4 stagger-children">

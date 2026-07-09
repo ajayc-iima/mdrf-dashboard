@@ -124,3 +124,27 @@ export async function downloadExcel(data: any[], filename: string) {
   XLSX.utils.book_append_sheet(wb, ws, "Data")
   XLSX.writeFile(wb, `${filename}.xlsx`)
 }
+
+/** Build an .xlsx workbook with multiple named sheets (ideal for monthly reports). */
+export async function downloadMultiSheetExcel(sheets: { name: string; data: any[] }[], filename: string) {
+  const XLSX = await import("xlsx")
+  const wb = XLSX.utils.book_new()
+  for (const s of sheets) {
+    const ws = XLSX.utils.json_to_sheet(s.data.length ? s.data : [{ "": "No data" }])
+    XLSX.utils.book_append_sheet(wb, ws, s.name.slice(0, 31))
+  }
+  XLSX.writeFile(wb, `${filename}.xlsx`)
+}
+
+/** [start, end] covering a calendar month (local time). */
+export function getMonthRange(year: number, month: number): [Date, Date] {
+  const start = new Date(year, month, 1, 0, 0, 0, 0)
+  const end = new Date(year, month + 1, 0, 23, 59, 59, 999)
+  return [start, end]
+}
+
+/** "2026-07" -> { year, monthIndex }. */
+export function parseMonthValue(value: string): { year: number; month: number } {
+  const [y, m] = value.split("-").map(Number)
+  return { year: y, month: m - 1 }
+}

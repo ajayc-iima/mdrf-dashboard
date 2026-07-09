@@ -1,8 +1,8 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { getFellows } from "@/lib/firestore"
-import type { UserProfile, WorkLog, CaseStudy, SupportRequest, CourseProgress } from "@/types"
+import { getAllUsers } from "@/lib/firestore"
+import type { UserProfile, WorkLog, CaseStudy, SupportRequest, CourseProgress, UserRole } from "@/types"
 import { generateIndividualReport } from "./reports/individual-report"
 import { generateProgramReport } from "./reports/program-report"
 import { PageHeader } from "@/components/shared/page-header"
@@ -62,9 +62,11 @@ export function QuarterlyReportGenerator({ program }: { program: "mdrf" | "mlrf"
   const [generating, setGenerating] = useState(false)
   const [error, setError] = useState("")
 
+  const REPORTABLE_ROLES: UserRole[] = ["fellow", "data-scientist", "srf"]
+
   useEffect(() => {
-    getFellows(program).then((data) => {
-      setFellows(data.filter((f) => f.isActive !== false))
+    getAllUsers(program).then((data) => {
+      setFellows(data.filter((f) => f.isActive !== false && f.role && REPORTABLE_ROLES.includes(f.role)))
     })
   }, [program])
 
@@ -164,7 +166,7 @@ export function QuarterlyReportGenerator({ program }: { program: "mdrf" | "mlrf"
               >
                 <option value="">Choose a fellow...</option>
                 {fellows.map((f) => (
-                  <option key={f.id} value={f.id}>{f.name} — {f.district}</option>
+                  <option key={f.id} value={f.id}>{f.name}{f.role === "fellow" ? ` — ${f.district}` : ""}</option>
                 ))}
               </select>
             </div>

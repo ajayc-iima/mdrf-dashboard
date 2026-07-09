@@ -8,7 +8,6 @@ import {
 } from "@/lib/auth"
 import { getUserProfile, createUserProfile } from "@/lib/firestore"
 import { PROGRAM_META } from "@/lib/constants"
-import { AppLogo } from "@/components/shared/app-logo"
 import type { Program } from "@/types"
 
 export default function LoginPage() {
@@ -20,7 +19,7 @@ export default function LoginPage() {
   const router = useRouter()
 
   useEffect(() => {
-    const t = setTimeout(() => setVisible(true), 100)
+    const t = setTimeout(() => setVisible(true), 60)
     return () => clearTimeout(t)
   }, [])
 
@@ -83,8 +82,7 @@ export default function LoginPage() {
     setError("")
     setLoading(provider)
     try {
-      const fn = provider === "google" ? signInWithGoogle : signInWithGoogle
-      const user = await fn()
+      const user = await signInWithGoogle()
       let profile = await getUserProfile(user.uid)
       if (!profile) {
         await createUserProfile(user.uid, {
@@ -104,257 +102,181 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col lg:flex-row">
+    <div className="min-h-screen flex flex-col bg-[#fafafa]">
 
-      {/* ─── Hero Panel ─── */}
-      <div className={`relative bg-[#0d1f4b] overflow-hidden transition-all duration-700 ${visible ? "opacity-100" : "opacity-0"} lg:w-[52%] lg:min-h-screen`}>
-
-        <div className="absolute inset-0 opacity-[0.03]" style={{
-          backgroundImage: "linear-gradient(rgba(255,255,255,.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.1) 1px, transparent 1px)",
-          backgroundSize: "60px 60px"
-        }} />
-
-        <svg className="absolute top-0 left-0 w-full h-full opacity-[0.04]" viewBox="0 0 800 900" fill="none">
-          <path d="M-100 200 C200 150, 400 300, 800 250" stroke="white" strokeWidth="1" />
-          <path d="M-100 300 C200 250, 400 400, 800 350" stroke="white" strokeWidth="1" />
-          <path d="M-100 400 C200 350, 400 500, 800 450" stroke="white" strokeWidth="1" />
-          <path d="M-100 500 C200 450, 400 600, 800 550" stroke="white" strokeWidth="1" />
-          <path d="M-100 600 C200 550, 400 700, 800 650" stroke="white" strokeWidth="1" />
-          <path d="M-100 700 C200 650, 400 800, 800 750" stroke="white" strokeWidth="1" />
-        </svg>
-
-        <div className="absolute top-[-20%] left-[-10%] w-[400px] h-[400px] lg:w-[600px] lg:h-[600px] rounded-full bg-[#80edd9]/[0.06] blur-[100px] lg:blur-[120px]" />
-        <div className="absolute bottom-[-15%] right-[-5%] w-[300px] h-[300px] lg:w-[400px] lg:h-[400px] rounded-full bg-white/[0.02] blur-[80px] lg:blur-[100px]" />
-
-        <div className="relative z-10 flex flex-col justify-between h-full min-h-[340px] lg:min-h-screen p-8 sm:p-10 lg:p-10 xl:p-14">
-
-          <div className={`flex items-center justify-between transition-all duration-500 delay-100 ${visible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4"}`}>
-            <div className="flex items-center gap-3">
-              <AppLogo size={28} />
-              <div className="flex flex-col">
-                <span className="text-[14px] font-bold text-white tracking-tight">RFC</span>
-                <span className="text-[10px] font-medium text-white/40 tracking-wide hidden sm:block">Research Fellow Connect</span>
-              </div>
-            </div>
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.06] border border-white/[0.08]">
-              <span className="relative flex h-[6px] w-[6px]">
-                <span className="absolute inline-flex h-full w-full rounded-full bg-[#80edd9] opacity-40 animate-ping" />
-                <span className="relative inline-flex rounded-full h-[6px] w-[6px] bg-[#80edd9]" />
-              </span>
-              <span className="text-[10px] font-semibold text-white/50 uppercase tracking-[0.1em]">Live</span>
-            </div>
-          </div>
-
-          <div className={`flex-1 flex flex-col justify-center max-w-lg transition-all duration-600 delay-200 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
-
-            <div className="flex items-center gap-3 mb-6 lg:mb-8">
-              <div className="w-8 h-[2px] rounded-full bg-[#80edd9]" />
-              <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.18em] text-[#80edd9]/80">
-                Bharti Institute of Public Policy &middot; ISB
-              </span>
-            </div>
-
-            <h1 className="mb-6 lg:mb-8">
-              <span className="block text-[2rem] sm:text-[2.5rem] lg:text-[2.75rem] xl:text-[3.5rem] font-editorial font-bold text-white leading-[1.08] tracking-[-0.02em]">
-                Research
-              </span>
-              <span className="block text-[2rem] sm:text-[2.5rem] lg:text-[2.75rem] xl:text-[3.5rem] font-editorial font-bold leading-[1.08] tracking-[-0.02em]">
-                <span className="text-[#80edd9] italic">Fellow</span>
-                <span className="text-white/90"> Connect</span>
-              </span>
-            </h1>
-
-            <div className="w-16 h-px bg-gradient-to-r from-[#80edd9]/60 to-transparent mb-6 lg:mb-8" />
-
-            <p className="text-[14px] lg:text-[15px] text-white/55 leading-relaxed max-w-md">
-              Connecting Meghalaya&apos;s District & Legislative Research Fellows with Coordinators and Directors to drive meaningful governance impact.
-            </p>
-
-            <div className="flex flex-col gap-4 mt-8 lg:mt-12">
-              {[
-                { icon: "M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2", label: "Weekly work tracking & reporting" },
-                { icon: "M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9", label: "Real-time alerts & notifications" },
-                { icon: "M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z", label: "Secure & role-based access" },
-              ].map((item) => (
-                <div key={item.label} className="flex items-center gap-3">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#80edd9]/[0.1] shrink-0">
-                    <svg className="w-4 h-4 text-[#80edd9]/70" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                      <path d={item.icon} />
-                    </svg>
-                  </div>
-                  <span className="text-[13px] font-medium text-white/50">{item.label}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className={`hidden lg:flex items-center justify-between transition-all duration-500 delay-300 ${visible ? "opacity-100" : "opacity-0"}`}>
-            <p className="text-[11px] text-white/30 font-medium">&copy; {new Date().getFullYear()} Bharti Institute of Public Policy</p>
-            <div className="flex items-center gap-3 text-[11px] text-white/30">
-              <span>Meghalaya</span>
-              <span className="w-1 h-1 rounded-full bg-white/20" />
-              <span>India</span>
-            </div>
-          </div>
+      {/* ─── Minimal top bar ─── */}
+      <header className={`flex items-center justify-between px-8 py-6 transition-all duration-700 ${visible ? "opacity-100" : "opacity-0"}`}>
+        <div className="flex items-center gap-2.5">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+            <rect width="28" height="28" rx="7" fill="#0d1f4b" />
+            <path d="M8 10h12M8 14h8M8 18h10" stroke="white" strokeWidth="1.8" strokeLinecap="round" />
+          </svg>
+          <span className="text-[13px] font-semibold text-[#1d1d1f] tracking-[-0.01em]">RFC</span>
         </div>
-      </div>
+        <div className="flex items-center gap-1.5">
+          <span className="relative flex h-[5px] w-[5px]">
+            <span className="absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-40 animate-ping" />
+            <span className="relative inline-flex rounded-full h-[5px] w-[5px] bg-emerald-500" />
+          </span>
+          <span className="text-[11px] text-[#86868b]">Live</span>
+        </div>
+      </header>
 
-      {/* ─── Sign In Panel ─── */}
-      <div className={`flex-1 flex flex-col justify-center items-center px-6 sm:px-10 py-10 lg:py-0 bg-[#f7f9fc] transition-all duration-700 delay-100 ${visible ? "opacity-100" : "opacity-0"}`}>
+      {/* ─── Main content ─── */}
+      <main className="flex-1 flex flex-col items-center justify-center px-6 pb-12">
 
-        <div className="w-full max-w-[400px]">
+        {/* ─── Card ─── */}
+        <div className={`w-full max-w-[420px] transition-all duration-700 ease-out ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}`}>
 
-          <div className="bg-white rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.04),0_8px_32px_rgba(0,0,0,0.06)] border border-black/[0.04] p-8 sm:p-10">
-
-            {/* Welcome */}
-            <div className={`mb-8 transition-all duration-500 delay-200 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
-              <p className="text-[12px] font-extrabold uppercase tracking-[0.18em] text-[#0d1f4b] mb-3">Welcome</p>
-              <h2 className="text-[22px] font-bold text-[#0d1f4b] tracking-[-0.01em]">Sign in to continue</h2>
-              <p className="text-[13px] text-[#5d6f7a] mt-2 leading-relaxed">Access your research dashboard and collaborate with your team.</p>
+          {/* Heading */}
+          <div className="text-center mb-10">
+            <div className={`transition-all duration-500 delay-100 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"}`}>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#86868b] mb-4">Bharti Institute of Public Policy</p>
             </div>
+            <h1 className={`text-[32px] sm:text-[36px] font-semibold text-[#1d1d1f] tracking-[-0.025em] leading-[1.15] transition-all duration-500 delay-200 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"}`}>
+              Research Fellow
+              <br />
+              <span className="text-[#0d1f4b]">Connect</span>
+            </h1>
+            <p className={`text-[15px] text-[#86868b] mt-4 leading-relaxed transition-all duration-500 delay-300 ${visible ? "opacity-100" : "opacity-0"}`}>
+              Sign in to your dashboard
+            </p>
+          </div>
 
-            {/* Programme cards */}
-            <div className={`space-y-2.5 mb-8 transition-all duration-500 delay-300 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
+          {/* Card body */}
+          <div className={`bg-white rounded-2xl p-8 sm:p-10 shadow-[0_2px_8px_rgba(0,0,0,0.04),0_12px_40px_rgba(0,0,0,0.06)] transition-all duration-500 delay-300 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}`}>
+
+            {/* Programme pills */}
+            <div className="flex gap-2 mb-8">
               {([
-                { key: "mdrf" as Program, icon: "M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z" },
-                { key: "mlrf" as Program, icon: "M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" },
-              ]).map(({ key, icon }) => {
+                { key: "mdrf" as Program },
+                { key: "mlrf" as Program },
+              ]).map(({ key }) => {
                 const meta = PROGRAM_META[key]
                 return (
-                  <div key={key} className="flex items-center gap-3.5 p-3.5 rounded-xl bg-[#f7f9fc] border border-black/[0.04] transition-all duration-200">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#0d1f4b]/[0.05] text-[#0d1f4b]/40 shrink-0">
-                      <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                        <path d={icon} />
-                      </svg>
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-[13px] font-bold text-[#0d1f4b]">{meta.app}</p>
-                      <p className="text-[11px] text-[#7c8698] mt-[1px]">{meta.full}</p>
-                    </div>
-                    <svg className="w-4 h-4 text-[#bcc3cf] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M9 18l6-6-6-6" />
-                    </svg>
+                  <div key={key} className="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-[#f5f5f7] border border-transparent hover:border-[#d2d2d7] transition-all duration-200 cursor-default">
+                    <span className="text-[12px] font-semibold text-[#1d1d1f]">{meta.label}</span>
+                    <span className="text-[11px] text-[#86868b] hidden sm:inline">&middot;</span>
+                    <span className="text-[11px] text-[#86868b] hidden sm:inline">{meta.short}</span>
                   </div>
                 )
               })}
             </div>
 
-            {/* Divider */}
-            <div className={`flex items-center gap-4 mb-6 transition-all duration-500 delay-[400ms] ${visible ? "opacity-100" : "opacity-0"}`}>
-              <div className="flex-1 h-px bg-black/[0.06]" />
-              <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#bcc3cf] shrink-0">Sign In</span>
-              <div className="flex-1 h-px bg-black/[0.06]" />
-            </div>
-
-            {/* ─── Email OTP Section ─── */}
-            <div className={`transition-all duration-500 delay-[450ms] ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
-              {otpSent ? (
-                <div className="text-center py-4">
-                  <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[#0d1f4b]/5">
-                    <svg className="w-6 h-6 text-[#0d1f4b]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-                      <polyline points="22,6 12,13 2,6" />
-                    </svg>
+            {/* Email OTP form */}
+            {!otpSent ? (
+              <form onSubmit={handleSendOtp} className="space-y-4">
+                {error && (
+                  <div className="rounded-xl bg-red-50 border border-red-100 px-4 py-3 text-[12px] text-red-600 text-center font-medium">
+                    {error}
                   </div>
-                  <p className="text-[14px] font-semibold text-[#0d1f4b]">Check your email</p>
-                  <p className="text-[12px] text-[#5d6f7a] mt-1 leading-relaxed">
-                    We sent a sign-in link to <span className="font-semibold text-[#0d1f4b]">{otpEmail}</span>
-                  </p>
-                  <p className="text-[11px] text-amber-600/70 mt-2 leading-relaxed">
-                    Also check your <span className="font-semibold">Junk Email</span> folder if you don&apos;t see it in your inbox.
-                  </p>
-                  <button
-                    type="button"
-                    onClick={() => setOtpSent(false)}
-                    className="mt-4 text-[12px] font-semibold text-[#0d1f4b] hover:underline"
-                  >
-                    Use a different email
-                  </button>
+                )}
+                <div>
+                  <input
+                    type="email"
+                    value={otpEmail}
+                    onChange={(e) => setOtpEmail(e.target.value)}
+                    placeholder="name@isb.edu"
+                    autoComplete="email"
+                    className="w-full h-[50px] rounded-xl border border-[#d2d2d7] bg-white px-4 text-[15px] text-[#1d1d1f] placeholder:text-[#aeaeb2] outline-none focus:border-[#0d1f4b] focus:ring-4 focus:ring-[#0d1f4b]/[0.08] transition-all duration-200"
+                  />
                 </div>
-              ) : (
-                <form onSubmit={handleSendOtp}>
-                  {error && (
-                    <div className="mb-3 rounded-xl bg-red-50 border border-red-100 px-4 py-3 text-[12px] text-red-600 text-center font-medium" style={{ animation: "heroFadeIn 0.3s ease-out" }}>
-                      {error}
-                    </div>
+                <button
+                  type="submit"
+                  disabled={loading === "otp"}
+                  className="w-full h-[50px] rounded-xl bg-[#0d1f4b] text-white font-semibold text-[15px] tracking-[-0.01em] transition-all duration-200 disabled:opacity-40 disabled:pointer-events-none active:scale-[0.98] flex items-center justify-center gap-2.5 hover:bg-[#131f70]"
+                >
+                  {loading === "otp" ? (
+                    <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
+                      <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" className="opacity-20" />
+                      <path d="M4 12a8 8 0 018-8" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+                    </svg>
+                  ) : (
+                    <svg className="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="2" y="4" width="20" height="16" rx="2" />
+                      <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                    </svg>
                   )}
-                  <div className="mb-3">
-                    <input
-                      type="email"
-                      value={otpEmail}
-                      onChange={(e) => setOtpEmail(e.target.value)}
-                      placeholder="name@isb.edu"
-                      autoComplete="email"
-                      className="w-full h-[48px] rounded-xl border border-black/[0.08] bg-white px-4 text-[13px] text-[#0d1f4b] placeholder:text-[#bcc3cf] outline-none focus:border-[#0d1f4b]/30 focus:ring-2 focus:ring-[#0d1f4b]/5 transition-all duration-200"
-                    />
-                  </div>
-                  <button
-                    type="submit"
-                    disabled={loading === "otp"}
-                    className="w-full h-[48px] rounded-xl transition-all duration-200 disabled:opacity-50 disabled:pointer-events-none active:scale-[0.98] select-none flex items-center justify-center gap-2 bg-[#0d1f4b] text-white font-semibold text-[13px] hover:bg-[#131f70] shadow-[0_1px_2px_rgba(0,0,0,0.08)] hover:shadow-[0_4px_16px_rgba(13,31,75,0.25)]"
-                  >
-                    {loading === "otp" ? (
-                      <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
-                        <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" className="opacity-20" />
-                        <path d="M4 12a8 8 0 018-8" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
-                      </svg>
-                    ) : (
-                      <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-                        <polyline points="22,6 12,13 2,6" />
-                      </svg>
-                    )}
-                    <span>{loading === "otp" ? "Sending..." : "Send OTP via Email"}</span>
-                  </button>
-                </form>
-              )}
-            </div>
+                  <span>{loading === "otp" ? "Sending..." : "Continue with Email"}</span>
+                </button>
+              </form>
+            ) : (
+              <div className="text-center py-6">
+                <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-[#f5f5f7]">
+                  <svg className="w-7 h-7 text-[#0d1f4b]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="2" y="4" width="20" height="16" rx="2" />
+                    <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                  </svg>
+                </div>
+                <p className="text-[17px] font-semibold text-[#1d1d1f] tracking-[-0.01em]">Check your email</p>
+                <p className="text-[13px] text-[#86868b] mt-2 leading-relaxed">
+                  We sent a sign-in link to
+                </p>
+                <p className="text-[13px] font-semibold text-[#1d1d1f] mt-0.5">{otpEmail}</p>
+                <p className="text-[11px] text-[#86868b] mt-3 leading-relaxed">
+                  Also check your <span className="font-semibold">Junk Email</span> folder if you don&apos;t see it.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => { setOtpSent(false); setError("") }}
+                  className="mt-5 text-[13px] font-semibold text-[#0d1f4b] hover:underline underline-offset-2"
+                >
+                  Use a different email
+                </button>
+              </div>
+            )}
 
             {/* Divider */}
-            <div className={`flex items-center gap-4 my-6 transition-all duration-500 delay-[500ms] ${visible ? "opacity-100" : "opacity-0"}`}>
-              <div className="flex-1 h-px bg-black/[0.04]" />
-              <span className="text-[10px] font-semibold tracking-[0.12em] text-[#bcc3cf] shrink-0">OR</span>
-              <div className="flex-1 h-px bg-black/[0.04]" />
+            <div className="flex items-center gap-4 my-6">
+              <div className="flex-1 h-px bg-[#d2d2d7]/60" />
+              <span className="text-[11px] font-semibold text-[#aeaeb2] uppercase tracking-[0.1em]">or</span>
+              <div className="flex-1 h-px bg-[#d2d2d7]/60" />
             </div>
 
             {/* Google button */}
-            <div className={`transition-all duration-500 delay-[550ms] ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
-              <button
-                type="button"
-                onClick={() => handleSignIn("google")}
-                disabled={loading !== null}
-                className="group relative w-full h-[48px] rounded-xl transition-all duration-200 disabled:opacity-50 disabled:pointer-events-none active:scale-[0.98] select-none flex items-center justify-center gap-3 bg-white text-[#0d1f4b] font-semibold text-[13px] border border-black/[0.08] hover:border-black/[0.12] hover:bg-[#f7f9fc] shadow-[0_1px_2px_rgba(0,0,0,0.04)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.06)]"
-              >
-                {loading === "google" ? (
-                  <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
-                    <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" className="opacity-20" />
-                    <path d="M4 12a8 8 0 018-8" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
-                  </svg>
-                ) : (
-                  <svg className="h-4 w-4" viewBox="0 0 24 24">
-                    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4" />
-                    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
-                    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
-                    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
-                  </svg>
-                )}
-                <span>{loading === "google" ? "Signing in..." : "Continue with Google"}</span>
-              </button>
-            </div>
-
-            {/* Terms */}
-            <div className={`mt-8 transition-all duration-500 delay-[600ms] ${visible ? "opacity-100" : "opacity-0"}`}>
-              <p className="text-[11px] text-[#bcc3cf] leading-relaxed text-center">
-                By signing in, you agree to the platform&apos;s terms. Your account will be reviewed by an administrator before access is granted.
-              </p>
-            </div>
+            <button
+              type="button"
+              onClick={() => handleSignIn("google")}
+              disabled={loading !== null}
+              className="w-full h-[50px] rounded-xl bg-white border border-[#d2d2d7] text-[#1d1d1f] font-semibold text-[15px] tracking-[-0.01em] transition-all duration-200 disabled:opacity-40 disabled:pointer-events-none active:scale-[0.98] flex items-center justify-center gap-3 hover:bg-[#f5f5f7] hover:border-[#c7c7cc]"
+            >
+              {loading === "google" ? (
+                <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" className="opacity-20" />
+                  <path d="M4 12a8 8 0 018-8" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+                </svg>
+              ) : (
+                <svg className="h-[18px] w-[18px]" viewBox="0 0 24 24">
+                  <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4" />
+                  <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
+                  <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
+                  <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
+                </svg>
+              )}
+              <span>Continue with Google</span>
+            </button>
           </div>
 
-          <div className="lg:hidden mt-8 text-center">
-            <p className="text-[11px] text-[#7c8698]">&copy; {new Date().getFullYear()} Bharti Institute of Public Policy</p>
+          {/* Footer info */}
+          <div className={`mt-8 text-center transition-all duration-500 delay-[500ms] ${visible ? "opacity-100" : "opacity-0"}`}>
+            <p className="text-[11px] text-[#aeaeb2] leading-relaxed">
+              By signing in, you agree to the platform&apos;s terms.
+              <br />
+              Your account will be reviewed before access is granted.
+            </p>
           </div>
         </div>
-      </div>
+      </main>
+
+      {/* ─── Bottom bar ─── */}
+      <footer className={`px-8 py-6 flex items-center justify-between transition-all duration-500 delay-[600ms] ${visible ? "opacity-100" : "opacity-0"}`}>
+        <p className="text-[11px] text-[#aeaeb2]">&copy; {new Date().getFullYear()} Bharti Institute of Public Policy</p>
+        <div className="flex items-center gap-2 text-[11px] text-[#aeaeb2]">
+          <span>Meghalaya</span>
+          <span className="w-[3px] h-[3px] rounded-full bg-[#d2d2d7]" />
+          <span>India</span>
+        </div>
+      </footer>
     </div>
   )
 }
