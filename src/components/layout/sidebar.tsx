@@ -4,6 +4,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useAuth } from "@/hooks/useAuth"
 import { signOut, ROLE_LABELS } from "@/lib/auth"
+import { getRoleTheme } from "@/lib/role-themes"
 import { programAppName } from "@/lib/constants"
 import { cn } from "@/lib/utils"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
@@ -17,18 +18,19 @@ export function Sidebar() {
 
   if (!profile || !profile.role) return null
   const nav = NAV[profile.role]
+  const theme = getRoleTheme(profile.role)
   const appName = profile.program ? programAppName(profile.program) : "Research Fellows"
 
   return (
-    <div className="sidebar-shell flex h-screen flex-col">
+    <div className="flex h-screen flex-col" style={{ background: `linear-gradient(180deg, ${theme.primary} 0%, ${theme.primaryDark} 100%)` }}>
       {/* App branding */}
       <div className="flex h-16 items-center gap-3 px-5 border-b border-white/[0.06]">
-        <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/[0.08]">
+        <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/[0.12]">
           <AppLogoSmall size={20} />
         </div>
         <div className="min-w-0">
           <p className="text-[14px] font-semibold text-white leading-tight truncate">{appName}</p>
-          <p className="text-[11px] text-white/40 leading-tight">{ROLE_LABELS[profile.role]}</p>
+          <p className="text-[11px] text-white/50 leading-tight">{theme.emoji} {ROLE_LABELS[profile.role]}</p>
         </div>
       </div>
 
@@ -57,7 +59,7 @@ export function Sidebar() {
                   rel="noopener noreferrer"
                   className={cn(
                     "flex items-center gap-3 rounded-xl px-3 py-2.5 text-[13px] font-medium transition-all duration-200",
-                    "text-white/45 hover:bg-white/[0.05] hover:text-white/80",
+                    "text-white/45 hover:bg-white/[0.08] hover:text-white/80",
                   )}
                 >
                   <span className="flex h-5 w-5 items-center justify-center transition-transform duration-200">
@@ -74,8 +76,8 @@ export function Sidebar() {
                 className={cn(
                   "flex items-center gap-3 rounded-xl px-3 py-2.5 text-[13px] font-medium transition-all duration-200",
                   active
-                    ? "bg-white/[0.1] text-white shadow-[inset_0_0_0_1px_rgba(255,255,255,0.08)]"
-                    : "text-white/45 hover:bg-white/[0.05] hover:text-white/80",
+                    ? "bg-white/[0.15] text-white shadow-[inset_0_0_0_1px_rgba(255,255,255,0.12)]"
+                    : "text-white/45 hover:bg-white/[0.08] hover:text-white/80",
                 )}
               >
                 <span className="flex h-5 w-5 items-center justify-center transition-transform duration-200">
@@ -90,19 +92,19 @@ export function Sidebar() {
 
       {/* User footer */}
       <div className="border-t border-white/[0.06] p-3">
-        <div className="flex items-center gap-3 rounded-xl px-2 py-2.5 hover:bg-white/[0.04] transition-colors">
-          <Avatar className="h-9 w-9 ring-2 ring-white/10">
-            <AvatarFallback className="bg-white/[0.08] text-white/70 text-[11px] font-semibold">
+        <div className="flex items-center gap-3 rounded-xl px-2 py-2.5 hover:bg-white/[0.06] transition-colors">
+          <Avatar className="h-9 w-9 ring-2 ring-white/15">
+            <AvatarFallback className="bg-white/[0.12] text-white/80 text-[11px] font-semibold">
               {profile.name.split(" ").map((w) => w[0]).join("").slice(0, 2).toUpperCase()}
             </AvatarFallback>
           </Avatar>
           <div className="flex-1 min-w-0">
             <p className="text-[13px] font-medium text-white/90 truncate">{profile.name}</p>
-            <p className="text-[11px] text-white/35">{ROLE_LABELS[profile.role]}</p>
+            <p className="text-[11px] text-white/40">{ROLE_LABELS[profile.role]}</p>
           </div>
           <button
             onClick={() => signOut()}
-            className="rounded-lg p-2 text-white/30 hover:text-white/70 hover:bg-white/[0.06] transition-all duration-200 active:scale-90"
+            className="rounded-lg p-2 text-white/30 hover:text-white/70 hover:bg-white/[0.08] transition-all duration-200 active:scale-90"
             aria-label="Sign out"
           >
             <LogOut className="h-4 w-4" />

@@ -6,6 +6,7 @@ import { useAuth } from "@/hooks/useAuth"
 import { Sidebar } from "./sidebar"
 import { MobileNav } from "./mobile-nav"
 import { signOut, getRoleHome } from "@/lib/auth"
+import { getRoleTheme } from "@/lib/role-themes"
 import { LogOut } from "lucide-react"
 import { AppLogoSmall } from "@/components/shared/app-logo"
 import type { UserRole } from "@/types"
@@ -19,6 +20,7 @@ export function DashboardLayout({ children, allowedRoles }: DashboardLayoutProps
   const { user, profile, loading } = useAuth()
   const router = useRouter()
   const pathname = usePathname()
+  const theme = getRoleTheme(profile?.role ?? null)
   const pageTitle = profile?.program === "mlrf" ? "MLRF Connect" : "MDRF Connect"
 
   useEffect(() => {
@@ -52,10 +54,15 @@ export function DashboardLayout({ children, allowedRoles }: DashboardLayoutProps
         {/* Mobile header */}
         <header className="md:hidden flex items-center justify-between bg-white border-b border-[hsl(var(--border))] px-4 h-14 shrink-0">
           <div className="flex items-center gap-3">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[hsl(var(--navy))]">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg" style={{ backgroundColor: theme.primary }}>
               <AppLogoSmall size={18} />
             </div>
-            <span className="text-[15px] font-semibold text-[hsl(var(--navy))]">{pageTitle}</span>
+            <div className="flex items-center gap-2">
+              <span className="text-[15px] font-semibold" style={{ color: theme.primary }}>{pageTitle}</span>
+              <span className="text-[11px] px-2 py-0.5 rounded-full font-medium" style={{ backgroundColor: theme.primaryLight, color: theme.primary }}>
+                {theme.emoji} {theme.label}
+              </span>
+            </div>
           </div>
           <button onClick={() => signOut()} className="rounded-lg p-2 text-[hsl(var(--text-4))] hover:bg-[hsl(var(--bg-muted))] transition-colors">
             <LogOut className="h-4 w-4" />
