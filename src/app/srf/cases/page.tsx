@@ -178,7 +178,7 @@ export default function SrfCasesPage() {
       <PageHeader
         title="Case Studies for Review"
         icon={<BookOpen className="h-6 w-6" />}
-        description="Review case studies submitted by MDRF fellows"
+        description={`Review case studies submitted by ${profile?.program === "mlrf" ? "MLRF" : "MDRF"} fellows`}
       />
 
       {/* Stats */}

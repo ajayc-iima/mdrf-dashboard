@@ -43,7 +43,7 @@ export function NotificationsPage({ role, label }: Props) {
       <PageHeader
         title="Notifications"
         icon={<Bell className="h-6 w-6" />}
-        description={`Help requests and messages from MDRF fellows`}
+        description="Help requests and messages from fellows"
       />
 
       <div className="flex gap-2">

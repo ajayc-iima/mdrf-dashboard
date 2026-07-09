@@ -30,7 +30,7 @@ export default function AdminDashboard() {
   async function loadData() {
     setLoading(true)
     const [users, districtStats, reqs, pendingUsers] = await Promise.all([
-      getAllUsers(dashboardType), getDistrictStats(dashboardType), getSupportRequests(), getPendingUsers(),
+      getAllUsers(dashboardType), getDistrictStats(dashboardType), getSupportRequests({ program: dashboardType }), getPendingUsers(),
     ])
     setFellows(users); setStats(districtStats); setRequests(reqs); setPending(pendingUsers)
     const next: Record<string, ApprovalDraft> = {}
